@@ -7,36 +7,39 @@
 
 package frc.robot.subsystems;
 
+import java.util.Arrays;
 import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import edu.wpi.first.wpilibj.Relay;
-import edu.wpi.first.wpilibj.controller.PIDController;
+import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Robot;
 
 public class DriveTrain extends SubsystemBase {
-    /**
-     * Creates a new ExampleSubsystem.
-     */
     CANSparkMax leftLeader, leftFollower, rightLeader, rightFollower;
     DifferentialDrive diffDrive;
-    boolean fieldCentric = false;
-    PIDController turningCtrl;
-    double throttleLimit, turnOutput;
+    double limitedThrottle;
     AHRS navX;
-    Relay spike;
-
-    enum driveSides {
-        LEFT, RIGHT;
-    }
 
     public DriveTrain() {
-        leftLeader = new CANSparkMax(14, MotorType.kBrushless);
-        leftFollower = new CANSparkMax(14, MotorType.kBrushless);
-        rightLeader = new CANSparkMax(14, MotorType.kBrushless);
-        rightFollower = new CANSparkMax(14, MotorType.kBrushless);
+        leftLeader = new CANSparkMax(1, MotorType.kBrushless);
+        leftFollower = new CANSparkMax(2, MotorType.kBrushless);
+        rightLeader = new CANSparkMax(3, MotorType.kBrushless);
+        rightFollower = new CANSparkMax(4, MotorType.kBrushless);
+        leftLeader.setInverted(false);
+        leftFollower.follow(leftLeader, false);
+        rightFollower.follow(rightLeader);
         diffDrive = new DifferentialDrive(leftLeader, rightLeader);
+        diffDrive.setSafetyEnabled(false);
+        navX = new AHRS(Port.kMXP, (byte) 200);
+        Arrays.asList(leftLeader, leftFollower, rightLeader, rightFollower)
+                .forEach((CANSparkMax spark) -> spark.setSmartCurrentLimit(40));
+        Arrays.asList(leftLeader, leftFollower, rightLeader, rightFollower)
+                .forEach((CANSparkMax spark) -> spark.setIdleMode(IdleMode.kBrake));
+        rightLeader.setOpenLoopRampRate(0.0065);
+        leftLeader.setOpenLoopRampRate(0.0065);
     }
 
     @Override
@@ -44,9 +47,12 @@ public class DriveTrain extends SubsystemBase {
         // This method will be called once per scheduler run
     }
 
-    public void allDrive(double x, double y) {
-        // diffDrive.arcadeDrive(xSpeed, zRotation);
-        // diffDrive.arcadeDrive(throttleLimit, zRotation);
+    public void allDrive(double throttle, double rotate) {
+        if (Robot.elevator.getPosition() > 40)
+            limitedThrottle = Math.abs(throttle) > 0.5 ? 0.5 * Math.signum(throttle) : throttle;
+        else
+            limitedThrottle = throttle;
+        diffDrive.arcadeDrive(limitedThrottle, -rotate);
     }
 
     public void slide(double distance) {
