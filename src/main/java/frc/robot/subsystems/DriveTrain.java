@@ -28,16 +28,30 @@ public class DriveTrain extends SubsystemBase {
         leftFollower = new CANSparkMax(2, MotorType.kBrushless);
         rightLeader = new CANSparkMax(3, MotorType.kBrushless);
         rightFollower = new CANSparkMax(4, MotorType.kBrushless);
+
+        // TODO: Verify which motors need to be inverted
+        // Since we're using DifferentialDrive below, we should not need to invert any,
+        // but it doesn't hurt to be explicit.
         leftLeader.setInverted(false);
-        leftFollower.follow(leftLeader, false);
+        rghtLeader.setInverted(false);
+
+        // Note: Default is to follow without inverting the follower
+        leftFollower.follow(leftLeader);
         rightFollower.follow(rightLeader);
+
         diffDrive = new DifferentialDrive(leftLeader, rightLeader);
         diffDrive.setSafetyEnabled(false);
+
         navX = new AHRS(Port.kMXP, (byte) 200);
+
+        // Set current limiting on drve train to prevent brown outs
         Arrays.asList(leftLeader, leftFollower, rightLeader, rightFollower)
                 .forEach((CANSparkMax spark) -> spark.setSmartCurrentLimit(40));
+
+        // Set motors to brake when idle. We don't want the drive train to coast.
         Arrays.asList(leftLeader, leftFollower, rightLeader, rightFollower)
                 .forEach((CANSparkMax spark) -> spark.setIdleMode(IdleMode.kBrake));
+
         rightLeader.setOpenLoopRampRate(0.0065);
         leftLeader.setOpenLoopRampRate(0.0065);
     }
@@ -48,6 +62,7 @@ public class DriveTrain extends SubsystemBase {
     }
 
     public void allDrive(double throttle, double rotate) {
+        // TODO: This will be based on the intake position. We don't have an elevator this year.
         if (Robot.elevator.getPosition() > 40)
             limitedThrottle = Math.abs(throttle) > 0.5 ? 0.5 * Math.signum(throttle) : throttle;
         else
