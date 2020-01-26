@@ -8,13 +8,22 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Intake extends SubsystemBase {
     CANSparkMax intakeMotor;
+    public DutyCycleEncoder shoulderPos;
+    public AnalogInput rollSpd;
+    public DigitalInput limitSwitch;
 
     public Intake() {
         intakeMotor = new CANSparkMax(5, MotorType.kBrushless);
+        shoulderPos = new DutyCycleEncoder(1);
+        rollSpd = new AnalogInput(1);
+        limitSwitch = new DigitalInput(1);
     }
 
     @Override
