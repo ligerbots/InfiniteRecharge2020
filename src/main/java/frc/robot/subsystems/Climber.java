@@ -10,7 +10,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Climber extends SubsystemBase {
     public Climber() {
-
+        // TODO: Need to add the winch motor
+        // TODO: Need to add ratchet servo
     }
 
     @Override
