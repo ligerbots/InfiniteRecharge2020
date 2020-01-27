@@ -16,8 +16,10 @@ import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
@@ -33,7 +35,7 @@ public class DriveTrain extends SubsystemBase {
 
     private final SpeedControllerGroup rightMotors = new SpeedControllerGroup(rightLeader, rightFollower);
 
-    DifferentialDrive diffDrive;
+    DifferentialDrive robotDrive;
     DifferentialDriveOdometry odometry;
 
     Encoder leftEncoder = new Encoder(Constants.LEFT_ENCODER_PORTS[0], Constants.LEFT_ENCODER_PORTS[1]);
@@ -51,8 +53,8 @@ public class DriveTrain extends SubsystemBase {
         leftLeader.setInverted(false);
         rightLeader.setInverted(false);
 
-        diffDrive = new DifferentialDrive(leftMotors, rightMotors);
-        diffDrive.setSafetyEnabled(false);
+        robotDrive = new DifferentialDrive(leftMotors, rightMotors);
+        robotDrive.setSafetyEnabled(false);
 
         navX = new AHRS(Port.kMXP, (byte) 200);
 
@@ -74,8 +76,51 @@ public class DriveTrain extends SubsystemBase {
         rightEncoder.setDistancePerPulse(Constants.DISTANCE_PER_PULSE);
 
         odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(0));
+    }
 
+    public Pose2d getPose () {
+        return odometry.getPoseMeters();
+    }
 
+    public void tankDriveVolts (double leftVolts, double rightVolts) {
+        leftMotors.setVoltage(leftVolts);
+        rightMotors.setVoltage(-rightVolts);// make sure right is negative becuase sides are opposite
+        robotDrive.feed();
+      }
+    
+    public double getAverageEncoderDistance() {
+        return (leftEncoder.getDistance() + rightEncoder.getDistance()) / 2.0;
+    }
+    
+    public double getLeftEncoderDistance() {
+        return leftEncoder.getDistance();
+    }
+    
+    public double getRightEncoderDistance() {
+        return rightEncoder.getDistance();
+    }
+    
+    public double getHeading() {
+        return Math.IEEEremainder(navX.getAngle(), 360) * -1; // -1 here for unknown reason look in documatation
+    }
+
+    public void resetHeading() {
+        navX.reset();
+    }
+    
+    public void resetEncoders () {
+        leftEncoder.reset();
+        rightEncoder.reset();
+    }
+    
+    public void resetOdometry (Pose2d pose) {
+        resetEncoders();
+        resetHeading();
+        odometry.resetPosition(pose, Rotation2d.fromDegrees(getHeading()));
+    }
+
+    public DifferentialDriveWheelSpeeds getWheelSpeeds () {
+        return new DifferentialDriveWheelSpeeds(leftEncoder.getRate(), rightEncoder.getRate());
     }
 
     @Override
@@ -89,7 +134,7 @@ public class DriveTrain extends SubsystemBase {
             limitedThrottle = Math.abs(throttle) > 0.5 ? 0.5 * Math.signum(throttle) : throttle;
         else
             limitedThrottle = throttle;
-        diffDrive.arcadeDrive(limitedThrottle, -rotate);
+        robotDrive.arcadeDrive(limitedThrottle, -rotate);
     }
 
     public void slide(double distance) {
