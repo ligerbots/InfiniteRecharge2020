@@ -4,21 +4,26 @@
 /* must be accompanied by the FIRST BSD license file in the root directory of */
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
-
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Climber extends SubsystemBase {
-    /**
-     * Creates a new ExampleSubsystem.
-     */
     public Climber() {
-
+        // TODO: Need to add the winch motor
+        // TODO: Need to add ratchet servo
     }
 
     @Override
     public void periodic() {
         // This method will be called once per scheduler run
+    }
+
+    public void deploy() {
+
+    }
+
+    public void climb(double speed) {
+
     }
 }

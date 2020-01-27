@@ -12,6 +12,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Carousel extends SubsystemBase {
+    // TODO: Should this be part of the Shooter?
     WPI_TalonSRX grabber;
     CANSparkMax spinner;
 
@@ -26,6 +27,6 @@ public class Carousel extends SubsystemBase {
     }
 
     public void spin(double speed) {
-
+        spinner.set(speed);
     }
 }
