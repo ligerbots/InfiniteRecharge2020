@@ -6,6 +6,8 @@
 /*----------------------------------------------------------------------------*/
 package frc.robot;
 
+import edu.wpi.first.wpilibj.DigitalSource;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
  * numerical or boolean constants. This class should not be used for any other
@@ -17,4 +19,20 @@ package frc.robot;
  * wherever the constants are needed, to reduce verbosity.
  */
 public final class Constants {
+    //TALON IDs
+    public static final int LEADER_LEFT_TALON_ID = 1;
+
+    public static final int LEADER_RIGHT_TALON_ID = 2;
+
+    public static final int FOLLOWER_LEFT_TALON_ID = 3;
+
+    public static final int FOLLOWER_RIGHT_TALON_ID = 4;
+
+    public static final int[] LEFT_ENCODER_PORTS = new int[]{1, 2};
+    
+    public static final int[] RIGHT_ENCODER_PORTS = new int[]{3, 4};
+
+    public static final double DISTANCE_PER_PULSE = 0.0001; // TODO: find real number ~ This is the coefficient of encoder ticks to convert to distance
+    
+
 }
