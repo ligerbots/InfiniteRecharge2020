@@ -8,16 +8,21 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ColorSensorV3;
-import com.revrobotics.CANDigitalInput.LimitSwitch;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Intake extends SubsystemBase {
     CANSparkMax intakeMotor;
+
+    // TODO: Do we need an encoder on the intake or will voltage be enough?
     public AnalogInput rollSpd;
+    
     public ColorSensorV3 colorSensor;
-    public LimitSwitch limitSwitch;
+
+    // TODO: There was some discussion of a beam break to help monitor balls
+    public DigitalInput beamBreak;
 
     public Intake() {
         intakeMotor = new CANSparkMax(5, MotorType.kBrushless);
@@ -28,9 +33,10 @@ public class Intake extends SubsystemBase {
     @Override
     public void periodic() {
         // This method will be called once per scheduler run
+        
     }
 
     public void run(double speed) {
-
+        intakeMotor.set(speed);
     }
 }
