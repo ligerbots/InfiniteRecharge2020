@@ -7,11 +7,16 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+
+import edu.wpi.first.wpilibj.PWM;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Shooter extends SubsystemBase {
     CANSparkMax motor1, motor2, motor3;
-    double hoodSpeed, shootSpeed;
+    PWM hoodServo;
+    double shootSpeed;
+
+    // TODO: Need to add velocity PID for shooter
 
     public Shooter() {
 
@@ -23,6 +28,7 @@ public class Shooter extends SubsystemBase {
     }
 
     public void shoot(double distance) {
-
+        // TODO: The idea was that this would set the shooter speed
+        // and hoodServo value based on the input distance.
     }
 }
