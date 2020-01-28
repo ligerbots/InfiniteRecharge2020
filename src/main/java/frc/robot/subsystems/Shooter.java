@@ -36,9 +36,4 @@ public class Shooter extends SubsystemBase {
         // and hoodServo value based on the input distance.
     }
 
-    @Override
-    public Set<Subsystem> getRequirements() {
-        // TODO Auto-generated method stub
-        return null;
-    }
 }
