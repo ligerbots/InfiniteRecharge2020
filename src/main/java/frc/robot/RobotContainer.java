@@ -8,8 +8,6 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
-import frc.robot.commands.ExampleCommand;
-import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.commands.Shooter;
 import frc.robot.commands.Climber;
@@ -34,6 +32,7 @@ public class RobotContainer {
   private final Turn turn = new Turn();
   
   XboxController xbox = new XboxController(0);
+
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -76,10 +75,4 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
-  /*
-      Command m_autoCommand;
-  public Command getAutonomousCommand() {
-    // An ExampleCommand will run in autonomous
-    return m_autoCommand;
-  }*/
 }
