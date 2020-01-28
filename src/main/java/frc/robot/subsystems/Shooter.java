@@ -6,9 +6,13 @@
 /*----------------------------------------------------------------------------*/
 package frc.robot.subsystems;
 
+import java.util.Set;
+
 import com.revrobotics.CANSparkMax;
 
 import edu.wpi.first.wpilibj.PWM;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Shooter extends SubsystemBase {
@@ -30,5 +34,11 @@ public class Shooter extends SubsystemBase {
     public void shoot(double distance) {
         // TODO: The idea was that this would set the shooter speed
         // and hoodServo value based on the input distance.
+    }
+
+    @Override
+    public Set<Subsystem> getRequirements() {
+        // TODO Auto-generated method stub
+        return null;
     }
 }
