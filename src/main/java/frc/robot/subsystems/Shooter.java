@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class Shooter extends SubsystemBase implements Command {
+public class Shooter extends SubsystemBase {
     CANSparkMax motor1, motor2, motor3;
     PWM hoodServo;
     double shootSpeed;
