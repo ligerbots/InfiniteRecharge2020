@@ -8,9 +8,13 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import frc.robot.subsystems.Carousel;
+import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.ExampleSubsystem;
-import frc.robot.commands.Shooter;
-import frc.robot.commands.Climber;
+import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Shooter;
+import frc.robot.commands.ShooterCommand;
+import frc.robot.commands.ClimberCommand;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
  //import edu.wpi.first.wpilibj.XboxController; will need later
@@ -27,11 +31,14 @@ import edu.wpi.first.wpilibj.GenericHID.Hand;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final DriveTrain robotDrive = new DriveTrain();
+  //private final DriveTrain robotDrive = new DriveTrain();
   private final Throttle throttle = new Throttle();
   private final Turn turn = new Turn();
-  
   XboxController xbox = new XboxController(0);
+  private final Intake intake = new Intake();
+  private final Carousel carousel = new Carousel();
+  private final Shooter shooter = new Shooter();
+  private final Climber climber = new Climber();
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -64,9 +71,10 @@ public class RobotContainer {
   }
   private void configureButtonBindings() {
     JoystickButton xboxA = new JoystickButton(xbox, 1);
-    xboxA.whenPressed(new ShooterCommand()); //shootercomand
+    JoystickButton xboxB = new JoystickButton(xbox, 2);
+    //xboxA.whenPressed(new ShooterCommand()); //shootercomand
     JoystickButton xboxLine = new JoystickButton(xbox, 8);
-    xboxA.whenPressed(new ClimberCommand()); //shootercomand
+    //xboxA.whenPressed(new ClimberCommand()); //shootercomand
   }
 
 
