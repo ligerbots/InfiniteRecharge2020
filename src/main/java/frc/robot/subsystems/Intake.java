@@ -12,6 +12,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 public class Intake extends SubsystemBase {
     CANSparkMax intakeMotor;
@@ -25,7 +26,7 @@ public class Intake extends SubsystemBase {
     public DigitalInput beamBreak;
 
     public Intake() {
-        intakeMotor = new CANSparkMax(5, MotorType.kBrushless);
+        intakeMotor = new CANSparkMax(Constants.INTAKE_MOTOR_CAN_ID , MotorType.kBrushless);
         rollSpd = new AnalogInput(1);
         colorSensor = new ColorSensorV3(null);
     }
