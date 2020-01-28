@@ -10,6 +10,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 public class Carousel extends SubsystemBase {
     // TODO: Should this be part of the Shooter?
@@ -17,8 +18,8 @@ public class Carousel extends SubsystemBase {
     CANSparkMax spinner;
 
     public Carousel() {
-        grabber = new WPI_TalonSRX(1);
-        spinner = new CANSparkMax(6, MotorType.kBrushless);
+        grabber = new WPI_TalonSRX(Constants.GRABBER_TALON_ID);
+        spinner = new CANSparkMax(Constants.SPINNER_CAN_ID, MotorType.kBrushless);
     }
 
     @Override

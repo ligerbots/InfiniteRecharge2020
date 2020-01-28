@@ -20,19 +20,38 @@ import edu.wpi.first.wpilibj.DigitalSource;
  */
 public final class Constants {
     //TALON IDs
-    public static final int LEADER_LEFT_TALON_ID = 1;
 
-    public static final int LEADER_RIGHT_TALON_ID = 2;
+    // Drive Train SPARK MAXes
+    public static final int LEADER_LEFT_CAN_ID = 1; //Drive Train Cansparkmaxes :D
 
-    public static final int FOLLOWER_LEFT_TALON_ID = 3;
+    public static final int LEADER_RIGHT_CAN_ID = 2;
 
-    public static final int FOLLOWER_RIGHT_TALON_ID = 4;
+    public static final int FOLLOWER_LEFT_CAN_ID = 3;
 
-    public static final int[] LEFT_ENCODER_PORTS = new int[]{1, 2};
+    public static final int FOLLOWER_RIGHT_CAN_ID = 4;//Sparkmaxes for drivetrain end here
+
+    // Drive Train Encoders
+    public static final int[] LEFT_ENCODER_PORTS = new int[]{1, 2};//DriveTrain Encoder
     
-    public static final int[] RIGHT_ENCODER_PORTS = new int[]{3, 4};
+    public static final int[] RIGHT_ENCODER_PORTS = new int[]{3, 4};//DriveTrain Encoder
+
+    //DistanceperPulse
 
     public static final double DISTANCE_PER_PULSE = 0.0001; // TODO: find real number ~ This is the coefficient of encoder ticks to convert to distance
     
 
+    //SPARKMAX for the spinner (Carousel)
+    public static final int SPINNER_CAN_ID = 6; // CAN ID for the spinner for carousel
+
+    // Talon SRX for the grabber (Carousel)
+
+    public static final int GRABBER_TALON_ID = 1; //TALON SRX ID for grabber
+
+    // SPARKMAX for the intake motor (Intake)
+
+    public static final int INTAKE_MOTOR_CAN_ID = 5; //CAN ID for intake motor
+
+    // Intake Color Sensor
+
+    public static final int COLOR_SENSOR_VALUE = 1; // value for color sensor
 }
