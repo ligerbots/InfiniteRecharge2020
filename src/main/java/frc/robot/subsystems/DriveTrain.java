@@ -32,7 +32,7 @@ public class DriveTrain extends SubsystemBase {
         // Since we're using DifferentialDrive below, we should not need to invert any,
         // but it doesn't hurt to be explicit.
         leftLeader.setInverted(false);
-        rghtLeader.setInverted(false);
+        rightLeader.setInverted(false);
 
         // Note: Default is to follow without inverting the follower
         leftFollower.follow(leftLeader);
@@ -61,7 +61,8 @@ public class DriveTrain extends SubsystemBase {
     }
 
     public void allDrive(double throttle, double rotate) {
-        // TODO: This will be based on the intake position. We don't have an elevator this year.
+        // TODO: This will be based on the intake position. We don't have an elevator
+        // this year.
         if (Robot.elevator.getPosition() > 40)
             limitedThrottle = Math.abs(throttle) > 0.5 ? 0.5 * Math.signum(throttle) : throttle;
         else
