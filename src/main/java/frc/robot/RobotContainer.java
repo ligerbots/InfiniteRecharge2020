@@ -10,12 +10,8 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.subsystems.Carousel;
 import frc.robot.subsystems.Climber;
-import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
-import frc.robot.commands.ShooterCommand;
-import frc.robot.commands.ClimberCommand;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
  //import edu.wpi.first.wpilibj.XboxController; will need later
 import java.util.function.DoubleSupplier;
