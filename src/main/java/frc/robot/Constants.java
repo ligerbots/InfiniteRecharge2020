@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.DigitalSource;
  * wherever the constants are needed, to reduce verbosity.
  */
 public final class Constants {
+
     //TALON IDs
 
     // Drive Train SPARK MAXes
@@ -54,4 +55,11 @@ public final class Constants {
     // Intake Color Sensor
 
     public static final int COLOR_SENSOR_VALUE = 1; // value for color sensor
+
+    // Shooter SPARK MAXES
+    public static final int SHOOTER_FLUP_CAN_ID = 35; // Carousel to shooter wheel "FLUP"
+    public static final int SHOOTER_ONE_CAN_ID = 32; // Motor 1 on shooter
+    public static final int SHOOTER_TWO_CAN_ID = 33; // Motor 2 on shooter
+    public static final int SHOOTER_THREE_CAN_ID = 34; // Motor 3 on shooter
+    public static final int SHOOTER_SERVO_PWM_ID = 1; // Servo to controll hood angle 
 }
