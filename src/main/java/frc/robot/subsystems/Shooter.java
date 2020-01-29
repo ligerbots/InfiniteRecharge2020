@@ -23,7 +23,7 @@ public class Shooter extends SubsystemBase {
 
     CANSparkMax motor1, motor2, motor3;
     CANEncoder shooterEncoder;
-    CANSparkMax Flup;
+    CANSparkMax flup;
     PWM hoodServo;
     double shootSpeed;
 
@@ -36,7 +36,7 @@ public class Shooter extends SubsystemBase {
         motor3 = new CANSparkMax(Constants.SHOOTER_THREE_CAN_ID,MotorType.kBrushless);
         shooterEncoder = new CANEncoder(motor1);
         hoodServo = new PWM(Constants.SHOOTER_SERVO_PWM_ID);
-        Flup = new CANSparkMax(Constants.SHOOTER_FLUP_CAN_ID,MotorType.kBrushless);
+        flup = new CANSparkMax(Constants.SHOOTER_FLUP_CAN_ID,MotorType.kBrushless);
         motor2.follow(motor1);  //  We want motor1 to be master and motor2 and 3 follow the speed of motor1
         motor3.follow(motor1);  //  ^^^
     }
