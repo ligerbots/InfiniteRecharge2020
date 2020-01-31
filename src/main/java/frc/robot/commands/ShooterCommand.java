@@ -9,6 +9,8 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
+import frc.robot.subsystems.Carousel;
 import frc.robot.subsystems.Shooter;
 
 public class ShooterCommand extends CommandBase {
@@ -20,12 +22,14 @@ public class ShooterCommand extends CommandBase {
   double[] empty = new double[] {0.0,0.0,0.0,0.0,0.0,0.0}; // TODO: Will prob have more values
 
   Shooter shooter;
+  Carousel carousel;
 
   boolean startFlag;
   boolean started;
 
-  public ShooterCommand(Shooter shooter) {
+  public ShooterCommand(Shooter shooter, Carousel carousel) {
     this.shooter = shooter;
+    this.carousel = carousel;
 
     startFlag = false;
   }
@@ -50,10 +54,13 @@ public class ShooterCommand extends CommandBase {
     visionInfo = SmartDashboard.getNumberArray("visionInfo", empty); // TODO: need actual vision info
     if (startFlag) {
       shooter.warmUp();
+      carousel.spin(Constants.CAROUSEL_SPEED);
       started = true;
     }
     else {
       started = false;
+      shooter.stopAll();
+      carousel.spin(0);
     }
 
     if (started) {

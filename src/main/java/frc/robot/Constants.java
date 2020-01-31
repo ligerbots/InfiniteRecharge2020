@@ -41,6 +41,8 @@ public final class Constants {
     //SPARKMAX for the spinner (Carousel)
     public static final int SPINNER_CAN_ID = 6; // CAN ID for the spinner for carousel
 
+    public static final double CAROUSEL_SPEED = 0.5; // This is just percent output
+
     // Talon SRX for the grabber (Carousel)
 
     public static final int GRABBER_TALON_ID = 1; //TALON SRX ID for grabber
