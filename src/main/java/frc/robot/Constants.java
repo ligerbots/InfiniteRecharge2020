@@ -38,12 +38,14 @@ public final class Constants {
 
     public static final double DISTANCE_PER_PULSE = 0.0001; // TODO: find real number ~ This is the coefficient of encoder ticks to convert to distance
     
-
     //SPARKMAX for the spinner (Carousel)
     public static final int SPINNER_CAN_ID = 6; // CAN ID for the spinner for carousel
 
-    // Talon SRX for the grabber (Carousel)
+    public static final double CAROUSEL_SHOOTER_SPEED = 0.5; // This is just percent output
 
+    public static final double CAROUSEL_INTAKE_SPEED = 0.3; // This is just percent output
+
+    // Talon SRX for the grabber (Carousel)
     public static final int GRABBER_TALON_ID = 1; //TALON SRX ID for grabber
 
     // SPARKMAX for the intake motor (Intake)
@@ -60,4 +62,6 @@ public final class Constants {
     public static final int SHOOTER_TWO_CAN_ID = 33; // Motor 2 on shooter
     public static final int SHOOTER_THREE_CAN_ID = 34; // Motor 3 on shooter
     public static final int SHOOTER_SERVO_PWM_ID = 1; // Servo to controll hood angle 
+
+    public static final double WARM_UP_RPM = 3000; // TODO: find a good valuabl
 }

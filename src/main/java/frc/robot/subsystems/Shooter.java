@@ -6,25 +6,27 @@
 /*----------------------------------------------------------------------------*/
 package frc.robot.subsystems;
 
-import java.util.Set;
 
 import com.revrobotics.CANEncoder;
+import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.wpilibj.PWM;
+import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Constants;
 
 public class Shooter extends SubsystemBase {
 
-    CANSparkMax motor1, motor2, motor3;
-    CANEncoder shooterEncoder;
-    CANSparkMax flup;
-    PWM hoodServo;
-    double shootSpeed;
+    CANSparkMax motor1, motor2, motor3, flup;
 
+    CANEncoder shooterEncoder;
+
+    Servo hoodServo;
+
+    CANPIDController pidController;
     // TODO: Need to add velocity PID for shooter
 
     public Shooter() {
@@ -32,11 +34,19 @@ public class Shooter extends SubsystemBase {
         motor1 = new CANSparkMax(Constants.SHOOTER_ONE_CAN_ID,MotorType.kBrushless);
         motor2 = new CANSparkMax(Constants.SHOOTER_TWO_CAN_ID,MotorType.kBrushless);
         motor3 = new CANSparkMax(Constants.SHOOTER_THREE_CAN_ID,MotorType.kBrushless);
-        shooterEncoder = new CANEncoder(motor1);
-        hoodServo = new PWM(Constants.SHOOTER_SERVO_PWM_ID);
+
         flup = new CANSparkMax(Constants.SHOOTER_FLUP_CAN_ID,MotorType.kBrushless);
+
+        hoodServo = new Servo(Constants.SHOOTER_SERVO_PWM_ID);
+
+        shooterEncoder = new CANEncoder(motor1);
+
+        pidController = new CANPIDController(motor1);
+
+        pidController.setFeedbackDevice(shooterEncoder);
+
         motor2.follow(motor1);  //  We want motor1 to be master and motor2 and 3 follow the speed of motor1
-        motor3.follow(motor1);  //  ^^^
+        motor3.follow(motor1);
     }
 
     @Override
@@ -44,9 +54,49 @@ public class Shooter extends SubsystemBase {
         // This method will be called once per scheduler run every 20ms
     }
 
-    public void shoot(double distance) {
+    public void prepareShooter(double distance) {
+
+        pidController.setReference(calculateShooterSpeed(distance), ControlType.kVelocity);
+        hoodServo.setAngle(calculateShooterHood(distance));
         // TODO: The idea was that this would set the shooter speed
         // and hoodServo value based on the input distance.
     }
 
+    public void shoot () {
+        flup.set(0.5); // TODO: figure out what to do with this constant
+    }
+
+    public double calculateShooterSpeed (double distance) {
+        // TODO: Some logic 
+        return 0;
+    }
+
+    public double calculateShooterHood (double distance) {
+        // TODO: Some logic (should return degrees)
+        return 0;
+    }
+
+    public void warmUp () {
+        pidController.setReference(Constants.WARM_UP_RPM, ControlType.kVelocity);
+    }
+
+    public boolean speedOnTarget (double targetVelocity, double percentAllowedError) {
+        double max = targetVelocity * (1.0 + (percentAllowedError / 100.0));
+        double min = targetVelocity * (1.0 - (percentAllowedError / 100.0));
+        return shooterEncoder.getVelocity() > min && shooterEncoder.getVelocity() <  max; 
+    }
+
+    public boolean hoodOnTarget (double targetAngle) {
+        return hoodServo.getAngle() > targetAngle - 1 && hoodServo.getAngle() < targetAngle + 1;
+    }
+
+    public void calibratePID (double p, double i, double d) {
+        pidController.setP(p);
+        pidController.setI(i);
+        pidController.setD(d);
+    }
+
+    public void stopAll () {
+        pidController.setReference(0, ControlType.kVoltage);
+    }
 }
