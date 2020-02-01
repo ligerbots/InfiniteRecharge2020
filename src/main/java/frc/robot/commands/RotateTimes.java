@@ -17,28 +17,57 @@ public class RotateTimes extends CommandBase {
    */
 
   Intake intake;
-  int bufferCounter;
   int rotationCount;
   int rotationsToGo;
   OutColor startColor;
 
+
+  OutColor currentColor; // YJ: current color read by the color sensor
+  OutColor oldColor;
+  int oldColorTicks;
+
+  boolean newColor;
+  boolean startingFlag;
+
   public RotateTimes(Intake intake, int rotations) {
     rotationCount = 0;
     this.intake = intake;
-    this.rotationsToGo = rotations;
-    // Use addRequirements() here to declare subsystem dependencies.
+    this.rotationsToGo = rotations *  2;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
     startColor = intake.read();
-    bufferCounter = 0;
+    oldColor = startColor;
+    oldColorTicks = 0;
+    intake.run(0.25); // YJ: Placeholder for the intake speed
+    newColor = false;
+    startingFlag = true;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    oldColor = currentColor;
+    currentColor = intake.read();
+    if (oldColor == currentColor) {
+      oldColorTicks += 1;
+    }
+    else {
+      oldColorTicks = 0;
+    }
+    if (oldColorTicks >= 3) {
+      newColor = false;
+    }
+    else {
+      newColor = true; 
+      startingFlag = false;
+    }
+    if (currentColor == startColor && !newColor && !startingFlag){ // if the newColor reaches the startColor once, it increases the rotationCount by 1/2
+      rotationCount += 1; // There are two of each color opposite each other
+    }
+
     
   }
 
