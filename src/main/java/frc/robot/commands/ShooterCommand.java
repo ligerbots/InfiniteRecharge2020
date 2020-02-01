@@ -54,7 +54,7 @@ public class ShooterCommand extends CommandBase {
     visionInfo = SmartDashboard.getNumberArray("visionInfo", empty); // TODO: need actual vision info
     if (startFlag) {
       shooter.warmUp();
-      carousel.spin(Constants.CAROUSEL_SPEED);
+      carousel.spin(Constants.CAROUSEL_SHOOTER_SPEED);
       started = true;
     }
     else {
