@@ -6,7 +6,7 @@
 /*----------------------------------------------------------------------------*/
 package frc.robot.subsystems;
 
-
+import java.util.Set;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
@@ -17,7 +17,7 @@ import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Constants;
-
+@SuppressWarnings("all")
 public class Shooter extends SubsystemBase {
 
     CANSparkMax motor1, motor2, motor3, flup;
