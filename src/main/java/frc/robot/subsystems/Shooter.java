@@ -7,7 +7,6 @@
 package frc.robot.subsystems;
 
 import java.util.Set;
-
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -16,7 +15,7 @@ import edu.wpi.first.wpilibj.PWM;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Constants;
-
+@SuppressWarnings("all")
 public class Shooter extends SubsystemBase {
 
     CANSparkMax motor1, motor2, motor3;
