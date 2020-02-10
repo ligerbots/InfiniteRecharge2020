@@ -6,6 +6,10 @@
 /*----------------------------------------------------------------------------*/
 package frc.robot.subsystems;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
@@ -24,10 +28,14 @@ public class Shooter extends SubsystemBase {
 
     CANEncoder shooterEncoder;
 
-    Servo hoodServo;
+    Servo hoodServo, turretServo;
+
+    private HashMap<Double,Double> distanceLookUp = new HashMap<Double,Double>() {}; //set up lookup table for ranges
 
     CANPIDController pidController;
     // TODO: Need to add velocity PID for shooter
+
+
 
     public Shooter() {
 
@@ -35,9 +43,11 @@ public class Shooter extends SubsystemBase {
         motor2 = new CANSparkMax(Constants.SHOOTER_TWO_CAN_ID,MotorType.kBrushless);
         motor3 = new CANSparkMax(Constants.SHOOTER_THREE_CAN_ID,MotorType.kBrushless);
 
-        flup = new CANSparkMax(Constants.SHOOTER_FLUP_CAN_ID,MotorType.kBrushless);
+        flup = new CANSparkMax(Constants.SHOOTER_FLUP_CAN_ID, MotorType.kBrushless);
 
         hoodServo = new Servo(Constants.SHOOTER_SERVO_PWM_ID);
+
+        turretServo = new Servo(Constants.SHOOTER_TURRET_SERVO_ID);
 
         shooterEncoder = new CANEncoder(motor1);
 
@@ -47,6 +57,9 @@ public class Shooter extends SubsystemBase {
 
         motor2.follow(motor1);  //  We want motor1 to be master and motor2 and 3 follow the speed of motor1
         motor3.follow(motor1);
+
+        //TODO: Populate lookup table
+        
     }
 
     @Override
@@ -54,7 +67,7 @@ public class Shooter extends SubsystemBase {
         // This method will be called once per scheduler run every 20ms
     }
 
-    public void prepareShooter(double distance) {
+    public void prepareShooter(final double distance) {
 
         pidController.setReference(calculateShooterSpeed(distance), ControlType.kVelocity);
         hoodServo.setAngle(calculateShooterHood(distance));
@@ -66,31 +79,33 @@ public class Shooter extends SubsystemBase {
         flup.set(0.5); // TODO: figure out what to do with this constant
     }
 
-    public double calculateShooterSpeed (double distance) {
+    public double calculateShooterSpeed (final double distance) {
         // TODO: Some logic 
         return 0;
     }
 
-    public double calculateShooterHood (double distance) {
+    public double calculateShooterHood (final double distance) {
         // TODO: Some logic (should return degrees)
-        return 0;
+        final float maxShootingDistance = 40; // set placeholder for max shooting distance (in feet)(YJ)
+        return 0.0; // (YJ) TODO: determine how to integrate angle slope equation into calculations
+        
     }
 
     public void warmUp () {
         pidController.setReference(Constants.WARM_UP_RPM, ControlType.kVelocity);
     }
 
-    public boolean speedOnTarget (double targetVelocity, double percentAllowedError) {
-        double max = targetVelocity * (1.0 + (percentAllowedError / 100.0));
-        double min = targetVelocity * (1.0 - (percentAllowedError / 100.0));
+    public boolean speedOnTarget (final double targetVelocity, final double percentAllowedError) {
+        final double max = targetVelocity * (1.0 + (percentAllowedError / 100.0));
+        final double min = targetVelocity * (1.0 - (percentAllowedError / 100.0));
         return shooterEncoder.getVelocity() > min && shooterEncoder.getVelocity() <  max; 
     }
 
-    public boolean hoodOnTarget (double targetAngle) {
+    public boolean hoodOnTarget (final double targetAngle) {
         return hoodServo.getAngle() > targetAngle - 1 && hoodServo.getAngle() < targetAngle + 1;
     }
 
-    public void calibratePID (double p, double i, double d) {
+    public void calibratePID (final double p, final double i, final double d) {
         pidController.setP(p);
         pidController.setI(i);
         pidController.setD(d);
@@ -98,5 +113,14 @@ public class Shooter extends SubsystemBase {
 
     public void stopAll () {
         pidController.setReference(0, ControlType.kVoltage);
+        hoodServo.setAngle(0);
+    }
+
+    public double getTurretAngle () {
+        return turretServo.get() *  Constants.TURRET_ANGLE_COEFFICIENT;
+    }
+
+    public void setTurret (double angle) {
+        turretServo.set(angle / Constants.TURRET_ANGLE_COEFFICIENT);
     }
 }
