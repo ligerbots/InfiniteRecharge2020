@@ -6,6 +6,8 @@
 /*----------------------------------------------------------------------------*/
 package frc.robot;
 
+import java.util.HashMap;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
  * numerical or boolean constants. This class should not be used for any other
@@ -62,6 +64,13 @@ public final class Constants {
     public static final int SHOOTER_TWO_CAN_ID = 33; // Motor 2 on shooter
     public static final int SHOOTER_THREE_CAN_ID = 34; // Motor 3 on shooter
     public static final int SHOOTER_SERVO_PWM_ID = 1; // Servo to controll hood angle 
+    public static final int SHOOTER_TURRET_SERVO_ID = 2; // TODO: Fix this
+
+    public static final double TURRET_ANGLE_COEFFICIENT = 180; // TODO: Fix this
 
     public static final double WARM_UP_RPM = 3000; // TODO: find a good valuabl
+
+    public static final double MAX_TURRET_OFFSET = 10; // in degrees (may be more)
+
+
 }

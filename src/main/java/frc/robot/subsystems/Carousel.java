@@ -30,4 +30,8 @@ public class Carousel extends SubsystemBase {
     public void spin(double speed) {
         spinner.set(speed);
     }
+
+    public void warmUp() {
+        this.spin(Constants.CAROUSEL_SHOOTER_SPEED);
+    }
 }
