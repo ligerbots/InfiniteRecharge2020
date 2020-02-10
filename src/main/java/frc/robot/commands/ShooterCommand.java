@@ -56,12 +56,12 @@ public class ShooterCommand extends CommandBase {
     visionInfo = SmartDashboard.getNumberArray("visionInfo", empty); // TODO: need actual vision info
 
     if (visionInfo[0] != 0) { // figure out if we see a vision target
-        shooter.prepareShooter(visionInfo[2]);
-
         angleError = visionInfo[3];
         distance = visionInfo[2];
 
-        if (angleError > Constants.MAX_TURRET_OFFSET) {
+        shooter.prepareShooter(distance);
+
+        if (Math.abs(angleError) > Constants.MAX_TURRET_OFFSET) {
           robotDrive.allDrive(0, 0.4 * Math.signum(angleError));
         }
         else {

@@ -43,7 +43,7 @@ public class Shooter extends SubsystemBase {
         motor2 = new CANSparkMax(Constants.SHOOTER_TWO_CAN_ID,MotorType.kBrushless);
         motor3 = new CANSparkMax(Constants.SHOOTER_THREE_CAN_ID,MotorType.kBrushless);
 
-        flup = new CANSparkMax(Constants.SHOOTER_FLUP_CAN_ID,MotorType.kBrushless);
+        flup = new CANSparkMax(Constants.SHOOTER_FLUP_CAN_ID, MotorType.kBrushless);
 
         hoodServo = new Servo(Constants.SHOOTER_SERVO_PWM_ID);
 
