@@ -49,7 +49,7 @@ public class Shooter extends SubsystemBase {
 
         turretServo = new Servo(Constants.SHOOTER_TURRET_SERVO_ID);
 
-        shooterEncoder = new CANEncoder(motor1);
+        shooterEncoder = motor1.getEncoder();
 
         pidController = new CANPIDController(motor1);
 
@@ -73,6 +73,10 @@ public class Shooter extends SubsystemBase {
         hoodServo.setAngle(calculateShooterHood(distance));
         // TODO: The idea was that this would set the shooter speed
         // and hoodServo value based on the input distance.
+    }
+
+    public void setShooterRPMRAW(double rpm) {
+        pidController.setReference(rpm, ControlType.kVelocity);
     }
 
     public void shoot () {
@@ -122,5 +126,9 @@ public class Shooter extends SubsystemBase {
 
     public void setTurret (double angle) {
         turretServo.set(angle / Constants.TURRET_ANGLE_COEFFICIENT);
+    }
+
+    public double getShooterVelocity() {
+        return shooterEncoder.getVelocity();
     }
 }

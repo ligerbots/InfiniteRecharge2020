@@ -8,15 +8,17 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import frc.robot.commands.ShooterPIDTuner;
 import frc.robot.subsystems.Carousel;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
- //import edu.wpi.first.wpilibj.XboxController; will need later
+//import edu.wpi.first.wpilibj.XboxController; will need later
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj.GenericHID.Hand;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 @SuppressWarnings("all")
 /**
@@ -43,6 +45,13 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
+
+    SmartDashboard.putNumber("Shooter P", 0.1);
+    SmartDashboard.putNumber("Shooter I", 0.0001);
+    SmartDashboard.putNumber("Shooter D", 0);
+    SmartDashboard.putNumber("Target RPM", 300);
+    SmartDashboard.putData("PID Calibration", new ShooterPIDTuner(shooter));
+
   }
 
   /**
