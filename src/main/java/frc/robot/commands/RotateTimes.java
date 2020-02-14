@@ -7,6 +7,7 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Intake.OutColor;
@@ -44,6 +45,7 @@ public class RotateTimes extends CommandBase {
     intake.run(0.25); // YJ: Placeholder for the intake speed
     newColor = false;
     startingFlag = true;
+    SmartDashboard.putString("SmartDashboard/vision/selected", "shooter");
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -80,6 +82,7 @@ public class RotateTimes extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    SmartDashboard.putString("SmartDashboard/vision/selected", "intake");
     return rotationCount == rotationsToGo;
   }
 }

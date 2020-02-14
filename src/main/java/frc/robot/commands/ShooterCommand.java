@@ -40,6 +40,7 @@ public class ShooterCommand extends CommandBase {
   @Override
   public void initialize() {
     //TODO: remember to set to shooting camera mode!!
+    SmartDashboard.putString("SmartDashboard/vision/selected", "goalfinder");
 
   }
 
@@ -88,6 +89,7 @@ public class ShooterCommand extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    //Maybe change camera to intake once command is done?
     shooter.stopAll();
     carousel.spin(Constants.CAROUSEL_INTAKE_SPEED);
   }
