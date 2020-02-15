@@ -36,6 +36,11 @@ public class ShooterCommand extends CommandBase {
     startShooting = false;
   }
 
+  public void rapidFire() {
+    carousel.spin(0.5);
+    Shooter.shoot();
+}
+
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
@@ -76,7 +81,7 @@ public class ShooterCommand extends CommandBase {
 
 
         if (speedOnTarget && hoodOnTarget && angleOnTarget)
-            shooter.shoot();
+            rapidFire();
     }
 
   }
