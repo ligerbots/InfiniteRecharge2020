@@ -7,7 +7,9 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import frc.robot.commands.CameraSwitching;
 import frc.robot.commands.ShooterPIDTuner;
 import frc.robot.subsystems.Carousel;
 import frc.robot.subsystems.Climber;
@@ -34,6 +36,7 @@ public class RobotContainer {
   private final Throttle throttle = new Throttle();
   private final Turn turn = new Turn();
   XboxController xbox = new XboxController(0);
+  Joystick farm = new Joystick(1);
   private final Intake intake = new Intake();
   private final Carousel carousel = new Carousel();
   private final Shooter shooter = new Shooter();
@@ -81,6 +84,14 @@ public class RobotContainer {
     //xboxA.whenPressed(new ShooterCommand()); //shootercomand
     JoystickButton xboxLine = new JoystickButton(xbox, 8);
     //xboxA.whenPressed(new ClimberCommand()); //shootercomand
+    JoystickButton farmOne = new JoystickButton(farm, 1);
+    farmOne.whenPressed(new CameraSwitching("shooter"));
+    JoystickButton farmTwo = new JoystickButton(farm, 2);
+    farmOne.whenPressed(new CameraSwitching("intake"));
+    JoystickButton farmThree = new JoystickButton(farm, 3);
+    farmOne.whenPressed(new CameraSwitching("goalfinder"));
+    JoystickButton farmFour = new JoystickButton(farm, 4);
+    farmOne.whenPressed(new CameraSwitching("ballfinder"));
   }
 
 
