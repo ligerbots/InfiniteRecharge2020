@@ -9,9 +9,10 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.subsystems.Carousel;
-import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.Winch;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Winch;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
  //import edu.wpi.first.wpilibj.XboxController; will need later
 import java.util.function.DoubleSupplier;
@@ -35,7 +36,7 @@ public class RobotContainer {
   private final Intake intake = new Intake();
   private final Carousel carousel = new Carousel();
   private final Shooter shooter = new Shooter();
-  private final Climber climber = new Climber();
+  private final Winch climber = new Winch();
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
