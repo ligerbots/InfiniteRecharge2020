@@ -6,7 +6,6 @@
 /*----------------------------------------------------------------------------*/
 package frc.robot;
 
-import java.util.HashMap;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -41,7 +40,7 @@ public final class Constants {
     public static final double DISTANCE_PER_PULSE = 0.0001; // TODO: find real number ~ This is the coefficient of encoder ticks to convert to distance
     
     //SPARKMAX for the spinner (Carousel)
-    public static final int SPINNER_CAN_ID = 6; // CAN ID for the spinner for carousel
+    public static final int SPINNER_CAN_ID = 12; // CAN ID for the spinner for carousel
 
     public static final double CAROUSEL_SHOOTER_SPEED = 0.5; // This is just percent output
 
@@ -52,25 +51,26 @@ public final class Constants {
 
     // SPARKMAX for the intake motor (Intake)
 
-    public static final int INTAKE_MOTOR_CAN_ID = 5; //CAN ID for intake motor
+    public static final int INTAKE_MOTOR_CAN_ID = 10; //CAN ID for intake motor
 
     // Intake Color Sensor
 
     public static final int COLOR_SENSOR_VALUE = 1; // value for color sensor
 
     // Shooter SPARK MAXES
-    public static final int SHOOTER_FLUP_CAN_ID = 35; // Carousel to shooter wheel "FLUP"
-    public static final int SHOOTER_ONE_CAN_ID = 32; // Motor 1 on shooter
-    public static final int SHOOTER_TWO_CAN_ID = 33; // Motor 2 on shooter
-    public static final int SHOOTER_THREE_CAN_ID = 34; // Motor 3 on shooter
+    public static final int SHOOTER_FLUP_CAN_ID = 8; // Carousel to shooter wheel "FLUP"
+    public static final int SHOOTER_ONE_CAN_ID = 5; // Motor 1 on shooter
+    public static final int SHOOTER_TWO_CAN_ID = 6; // Motor 2 on shooter
+    public static final int SHOOTER_THREE_CAN_ID = 7; // Motor 3 on shooter
     public static final int SHOOTER_SERVO_PWM_ID = 1; // Servo to controll hood angle 
-    public static final int SHOOTER_TURRET_SERVO_ID = 2; // TODO: Fix this
+    public static final int SHOOTER_TURRET_SERVO_ID = 0; // TODO: Fix this
 
     public static final double TURRET_ANGLE_COEFFICIENT = 180; // TODO: Fix this
 
     public static final double WARM_UP_RPM = 3000; // TODO: find a good valuabl
 
     public static final double MAX_TURRET_OFFSET = 10; // in degrees (may be more)
-
+    public static final int WINCH_MOTOR_ID = 9; // Winch for the climber
+    public static final double WINCH_SPEED = 0.3; // set default value for winch for now; requires further testing
 
 }

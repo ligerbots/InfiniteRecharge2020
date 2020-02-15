@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.commands.*;
 
 
 @SuppressWarnings("all")
@@ -62,6 +63,16 @@ public class Intake extends SubsystemBase {
         return convertColorFromReading(colorMatch.matchClosestColor(reading).color); // This converts no matter what, so it works for specific colors, and doesn't matter for rotations
     }
 
+    public void IntakeBalls(){
+        run(0.25);
+    }
+
+    public void OutputBalls(){
+        run(-0.25);
+    }
+
+   
+
     private OutColor convertColorFromReading (Color colorReading) {
         if (colorReading == redTarget) {
             return OutColor.GREEN;
@@ -79,5 +90,7 @@ public class Intake extends SubsystemBase {
             return OutColor.BAD;
         }
     }
+
+
 
 }

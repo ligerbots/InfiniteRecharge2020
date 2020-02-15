@@ -24,7 +24,9 @@ import frc.robot.Constants;
 @SuppressWarnings("all")
 public class Shooter extends SubsystemBase {
 
-    CANSparkMax motor1, motor2, motor3, flup;
+    CANSparkMax motor1, motor2, motor3;
+
+    static CANSparkMax flup;
 
     CANEncoder shooterEncoder;
 
@@ -75,7 +77,7 @@ public class Shooter extends SubsystemBase {
         // and hoodServo value based on the input distance.
     }
 
-    public void shoot () {
+    public static void shoot () {
         flup.set(0.5); // TODO: figure out what to do with this constant
     }
 
