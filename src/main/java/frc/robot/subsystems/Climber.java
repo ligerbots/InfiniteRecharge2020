@@ -6,11 +6,28 @@
 /*----------------------------------------------------------------------------*/
 package frc.robot.subsystems;
 
+import com.revrobotics.CANEncoder;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 public class Climber extends SubsystemBase {
+
+    CANSparkMax winch, shoulder;
+
+    CANEncoder winchEncoder;
+    // TODO: Need variable for the through bore encoder on the shoulder
+    // TODO: May need a servo for deploying climber
+
+    static final double WINCH_POWER = 0.25;
+
     public Climber() {
-        // TODO: Need to add the winch motor
+        winch = new CANSparkMax(Constants.WINCH_CAN_ID,MotorType.kBrushless);
+        shoulder = new CANSparkMax(Constants.SHOULDER_CAN_ID,MotorType.kBrushless);
+
+        winchEncoder = new CANEncoder(winch);
         // TODO: Need to add ratchet servo
     }
 
@@ -23,7 +40,12 @@ public class Climber extends SubsystemBase {
 
     }
 
-    public void climb(double speed) {
-
+    public void driveWinch() {
+        winch.set(WINCH_POWER);
     }
+
+    public void stopWinch() {
+        winch.set(0);
+    }
+
 }

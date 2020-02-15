@@ -72,5 +72,8 @@ public final class Constants {
 
     public static final double MAX_TURRET_OFFSET = 10; // in degrees (may be more)
 
+    //Climber winch SPARK MAXES
+    public static final int WINCH_CAN_ID = 9; //Motor that runs the climber winch
+    public static final int SHOULDER_CAN_ID = 11; //Motor that moves the intake arm up and down
 
 }
