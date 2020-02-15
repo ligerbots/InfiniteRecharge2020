@@ -12,10 +12,11 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-public class Winch extends SubsystemBase {
+public class Climber extends SubsystemBase {
+    CANSparkMax shoulder;
     CANSparkMax winch;
-    
-    public Winch() {
+    public Climber() {
+        shoulder = new CANSparkMax(Constants.SHOULDER_MOTOR_ID, MotorType.kBrushless);
         winch = new CANSparkMax(Constants.WINCH_MOTOR_ID, MotorType.kBrushless);
         // TODO: Need to add ratchet servo
     }
@@ -29,7 +30,11 @@ public class Winch extends SubsystemBase {
 
     }
 
-    public void climb(double speed) {
-        winch.set(Constants.WINCH_SPEED);
+    public void moveShoulder(final double speed) {
+        shoulder.set(speed);
+    }
+
+    public void wincher(final double speed) {
+        winch.set(speed);
     }
 }
