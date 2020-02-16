@@ -84,10 +84,10 @@ public class RobotContainer {
     }
   }
   private void configureButtonBindings() {
-    JoystickButton xboxA = new JoystickButton(xbox, 1);
-    JoystickButton xboxB = new JoystickButton(xbox, 2);
+    JoystickButton xboxA = new JoystickButton(xbox, Constants.XBOX_A);
+    JoystickButton xboxB = new JoystickButton(xbox, Constants.XBOX_B);
     //xboxA.whenPressed(new ShooterCommand()); //shootercomand
-    JoystickButton xboxLine = new JoystickButton(xbox, 8);
+    JoystickButton xboxLine = new JoystickButton(xbox, Constants.XBOX_START);
     xboxA.whenHeld(new RunWinch(Constants.WINCH_SPEED));
     //xboxA.whenPressed(new ClimberCommand()); //shootercomand
   }
