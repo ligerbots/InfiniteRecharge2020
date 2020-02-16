@@ -12,6 +12,10 @@ import frc.robot.subsystems.Carousel;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.DriveTrain;
+import frc.robot.commands.RunWinch;
+import frc.robot.commands.DriveCommand;
+import frc.robot.commands.RunShoulder;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
  //import edu.wpi.first.wpilibj.XboxController; will need later
 import java.util.function.DoubleSupplier;
@@ -31,12 +35,18 @@ public class RobotContainer {
   //private final DriveTrain robotDrive = new DriveTrain();
   private final Throttle throttle = new Throttle();
   private final Turn turn = new Turn();
+  private final DriveTrain robotDrive = new DriveTrain();
+  public final DriveCommand driveCommand = new DriveCommand(robotDrive, throttle, turn);
+
   XboxController xbox = new XboxController(0);
+
   private final Intake intake = new Intake();
   private final Carousel carousel = new Carousel();
   private final Shooter shooter = new Shooter();
-  private final Climber climber = new Climber();
 
+
+  private final Shoulder shoulder = new Shoulder();
+  public final RunShoulder runShoulder = new RunShoulder(shoulder);
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -66,11 +76,19 @@ public class RobotContainer {
       return xbox.getX(Hand.kRight);
     }
   }
+  public class Shoulder implements DoubleSupplier{
+
+    @Override
+    public double getAsDouble() {
+      return 0;// set shoulder speed 
+    }
+  }
   private void configureButtonBindings() {
     JoystickButton xboxA = new JoystickButton(xbox, 1);
     JoystickButton xboxB = new JoystickButton(xbox, 2);
     //xboxA.whenPressed(new ShooterCommand()); //shootercomand
     JoystickButton xboxLine = new JoystickButton(xbox, 8);
+    xboxA.whenHeld(new RunWinch(Constants.WINCH_SPEED));
     //xboxA.whenPressed(new ClimberCommand()); //shootercomand
   }
 

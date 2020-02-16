@@ -70,7 +70,8 @@ public final class Constants {
     public static final double WARM_UP_RPM = 3000; // TODO: find a good valuabl
 
     public static final double MAX_TURRET_OFFSET = 10; // in degrees (may be more)
-    public static final int WINCH_MOTOR_ID = 9; // Winch for the climber
+    public static final int WINCH_MOTOR_CAN_ID = 9; // Winch for the climber
+    public static final int SHOULDER_MOTOR_CAN_ID = 11;; // shoulder for the climber
     public static final double WINCH_SPEED = 0.3; // set default value for winch for now; requires further testing
 
 }
