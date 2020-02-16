@@ -24,9 +24,9 @@ public final class Constants {
     // Drive Train SPARK MAXes
     public static final int LEADER_LEFT_CAN_ID = 1; //Drive Train Cansparkmaxes :D
 
-    public static final int LEADER_RIGHT_CAN_ID = 2;
+    public static final int LEADER_RIGHT_CAN_ID = 3;
 
-    public static final int FOLLOWER_LEFT_CAN_ID = 3;
+    public static final int FOLLOWER_LEFT_CAN_ID = 2;
 
     public static final int FOLLOWER_RIGHT_CAN_ID = 4;//Sparkmaxes for drivetrain end here
 
