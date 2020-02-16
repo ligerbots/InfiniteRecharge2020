@@ -77,7 +77,7 @@ public class Shooter extends SubsystemBase {
         // and hoodServo value based on the input distance.
     }
 
-    public static void shoot () {
+    public void shoot () {
         flup.set(0.5); // TODO: figure out what to do with this constant
     }
 
