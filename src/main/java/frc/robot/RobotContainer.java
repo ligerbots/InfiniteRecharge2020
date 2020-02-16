@@ -14,6 +14,8 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.commands.RunWinch;
+import frc.robot.commands.TestCarousel;
+import frc.robot.commands.TestIntake;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.RunShoulder;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -47,6 +49,10 @@ public class RobotContainer {
 
   private final Shoulder shoulder = new Shoulder();
   public final RunShoulder runShoulder = new RunShoulder(shoulder);
+
+  public TestCarousel testCarousel = new TestCarousel (carousel);
+  public TestIntake testIntake = new TestIntake(intake);
+
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
