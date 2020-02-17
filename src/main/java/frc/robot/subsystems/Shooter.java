@@ -6,6 +6,7 @@
 /*----------------------------------------------------------------------------*/
 package frc.robot.subsystems;
 
+import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,6 +16,7 @@ import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.Servo;
@@ -47,6 +49,11 @@ public class Shooter extends SubsystemBase {
 
         flup = new CANSparkMax(Constants.SHOOTER_FLUP_CAN_ID, MotorType.kBrushless);
 
+        // Set motors to brake when idle. We don't want the drive train to coast.
+        Arrays.asList(motor1, motor2, motor3, flup)
+                .forEach((CANSparkMax spark) -> spark.setIdleMode(IdleMode.kCoast));
+
+
         hoodServo = new Servo(Constants.SHOOTER_SERVO_PWM_ID);
 
         turretServo = new Servo(Constants.SHOOTER_TURRET_SERVO_ID);
@@ -78,7 +85,11 @@ public class Shooter extends SubsystemBase {
     }
 
     public void shoot () {
-        flup.set(0.5); // TODO: figure out what to do with this constant
+        flup.set(-0.5); // TODO: figure out what to do with this constant
+    }
+
+    public void testSpin () {
+        motor1.set(-0.2);
     }
 
     public double calculateShooterSpeed (final double distance) {

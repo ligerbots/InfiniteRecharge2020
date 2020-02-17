@@ -9,6 +9,7 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ColorMatch;
 import com.revrobotics.ColorSensorV3;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -38,7 +39,8 @@ public class Intake extends SubsystemBase {
 
     public Intake() {
         intakeMotor = new CANSparkMax(Constants.INTAKE_MOTOR_CAN_ID , MotorType.kBrushless);
-
+        intakeMotor.setIdleMode(IdleMode.kBrake);
+        
         //colorSensor = new ColorSensorV3(null);
 
         colorMatch.addColorMatch(blueTarget);
@@ -55,7 +57,7 @@ public class Intake extends SubsystemBase {
     }
 
     public void run(double speed) {
-        intakeMotor.set(speed);
+        intakeMotor.set(-speed);
     }
 
     public OutColor read () {
