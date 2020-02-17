@@ -30,6 +30,7 @@ public class TestFlup extends CommandBase {
   @Override
   public void execute() {
     shooter.shoot();
+    shooter.testSpin();
   }
 
   // Called once the command ends or is interrupted.
