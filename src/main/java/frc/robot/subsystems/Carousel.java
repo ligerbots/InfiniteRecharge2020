@@ -22,7 +22,7 @@ public class Carousel extends SubsystemBase {
 
     public Carousel() {
         grabber = new WPI_TalonSRX(Constants.GRABBER_TALON_ID);
-        spinner = new CANSparkMax(Constants.SPINNER_CAN_ID, MotorType.kBrushless);
+        spinner = new CANSparkMax(Constants.CAROUSEL_CAN_ID, MotorType.kBrushless);
     }
 
     @Override
