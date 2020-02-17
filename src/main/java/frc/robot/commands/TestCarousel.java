@@ -30,6 +30,7 @@ public class TestCarousel extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    SmartDashboard.putNumber("Carousel ticks", carousel.getTicks());
     carousel.spin(SmartDashboard.getNumber("Test Carousel Speed", 0));
   }
 
