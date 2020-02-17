@@ -76,6 +76,10 @@ public class Shooter extends SubsystemBase {
         // This method will be called once per scheduler run every 20ms
     }
 
+    public void setHood (double angle) {
+        hoodServo.setAngle(angle);
+    }
+
     public void prepareShooter(final double distance) {
 
         pidController.setReference(calculateShooterSpeed(distance), ControlType.kVelocity);
@@ -89,7 +93,7 @@ public class Shooter extends SubsystemBase {
     }
 
     public void testSpin () {
-        motor1.set(-0.2);
+        motor1.set(-0.35);
     }
 
     public double calculateShooterSpeed (final double distance) {

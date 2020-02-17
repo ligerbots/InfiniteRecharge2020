@@ -56,7 +56,7 @@ public class CarouselCommand extends CommandBase {
     currentTicks = -carousel.getTicks();
     System.out.println(currentTicks);
     currentCheckpoint = currentTicks / fifthRotationTicks;
-    if (carousel.getCurrent() > 5) {
+    if (carousel.getCurrent() > 6) {
       lastBackTime = System.nanoTime();
       backwards = true;
     }
