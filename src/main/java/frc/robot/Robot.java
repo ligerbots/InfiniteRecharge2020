@@ -97,7 +97,7 @@ public class Robot extends TimedRobot {
     m_robotContainer.carousel.resetEncoder();
     m_robotContainer.driveCommand.schedule();
     m_robotContainer.carouselCommand.schedule();
-    //m_robotContainer.testFlup.schedule();
+    m_robotContainer.testFlup.schedule();
     m_robotContainer.testIntake.schedule();
   }
 
