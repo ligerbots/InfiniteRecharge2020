@@ -23,7 +23,7 @@ public class Intake extends SubsystemBase {
     CANSparkMax intakeMotor;
 
     private ColorSensorV3 colorSensor;
-    private ColorMatch colorMatch;
+    private ColorMatch colorMatch = new ColorMatch();
     // TODO: There was some discussion of a beam break to help monitor balls
     private DigitalInput beamBreak;
 
@@ -39,7 +39,7 @@ public class Intake extends SubsystemBase {
     public Intake() {
         intakeMotor = new CANSparkMax(Constants.INTAKE_MOTOR_CAN_ID , MotorType.kBrushless);
 
-        colorSensor = new ColorSensorV3(null);
+        //colorSensor = new ColorSensorV3(null);
 
         colorMatch.addColorMatch(blueTarget);
         colorMatch.addColorMatch(greenTarget);
