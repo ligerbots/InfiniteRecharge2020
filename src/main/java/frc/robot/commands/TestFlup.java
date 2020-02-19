@@ -7,6 +7,7 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Shooter;
 @SuppressWarnings("all")
@@ -24,14 +25,23 @@ public class TestFlup extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    shooter.setHood(140);
+    SmartDashboard.putNumber("Shooter P", 0.00017);
+    SmartDashboard.putNumber("Shooter I", 0.00000);
+    SmartDashboard.putNumber("Shooter D", 0);
+    SmartDashboard.putNumber("Target Speed", -7000);
+
+    shooter.setHood(70);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    shooter.calibratePID(SmartDashboard.getNumber("Shooter P", 0), SmartDashboard.getNumber("Shooter I", 0.00), SmartDashboard.getNumber("Shooter D", 0));
     shooter.shoot();
-    shooter.testSpin();
+    //shooter.testSpin();
+    System.out.println("Shooting");
+    SmartDashboard.putNumber("Shooter RPM", shooter.getSpeed());
+    System.out.println("Shooter speed: " + shooter.getSpeed());
   }
 
   // Called once the command ends or is interrupted.
@@ -42,6 +52,6 @@ public class TestFlup extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return true;
+    return false;
   }
 }

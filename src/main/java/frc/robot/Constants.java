@@ -32,9 +32,9 @@ public final class Constants {
     public static final int FOLLOWER_RIGHT_CAN_ID = 4;//Sparkmaxes for drivetrain end here
 
     // Drive Train Encoders
-    public static final int[] LEFT_ENCODER_PORTS = new int[]{1, 2};//DriveTrain Encoder
+    public static final int[] LEFT_ENCODER_PORTS = new int[]{0, 1};//DriveTrain Encoder
     
-    public static final int[] RIGHT_ENCODER_PORTS = new int[]{3, 4};//DriveTrain Encoder
+    public static final int[] RIGHT_ENCODER_PORTS = new int[]{2, 3};//DriveTrain Encoder
 
     //DistanceperPulse
     
@@ -61,8 +61,8 @@ public final class Constants {
     public static final int SHOOTER_ONE_CAN_ID = 5; // Motor 1 on shooter
     public static final int SHOOTER_TWO_CAN_ID = 6; // Motor 2 on shooter
     public static final int SHOOTER_THREE_CAN_ID = 7; // Motor 3 on shooter
-    public static final int SHOOTER_SERVO_PWM_ID = 1; // Servo to controll hood angle 
-    public static final int SHOOTER_TURRET_SERVO_ID = 0; // TODO: Fix this
+    public static final int SHOOTER_SERVO_PWM_ID = 0; // Servo to controll hood angle 
+    public static final int SHOOTER_TURRET_SERVO_ID = 1; // TODO: Fix this
 
     public static final double TURRET_ANGLE_COEFFICIENT = 180; // TODO: Fix this
 

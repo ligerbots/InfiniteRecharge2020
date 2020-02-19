@@ -130,7 +130,11 @@ public class DriveTrain extends SubsystemBase {
         robotDrive.arcadeDrive(throttle, -rotate);
     }
 
-    public void slide(double distance) {
+    public int getLeftEncoderTicks () {
+        return leftEncoder.get();
+    }
 
+    public int getRightEncoderTicks () {
+        return rightEncoder.get();
     }
 }
