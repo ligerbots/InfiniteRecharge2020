@@ -6,9 +6,13 @@
 /*----------------------------------------------------------------------------*/
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -16,13 +20,14 @@ public class Carousel extends SubsystemBase {
 
 
 
-    // TODO: Should this be part of the Shooter?
-    WPI_TalonSRX grabber;
-    CANSparkMax spinner;
+    WPI_TalonSRX spinner;
+    Encoder carouselEncoder;
+
 
     public Carousel() {
-        grabber = new WPI_TalonSRX(Constants.GRABBER_TALON_ID);
-        spinner = new CANSparkMax(Constants.SPINNER_CAN_ID, MotorType.kBrushless);
+        spinner = new WPI_TalonSRX(Constants.CAROUSEL_CAN_ID);
+        spinner.setNeutralMode(NeutralMode.Brake);
+        carouselEncoder = new Encoder(5, 6);
     }
 
     @Override
@@ -31,10 +36,23 @@ public class Carousel extends SubsystemBase {
     }
 
     public void spin(double speed) {
-        spinner.set(speed);
+        spinner.set(ControlMode.PercentOutput, speed);
+    }
+
+    public double getCurrent () {
+        return spinner.getStatorCurrent();
     }
 
     public void warmUp() {
         this.spin(Constants.CAROUSEL_SHOOTER_SPEED);
+    }
+
+
+    public int getTicks() {
+        return carouselEncoder.getRaw();
+    }
+
+    public void resetEncoder () {
+        carouselEncoder.reset();
     }
 }

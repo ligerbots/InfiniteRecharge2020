@@ -24,9 +24,9 @@ public final class Constants {
     // Drive Train SPARK MAXes
     public static final int LEADER_LEFT_CAN_ID = 1; //Drive Train Cansparkmaxes :D
 
-    public static final int LEADER_RIGHT_CAN_ID = 2;
+    public static final int LEADER_RIGHT_CAN_ID = 3;
 
-    public static final int FOLLOWER_LEFT_CAN_ID = 3;
+    public static final int FOLLOWER_LEFT_CAN_ID = 2;
 
     public static final int FOLLOWER_RIGHT_CAN_ID = 4;//Sparkmaxes for drivetrain end here
 
@@ -39,12 +39,12 @@ public final class Constants {
 
     public static final double DISTANCE_PER_PULSE = 0.0001; // TODO: find real number ~ This is the coefficient of encoder ticks to convert to distance
     
-    //SPARKMAX for the spinner (Carousel)
-    public static final int SPINNER_CAN_ID = 12; // CAN ID for the spinner for carousel
+    //Talon SRX for the Carousel
+    public static final int CAROUSEL_CAN_ID = 12; // CAN ID for the spinner for carousel
 
-    public static final double CAROUSEL_SHOOTER_SPEED = 0.5; // This is just percent output
+    public static final double CAROUSEL_SHOOTER_SPEED = 0.8; // This is just percent output
 
-    public static final double CAROUSEL_INTAKE_SPEED = 0.3; // This is just percent output
+    public static final double CAROUSEL_INTAKE_SPEED = 0.5; // This is just percent output
 
     // Talon SRX for the grabber (Carousel)
     public static final int GRABBER_TALON_ID = 1; //TALON SRX ID for grabber

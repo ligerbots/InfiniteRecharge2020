@@ -94,6 +94,11 @@ public class Robot extends TimedRobot {
     // this line or comment it out.
     if (m_autonomousCommand != null)
       m_autonomousCommand.cancel();
+    m_robotContainer.carousel.resetEncoder();
+    m_robotContainer.driveCommand.schedule();
+    m_robotContainer.carouselCommand.schedule();
+    m_robotContainer.testFlup.schedule();
+    m_robotContainer.testIntake.schedule();
   }
 
   /**

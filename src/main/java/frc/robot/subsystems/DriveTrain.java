@@ -50,8 +50,6 @@ public class DriveTrain extends SubsystemBase {
         // TODO: Verify which motors need to be inverted
         // Since we're using DifferentialDrive below, we should not need to invert any,
         // but it doesn't hurt to be explicit.
-        leftLeader.setInverted(false);
-        rightLeader.setInverted(false);
 
         robotDrive = new DifferentialDrive(leftMotors, rightMotors);
         robotDrive.setSafetyEnabled(false);
@@ -129,12 +127,7 @@ public class DriveTrain extends SubsystemBase {
     }
 
     public void allDrive(double throttle, double rotate) {
-        // TODO: This will be based on the intake position. We don't have an elevator this year.
-        /*if (Robot.elevator.getPosition() > 40)
-            limitedThrottle = Math.abs(throttle) > 0.5 ? 0.5 * Math.signum(throttle) : throttle;
-        else
-            limitedThrottle = throttle;
-        robotDrive.arcadeDrive(limitedThrottle, -rotate);*/
+        robotDrive.arcadeDrive(throttle, -rotate);
     }
 
     public void slide(double distance) {

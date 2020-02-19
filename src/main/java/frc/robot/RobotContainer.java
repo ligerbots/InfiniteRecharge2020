@@ -14,6 +14,10 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.commands.RunWinch;
+import frc.robot.commands.TestCarousel;
+import frc.robot.commands.TestFlup;
+import frc.robot.commands.TestIntake;
+import frc.robot.commands.CarouselCommand;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.RunShoulder;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -41,12 +45,17 @@ public class RobotContainer {
   XboxController xbox = new XboxController(0);
 
   private final Intake intake = new Intake();
-  private final Carousel carousel = new Carousel();
+  public final Carousel carousel = new Carousel();
   private final Shooter shooter = new Shooter();
 
 
   private final Shoulder shoulder = new Shoulder();
   public final RunShoulder runShoulder = new RunShoulder(shoulder);
+
+  public CarouselCommand carouselCommand = new CarouselCommand (carousel);
+  public TestIntake testIntake = new TestIntake(intake);
+  public TestFlup testFlup = new TestFlup(shooter);
+
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -65,7 +74,7 @@ public class RobotContainer {
 
     @Override
     public double getAsDouble() {
-      return -xbox.getY(Hand.kLeft);
+      return xbox.getY(Hand.kLeft);
     }
   }
 
@@ -88,7 +97,7 @@ public class RobotContainer {
     JoystickButton xboxB = new JoystickButton(xbox, Constants.XBOX_B);
     //xboxA.whenPressed(new ShooterCommand()); //shootercomand
     JoystickButton xboxLine = new JoystickButton(xbox, Constants.XBOX_START);
-    xboxA.whenHeld(new RunWinch(Constants.WINCH_SPEED));
+    xboxA.whileHeld(new RunWinch(Constants.WINCH_SPEED));
     //xboxA.whenPressed(new ClimberCommand()); //shootercomand
   }
 

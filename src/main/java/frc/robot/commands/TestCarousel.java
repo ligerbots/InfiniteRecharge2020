@@ -7,31 +7,31 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Shooter;
-@SuppressWarnings("all")
-public class TestFlup extends CommandBase {
-  /**
-   * Creates a new TestFlup.
-   */
+import frc.robot.subsystems.Carousel;
 
-  Shooter shooter;
-  public TestFlup(Shooter shooter) {
-    this.shooter = shooter;
+public class TestCarousel extends CommandBase {
+  /**
+   * Creates a new TestCarousel.
+   */
+  Carousel carousel;
+  public TestCarousel(Carousel carousel) {
+    this.carousel = carousel;
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    shooter.setHood(140);
+    SmartDashboard.putNumber("Test Carousel Speed", 0);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    shooter.shoot();
-    shooter.testSpin();
+    SmartDashboard.putNumber("Carousel ticks", carousel.getTicks());
+    carousel.spin(SmartDashboard.getNumber("Test Carousel Speed", 0));
   }
 
   // Called once the command ends or is interrupted.
@@ -42,6 +42,6 @@ public class TestFlup extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return true;
+    return false;
   }
 }
