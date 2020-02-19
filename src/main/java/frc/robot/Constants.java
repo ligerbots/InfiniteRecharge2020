@@ -92,4 +92,7 @@ public final class Constants {
     public static final int XBOX_JL = 9;
     public static final int XBOX_JR = 10;
 
+    // climber speed and pitch angle
+    public static final double CLIMB_SPEED = 0.1;
+    public static final double CLIMB_PITCH_ANGLE = 0;
 }

@@ -21,9 +21,8 @@ import frc.robot.commands.CarouselCommand;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.RunShoulder;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
- //import edu.wpi.first.wpilibj.XboxController; will need later
+//import edu.wpi.first.wpilibj.XboxController; will need later
 import java.util.function.DoubleSupplier;
-
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 
 @SuppressWarnings("all")
@@ -36,23 +35,19 @@ import edu.wpi.first.wpilibj.GenericHID.Hand;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  //private final DriveTrain robotDrive = new DriveTrain();
+  // private final DriveTrain robotDrive = new DriveTrain();
   private final Throttle throttle = new Throttle();
   private final Turn turn = new Turn();
   private final DriveTrain robotDrive = new DriveTrain();
   public final DriveCommand driveCommand = new DriveCommand(robotDrive, throttle, turn);
-
-  XboxController xbox = new XboxController(0);
-
-  private final Intake intake = new Intake();
   public final Carousel carousel = new Carousel();
+  public final Climber climber = new Climber(robotDrive);
+  private final Intake intake = new Intake();
   private final Shooter shooter = new Shooter();
-
-
+  XboxController xbox = new XboxController(0);
   private final Shoulder shoulder = new Shoulder();
   public final RunShoulder runShoulder = new RunShoulder(shoulder);
-
-  public CarouselCommand carouselCommand = new CarouselCommand (carousel);
+  public CarouselCommand carouselCommand = new CarouselCommand(carousel);
   public TestIntake testIntake = new TestIntake(intake);
   public TestFlup testFlup = new TestFlup(shooter);
 
@@ -70,7 +65,7 @@ public class RobotContainer {
    * ({@link edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then
    * passing it to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
-  public class Throttle implements DoubleSupplier{
+  public class Throttle implements DoubleSupplier {
 
     @Override
     public double getAsDouble() {
@@ -78,29 +73,30 @@ public class RobotContainer {
     }
   }
 
-  public class Turn implements DoubleSupplier{
+  public class Turn implements DoubleSupplier {
 
     @Override
     public double getAsDouble() {
       return xbox.getX(Hand.kRight);
     }
   }
-  public class Shoulder implements DoubleSupplier{
+
+  public class Shoulder implements DoubleSupplier {
 
     @Override
     public double getAsDouble() {
-      return 0;// set shoulder speed 
+      return 0;// set shoulder speed
     }
   }
+
   private void configureButtonBindings() {
     JoystickButton xboxA = new JoystickButton(xbox, Constants.XBOX_A);
     JoystickButton xboxB = new JoystickButton(xbox, Constants.XBOX_B);
-    //xboxA.whenPressed(new ShooterCommand()); //shootercomand
+    // xboxA.whenPressed(new ShooterCommand()); //shootercomand
     JoystickButton xboxLine = new JoystickButton(xbox, Constants.XBOX_START);
     xboxA.whileHeld(new RunWinch(Constants.WINCH_SPEED));
-    //xboxA.whenPressed(new ClimberCommand()); //shootercomand
+    // xboxA.whenPressed(new ClimberCommand()); //shootercomand
   }
-
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
