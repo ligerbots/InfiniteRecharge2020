@@ -30,7 +30,7 @@ public class CarouselCommand extends CommandBase {
   int currentCheckpoint;
 
   final int fifthRotationTicks = 12561;
-  final double pauseTime = 0.25; // seconds
+  final double pauseTime = 0.5; // seconds
 
   public CarouselCommand(Carousel carousel) {
     this.carousel = carousel;
@@ -52,11 +52,12 @@ public class CarouselCommand extends CommandBase {
   @Override
   public void execute() {
     SmartDashboard.putNumber("Output current", carousel.getCurrent());
+    SmartDashboard.putNumber("Carousel ticks", carousel.getTicks());
     System.out.println("Output current: " + carousel.getCurrent());
     currentTicks = -carousel.getTicks();
     System.out.println(currentTicks);
     currentCheckpoint = currentTicks / fifthRotationTicks;
-    if (carousel.getCurrent() > 6) {
+    if (carousel.getCurrent() > 8) {
       lastBackTime = System.nanoTime();
       backwards = true;
     }
@@ -74,7 +75,7 @@ public class CarouselCommand extends CommandBase {
     }
     else {
       carousel.spin(-0.6);
-      if ((double)(System.nanoTime() - lastBackTime) / 1_000_000_000.0 > 0.3) {
+      if ((double)(System.nanoTime() - lastBackTime) / 1_000_000_000.0 > 0.5) {
         backwards = false;
       }
     }

@@ -7,8 +7,10 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commands.RunWinch;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -92,13 +94,17 @@ public class Robot extends TimedRobot {
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
+    SmartDashboard.putData(m_robotContainer.testFlup);
     if (m_autonomousCommand != null)
       m_autonomousCommand.cancel();
     m_robotContainer.carousel.resetEncoder();
     m_robotContainer.driveCommand.schedule();
     m_robotContainer.carouselCommand.schedule();
-    m_robotContainer.testFlup.schedule();
-    m_robotContainer.testIntake.schedule();
+    //m_robotContainer.testFlup.schedule();
+    //m_robotContainer.testIntake.schedule();
+    //m_robotContainer.runShoulder.schedule();
+    /*RunWinch aaa = new RunWinch(m_robotContainer.climber, m_robotContainer);
+    aaa.schedule();*/
   }
 
   /**

@@ -6,38 +6,39 @@
 /*----------------------------------------------------------------------------*/
 
 package frc.robot.commands;
-import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.Intake;
 
-import frc.robot.subsystems.Climber;
-
-public class RunShoulder extends CommandBase {
-
-  DoubleSupplier climb; // declare class to get climb speed
-  Climber climber; // declare motor class
-
+public class IntakeCommand extends CommandBase {
   /**
-   * Creates a new RunClimber.
-   */
-  public RunShoulder(Climber climber, DoubleSupplier climb) {
-    this.climber = climber;
-    this.climb = climb; // init climber 
+   * Creates a new IntakeCommand.
+  */
+
+  Intake intake;
+  public IntakeCommand(Intake intake) {
+    this.intake = intake;
+    // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    intake.run(0.3);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-      climber.moveShoulder(climb.getAsDouble()); // set speed of soulder motors based on climb speed
+
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    if (interrupted) {
+      intake.run(0);
+    }
   }
 
   // Returns true when the command should end.
