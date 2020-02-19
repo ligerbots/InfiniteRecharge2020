@@ -21,6 +21,8 @@ public class ShooterCommand extends CommandBase {
 
   double[] visionInfo;
   double[] empty = new double[] {0.0,0.0,0.0,0.0,0.0,0.0,0.0}; 
+  double waitTime;
+  double startTime;
 
   Shooter shooter;
   Carousel carousel;
@@ -28,10 +30,11 @@ public class ShooterCommand extends CommandBase {
 
   boolean startShooting;
 
-  public ShooterCommand(Shooter shooter, Carousel carousel, DriveTrain robotDrive) {
+  public ShooterCommand(Shooter shooter, Carousel carousel, DriveTrain robotDrive, double waitTime) {
     this.shooter = shooter;
     this.carousel = carousel;
     this.robotDrive = robotDrive;
+    this.waitTime = waitTime;
 
     startShooting = false;
   }
@@ -44,6 +47,7 @@ public class ShooterCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    startTime = System.nanoTime();
     //TODO: remember to set to shooting camera mode!!
 
   }
@@ -98,8 +102,16 @@ public class ShooterCommand extends CommandBase {
   }
 
   // Returns true when the command should end.
+
+
+
   @Override
   public boolean isFinished() {
-    return false;
+    if (waitTime == 0.0) {
+      return false;
+    }
+    else {
+      return ((System.nanoTime() - startTime) / 1_000_000_000.0 >= waitTime);
+    }
   }
 }

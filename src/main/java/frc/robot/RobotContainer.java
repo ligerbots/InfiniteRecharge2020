@@ -19,6 +19,7 @@ import frc.robot.commands.TestFlup;
 import frc.robot.commands.TestIntake;
 import frc.robot.commands.CarouselCommand;
 import frc.robot.commands.DriveCommand;
+import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.RunShoulder;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
  //import edu.wpi.first.wpilibj.XboxController; will need later
@@ -47,10 +48,11 @@ public class RobotContainer {
   private final Intake intake = new Intake();
   public final Carousel carousel = new Carousel();
   private final Shooter shooter = new Shooter();
+  public final Climber climber = new Climber();
 
 
   private final Shoulder shoulder = new Shoulder();
-  public final RunShoulder runShoulder = new RunShoulder(shoulder);
+  public final RunShoulder runShoulder = new RunShoulder(climber, shoulder);
 
   public CarouselCommand carouselCommand = new CarouselCommand (carousel);
   public TestIntake testIntake = new TestIntake(intake);
@@ -89,17 +91,21 @@ public class RobotContainer {
 
     @Override
     public double getAsDouble() {
-      return 0;// set shoulder speed 
+      return xbox.getTriggerAxis(Hand.kRight) - xbox.getTriggerAxis(Hand.kLeft);// set shoulder speed 
     }
   }
   private void configureButtonBindings() {
     JoystickButton xboxA = new JoystickButton(xbox, Constants.XBOX_A);
     JoystickButton xboxB = new JoystickButton(xbox, Constants.XBOX_B);
-    //xboxA.whenPressed(new ShooterCommand()); //shootercomand
     JoystickButton xboxLine = new JoystickButton(xbox, Constants.XBOX_START);
-    xboxA.whileHeld(new RunWinch(Constants.WINCH_SPEED));
+    JoystickButton bumperRight = new JoystickButton(xbox, Constants.XBOX_RB);
+    bumperRight.whileHeld(new IntakeCommand(intake));
     //xboxA.whenPressed(new ClimberCommand()); //shootercomand
   }
+
+  /*public boolean APressed () {
+    return xboxA.get();
+  }*/
 
 
   /**

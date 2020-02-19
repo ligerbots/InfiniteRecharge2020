@@ -6,22 +6,15 @@
 /*----------------------------------------------------------------------------*/
 
 package frc.robot.commands;
-import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-import frc.robot.subsystems.Climber;
-
-public class RunShoulder extends CommandBase {
-
-  DoubleSupplier climb; // declare class to get climb speed
-  Climber climber; // declare motor class
-
+public class StartMatchCommand extends CommandBase {
   /**
-   * Creates a new RunClimber.
+   * Creates a new StartMatchCommand.
    */
-  public RunShoulder(Climber climber, DoubleSupplier climb) {
-    this.climber = climber;
-    this.climb = climb; // init climber 
+  public StartMatchCommand() {
+    // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
@@ -32,7 +25,6 @@ public class RunShoulder extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-      climber.moveShoulder(climb.getAsDouble()); // set speed of soulder motors based on climb speed
   }
 
   // Called once the command ends or is interrupted.

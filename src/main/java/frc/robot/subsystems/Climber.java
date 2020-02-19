@@ -18,7 +18,7 @@ public class Climber extends SubsystemBase {
     CANSparkMax winch; // declare new motor
     public Climber() {
         shoulder = new CANSparkMax(Constants.SHOULDER_MOTOR_CAN_ID, MotorType.kBrushless); //init motor type and can id
-        shoulder.setIdleMode(IdleMode.kBrake);
+        shoulder.setIdleMode(IdleMode.kCoast);
         winch = new CANSparkMax(Constants.WINCH_MOTOR_CAN_ID, MotorType.kBrushless); //init motor type and can id
         winch.setIdleMode(IdleMode.kBrake);
     }
