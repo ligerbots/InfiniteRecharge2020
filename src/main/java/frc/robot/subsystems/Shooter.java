@@ -20,6 +20,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.Servo;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Constants;
@@ -58,14 +59,16 @@ public class Shooter extends SubsystemBase {
 
         turretServo = new Servo(Constants.SHOOTER_TURRET_SERVO_ID);
 
-        shooterEncoder = new CANEncoder(motor1);
+        shooterEncoder = new CANEncoder(motor2);
+        shooterEncoder.setVelocityConversionFactor(2.666);
 
-        pidController = new CANPIDController(motor1);
+        pidController = new CANPIDController(motor2);
 
         pidController.setFeedbackDevice(shooterEncoder);
 
-        motor2.follow(motor1);  //  We want motor1 to be master and motor2 and 3 follow the speed of motor1
-        motor3.follow(motor1);
+
+        motor1.follow(motor2, true);  //  We want motor1 to be master and motor2 and 3 follow the speed of motor1
+        motor3.follow(motor2);
 
         //TODO: Populate lookup table
         
@@ -78,6 +81,10 @@ public class Shooter extends SubsystemBase {
 
     public void setHood (double angle) {
         hoodServo.setAngle(angle);
+    }
+
+    public double getSpeed () {
+        return shooterEncoder.getVelocity();
     }
 
     public void prepareShooter(final double distance) {
@@ -93,7 +100,8 @@ public class Shooter extends SubsystemBase {
     }
 
     public void testSpin () {
-        motor1.set(-0.35);
+        pidController.setReference(SmartDashboard.getNumber("Target Speed", 7000), ControlType.kVelocity);
+        SmartDashboard.putString("Shooting", "Shooting");
     }
 
     public double calculateShooterSpeed (final double distance) {

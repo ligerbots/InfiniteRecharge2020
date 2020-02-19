@@ -47,14 +47,14 @@ public class RobotContainer {
 
   private final Intake intake = new Intake();
   public final Carousel carousel = new Carousel();
-  private final Shooter shooter = new Shooter();
+  public final Shooter shooter = new Shooter();
   public final Climber climber = new Climber();
 
 
   private final Shoulder shoulder = new Shoulder();
   public final RunShoulder runShoulder = new RunShoulder(climber, shoulder);
 
-  public CarouselCommand carouselCommand = new CarouselCommand (carousel);
+  public TestCarousel carouselCommand = new TestCarousel (carousel);
   public TestIntake testIntake = new TestIntake(intake);
   public TestFlup testFlup = new TestFlup(shooter);
 

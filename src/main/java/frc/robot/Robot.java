@@ -35,6 +35,10 @@ public class Robot extends TimedRobot {
     // and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+
+    // Reset Smart Dashboard for shooter test
+    SmartDashboard.putString("Shooting", "Idle");
+
   }
 
   /**
@@ -94,11 +98,13 @@ public class Robot extends TimedRobot {
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
-    SmartDashboard.putData(m_robotContainer.testFlup);
+    //SmartDashboard.putData(m_robotContainer.testFlup);
     if (m_autonomousCommand != null)
       m_autonomousCommand.cancel();
     m_robotContainer.carousel.resetEncoder();
     m_robotContainer.driveCommand.schedule();
+    m_robotContainer.testFlup.schedule();
+    //m_robotContainer.shooter.testSpin();
     m_robotContainer.carouselCommand.schedule();
     //m_robotContainer.testFlup.schedule();
     //m_robotContainer.testIntake.schedule();
