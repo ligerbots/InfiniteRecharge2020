@@ -26,7 +26,7 @@ public class TestFlup extends CommandBase {
   @Override
   public void initialize() {
     SmartDashboard.putNumber("Shooter P", 0.00017);
-    SmartDashboard.putNumber("Shooter I", 0.00000);
+    SmartDashboard.putNumber("Shooter I", 0.00000013);
     SmartDashboard.putNumber("Shooter D", 0);
     SmartDashboard.putNumber("Target Speed", -7000);
 
@@ -38,7 +38,7 @@ public class TestFlup extends CommandBase {
   public void execute() {
     shooter.calibratePID(SmartDashboard.getNumber("Shooter P", 0), SmartDashboard.getNumber("Shooter I", 0.00), SmartDashboard.getNumber("Shooter D", 0));
     shooter.shoot();
-    //shooter.testSpin();
+    shooter.testSpin();
     System.out.println("Shooting");
     SmartDashboard.putNumber("Shooter RPM", shooter.getSpeed());
     System.out.println("Shooter speed: " + shooter.getSpeed());
