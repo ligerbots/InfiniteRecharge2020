@@ -6,24 +6,24 @@
 /*----------------------------------------------------------------------------*/
 package frc.robot;
 
+//import edu.wpi.first.wpilibj.XboxController; will need later
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.XboxController;
-import frc.robot.subsystems.Carousel;
-import frc.robot.subsystems.Climber;
-import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.Shooter;
-import frc.robot.subsystems.DriveTrain;
-import frc.robot.commands.RunWinch;
-import frc.robot.commands.TestCarousel;
-import frc.robot.commands.TestFlup;
-import frc.robot.commands.TestIntake;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.CarouselCommand;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.RunShoulder;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-//import edu.wpi.first.wpilibj.XboxController; will need later
-import java.util.function.DoubleSupplier;
-import edu.wpi.first.wpilibj.GenericHID.Hand;
+import frc.robot.commands.RunWinch;
+import frc.robot.commands.TestFlup;
+import frc.robot.commands.TestIntake;
+import frc.robot.subsystems.Carousel;
+import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Shooter;
 
 @SuppressWarnings("all")
 /**

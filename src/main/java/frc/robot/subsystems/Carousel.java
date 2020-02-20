@@ -21,8 +21,7 @@ import frc.robot.Constants;
 public class Carousel extends SubsystemBase {
     private final WPI_TalonSRX spinner;
     private final Encoder carouselEncoder;
-    private final I2C.Port i2cPort = I2C.Port.kOnboard;
-    private final ColorSensorV3 ballSensor = new ColorSensorV3(i2cPort);
+    private final ColorSensorV3 ballSensor = new ColorSensorV3(I2C.Port.kMXP);
 
     public Carousel() {
         spinner = new WPI_TalonSRX(Constants.CAROUSEL_CAN_ID);

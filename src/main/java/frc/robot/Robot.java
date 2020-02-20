@@ -21,7 +21,6 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
   private RobotContainer m_robotContainer;
-  
 
   /**
    * This function is run when the robot is first started up and should be used
@@ -61,10 +60,12 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void disabledInit() {
+
   }
 
   @Override
   public void disabledPeriodic() {
+
   }
 
   /**
@@ -73,7 +74,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = null;//m_robotContainer.getAutonomousCommand();
+    m_autonomousCommand = null;// m_robotContainer.getAutonomousCommand();
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null)
       m_autonomousCommand.schedule();
@@ -84,6 +85,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousPeriodic() {
+
   }
 
   @Override
@@ -94,11 +96,11 @@ public class Robot extends TimedRobot {
     // this line or comment it out.
     if (m_autonomousCommand != null)
       m_autonomousCommand.cancel();
-    m_robotContainer.carousel.resetEncoder();
-    m_robotContainer.driveCommand.schedule();
-    m_robotContainer.carouselCommand.schedule();
-    m_robotContainer.testFlup.schedule();
-    m_robotContainer.testIntake.schedule();
+    // m_robotContainer.carousel.resetEncoder();
+    // m_robotContainer.driveCommand.schedule();
+    // m_robotContainer.carouselCommand.schedule();
+    // m_robotContainer.testFlup.schedule();
+    // m_robotContainer.testIntake.schedule();
   }
 
   /**
@@ -106,6 +108,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
+
   }
 
   @Override
@@ -119,5 +122,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void testPeriodic() {
+
   }
 }
