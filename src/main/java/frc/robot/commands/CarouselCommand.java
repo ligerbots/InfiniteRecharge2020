@@ -66,7 +66,7 @@ public class CarouselCommand extends CommandBase {
         lastCheckpoint = currentCheckpoint;
         lastTimeCheck = System.nanoTime();
       }
-      if ((double)(System.nanoTime() - lastTimeCheck) / 1_000_000_000.0 > pauseTime) {
+      if ((double)(System.nanoTime() - lastTimeCheck) / 1_000_000_000.0 > pauseTime && carousel.isBallInFront()) {
         carousel.spin(Constants.CAROUSEL_INTAKE_SPEED);
       }
       else {
