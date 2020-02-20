@@ -60,6 +60,10 @@ public class Carousel extends SubsystemBase {
     }
 
     public boolean isBallInFront () {
-        return colorSensor.getProximity() < 110;
+        return colorSensor.getProximity() > 110;
+    }
+
+    public int getColorSensorProximity() {
+        return colorSensor.getProximity();
     }
 }
