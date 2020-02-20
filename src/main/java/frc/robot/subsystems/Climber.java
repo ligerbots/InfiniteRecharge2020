@@ -9,15 +9,14 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class Climber extends SubsystemBase {
-    CANSparkMax shoulder, winch; // declare new motors
-    DriveTrain robotDrive;
+    private final CANSparkMax shoulder, winch; // declare new motors
 
-    public Climber(DriveTrain robotDrive) {
-        this.robotDrive = robotDrive;
+    public Climber() {
         shoulder = new CANSparkMax(Constants.SHOULDER_MOTOR_CAN_ID, MotorType.kBrushless); // init motor type and can id
         shoulder.setIdleMode(IdleMode.kBrake);
         winch = new CANSparkMax(Constants.WINCH_MOTOR_CAN_ID, MotorType.kBrushless); // init motor type and can id

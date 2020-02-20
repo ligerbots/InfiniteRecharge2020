@@ -41,7 +41,7 @@ public class RobotContainer {
   private final DriveTrain robotDrive = new DriveTrain();
   public final DriveCommand driveCommand = new DriveCommand(robotDrive, throttle, turn);
   public final Carousel carousel = new Carousel();
-  public final Climber climber = new Climber(robotDrive);
+  public final Climber climber = new Climber();
   private final Intake intake = new Intake();
   private final Shooter shooter = new Shooter();
   XboxController xbox = new XboxController(0);
