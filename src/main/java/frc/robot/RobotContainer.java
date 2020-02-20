@@ -14,13 +14,17 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.commands.RunWinch;
+import frc.robot.commands.TemporaryShooterCommand;
 import frc.robot.commands.TestCarousel;
 import frc.robot.commands.TestFlup;
 import frc.robot.commands.TestIntake;
 import frc.robot.commands.CarouselCommand;
 import frc.robot.commands.DriveCommand;
+import frc.robot.commands.EightBallAuto;
 import frc.robot.commands.IntakeCommand;
+import frc.robot.commands.ManualCarousel;
 import frc.robot.commands.RunShoulder;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
  //import edu.wpi.first.wpilibj.XboxController; will need later
 import java.util.function.DoubleSupplier;
@@ -54,7 +58,7 @@ public class RobotContainer {
   private final Shoulder shoulder = new Shoulder();
   public final RunShoulder runShoulder = new RunShoulder(climber, shoulder);
 
-  public TestCarousel carouselCommand = new TestCarousel (carousel);
+  public CarouselCommand carouselCommand = new CarouselCommand (carousel);
   public TestIntake testIntake = new TestIntake(intake);
   public TestFlup testFlup = new TestFlup(shooter);
 
@@ -99,7 +103,11 @@ public class RobotContainer {
     JoystickButton xboxB = new JoystickButton(xbox, Constants.XBOX_B);
     JoystickButton xboxLine = new JoystickButton(xbox, Constants.XBOX_START);
     JoystickButton bumperRight = new JoystickButton(xbox, Constants.XBOX_RB);
-    bumperRight.whileHeld(new IntakeCommand(intake));
+    JoystickButton bumperLeft = new JoystickButton(xbox, Constants.XBOX_LB);
+    bumperRight.whileHeld(new IntakeCommand(intake, 0.3));
+    bumperLeft.whileHeld(new IntakeCommand(intake, -0.3));
+    xboxB.whileHeld(new ManualCarousel(carousel, carouselCommand));
+    xboxA.whenPressed(new TemporaryShooterCommand(shooter, carousel, robotDrive, carouselCommand));
     //xboxA.whenPressed(new ClimberCommand()); //shootercomand
   }
 
@@ -113,4 +121,8 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
+  EightBallAuto auto = new EightBallAuto(robotDrive, shooter, carousel, intake);
+  public Command getAutonomousCommand() {
+     return auto;
+  }
 }

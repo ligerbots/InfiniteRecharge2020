@@ -8,38 +8,37 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Carousel;
 
-public class IntakeCommand extends CommandBase {
+public class ManualCarousel extends CommandBase {
   /**
-   * Creates a new IntakeCommand.
-  */
-
-  Intake intake;
-  double speed;
-  public IntakeCommand(Intake intake, double speed) {
-    this.intake = intake;
-    this.speed = speed;
+   * Creates a new ManualCarousel.
+   */
+  Carousel carousel;
+  CarouselCommand carouselCommand;
+  public ManualCarousel(Carousel carousel, CarouselCommand carouselCommand) {
+    this.carousel = carousel;
+    this.carouselCommand = carouselCommand;
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    intake.run(speed);
+    carouselCommand.cancel();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
+    carousel.spin(0.2);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     if (interrupted) {
-      intake.run(0);
+      carouselCommand.schedule();
     }
   }
 

@@ -81,8 +81,8 @@ public class DriveTrain extends SubsystemBase {
     }
 
     public void tankDriveVolts (double leftVolts, double rightVolts) {
-        leftMotors.setVoltage(leftVolts);
-        rightMotors.setVoltage(-rightVolts);// make sure right is negative becuase sides are opposite
+        leftMotors.setVoltage(-leftVolts);
+        rightMotors.setVoltage(rightVolts);// make sure right is negative becuase sides are opposite
         robotDrive.feed();
       }
     

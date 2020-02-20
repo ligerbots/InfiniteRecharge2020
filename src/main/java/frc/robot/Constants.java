@@ -96,16 +96,16 @@ public final class Constants {
     public static final double DISTANCE_PER_PULSE = 0.00187022937;
 
     //FEEDFORWARD AND FEEDBACK GAINS
-    public static final double ksVolts = 1.11; 
+    public static final double ksVolts = 0.182; 
 
-    public static final double kvVoltSecondsPerMeter = 3.0; 
+    public static final double kvVoltSecondsPerMeter = 2.64; 
 
-    public static final double kaVoltSecondsSquaredPerMeter = 0.368; 
+    public static final double kaVoltSecondsSquaredPerMeter = 0.324; 
 
-    public static final double kPDriveVel = 13.3; 
+    public static final double kPDriveVel = 12.2; 
 
     //DIFFERENTIAL DRIVE KINEMATICS
-    public static final double kTrackwidth = 0.55245; // in meters
+    public static final double kTrackwidth = 0.6604; // in meters
 
     public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(kTrackwidth);
 
