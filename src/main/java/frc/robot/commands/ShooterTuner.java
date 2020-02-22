@@ -7,44 +7,51 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Carousel;
+import frc.robot.subsystems.Shooter;
 
-public class ManualCarousel extends CommandBase {
+public class ShooterTuner extends CommandBase {
   /**
-   * Creates a new ManualCarousel.
+   * Creates a new ShooterTuner.
    */
-  Carousel carousel;
-  CarouselCommand carouselCommand;
-  public ManualCarousel(Carousel carousel, CarouselCommand carouselCommand) {
-    this.carousel = carousel;
-    this.carouselCommand = carouselCommand;
+
+  Shooter shooter;
+  public ShooterTuner(Shooter shooter) {
+    this.shooter = shooter;
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    carouselCommand.cancel();
+    
+
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    carousel.spin(0.35);
+    System.out.println("Shooter Tuner going!");
+    shooter.shoot();
+    shooter.setHood(SmartDashboard.getNumber("Target Hood Angle", 60));
+    shooter.setShooterRPM(SmartDashboard.getNumber("TSR", -1000));
+    shooter.setTurret(SmartDashboard.getNumber("Turret Angle", 75));
+    shooter.setLEDRing(true);
+    SmartDashboard.putString("vision/active_mode/selected", "goalfinder");
+    System.out.println("Distance: " + SmartDashboard.getNumberArray("vision/target_info", new double[]{0,0,0,0,0,0,0})[3]);
+    SmartDashboard.putNumber("Shooter Voltage", shooter.getVoltage());
+    SmartDashboard.putNumber("Distance", SmartDashboard.getNumberArray("vision/target_info", new double[]{0,0,0,0,0,0,0})[3]);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    if (interrupted) {
-      carouselCommand.schedule();
-    }
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return true;
   }
 }

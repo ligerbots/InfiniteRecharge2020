@@ -80,9 +80,21 @@ public class Shooter extends SubsystemBase {
 
     @Override
     public void periodic() {
+        SmartDashboard.putNumber("Shooter RPM", getSpeed());
+    }
+
+    public double getVoltage() {
+        return motor2.getBusVoltage();
     }
 
     public void setHood (double angle) {
+        System.out.println("hood angle SET!!!!");
+        if (angle < 40) {
+            angle = 40;
+        }
+        if (angle > 160) {
+            angle = 160;
+        }
         hoodServo.setAngle(angle);
     }
 
@@ -105,6 +117,11 @@ public class Shooter extends SubsystemBase {
     public void testSpin () {
         pidController.setReference(-4000, ControlType.kVelocity);
         SmartDashboard.putString("Shooting", "Shooting");
+    }
+
+    public void setShooterRPM (double rpm) {
+        System.out.println("Shooter RPM SET!!!!!");
+        pidController.setReference(rpm, ControlType.kVelocity);
     }
 
     public double calculateShooterSpeed (final double distance) {
@@ -151,7 +168,7 @@ public class Shooter extends SubsystemBase {
     }
 
     public void setTurret (double angle) {
-        turretServo.set(angle / Constants.TURRET_ANGLE_COEFFICIENT);
+        turretServo.setAngle(angle);
     }
 
     public void setLEDRing (boolean on) {

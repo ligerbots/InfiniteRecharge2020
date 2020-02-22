@@ -106,6 +106,7 @@ public class DriveTrain extends SubsystemBase {
         navX.reset();
     }
     
+    
     public void resetEncoders () {
         leftEncoder.reset();
         rightEncoder.reset();
@@ -136,5 +137,9 @@ public class DriveTrain extends SubsystemBase {
 
     public int getRightEncoderTicks () {
         return rightEncoder.get();
+    }
+
+    public double turnSpeedCalc(double angleError) {
+        return 0.021 * angleError;
     }
 }

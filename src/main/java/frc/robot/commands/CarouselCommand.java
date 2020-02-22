@@ -36,7 +36,6 @@ public class CarouselCommand extends CommandBase {
   final double pauseTime = 0.04; // seconds
 
   public CarouselCommand(Carousel carousel) {
-    addRequirements(carousel);
     this.carousel = carousel;
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -60,12 +59,15 @@ public class CarouselCommand extends CommandBase {
     SmartDashboard.putNumber("Color Sensor distance reading", carousel.getColorSensorProximity());
     SmartDashboard.putNumber("Output current", carousel.getCurrent());
     SmartDashboard.putNumber("Carousel ticks", carousel.getTicks());
+
     currentTicks = -carousel.getTicks();
     currentCheckpoint = currentTicks / fifthRotationTicks;
+
     if (carousel.getCurrent() > 8) { // First check is to see if the current is spiking
       lastBackTime = System.nanoTime(); // start timer for going backwards
       backwards = true; // now we goin backwards
     }
+
     if (!backwards) { // This is what we do if we aren't going backwards
       if (currentCheckpoint > lastCheckpoint) { // if we have indexed to the next slot...
         lastCheckpoint = currentCheckpoint;

@@ -38,7 +38,9 @@ public class Robot extends TimedRobot {
 
     // Reset Smart Dashboard for shooter test
     SmartDashboard.putString("Shooting", "Idle");
-
+    
+    
+    // SmartDashboard.putData(new TestTurret(m_robotContainer.shooter));
   }
 
   /**
@@ -47,7 +49,9 @@ public class Robot extends TimedRobot {
    * teleoperated and test.
    *
    * <p>
-   * This runs after the mode specific periodic functions, but before LiveWindow
+   * This runs after the]\[
+   * [\]
+   * ] mode specific periodic functions, but before LiveWindow
    * and SmartDashboard integrated updating.
    */
   @Override
@@ -94,6 +98,10 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    SmartDashboard.putNumber("Turret Angle", 75);
+    SmartDashboard.putNumber("Target Hood Angle", 60);
+    SmartDashboard.putNumber("TSR", -5500);
+    System.out.println("teleopInit");
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove

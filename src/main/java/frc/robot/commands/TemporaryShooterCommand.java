@@ -31,7 +31,6 @@ public class TemporaryShooterCommand extends CommandBase {
     this.carousel = carousel;
     this.robotDrive = robotDrive;
     this.carouselCommand = carouselCommand;
-    addRequirements(carousel);
 
     startTicks = carousel.getTicks();
     // Use addRequirements() here to declare subsystem dependencies.
@@ -42,7 +41,7 @@ public class TemporaryShooterCommand extends CommandBase {
   public void initialize() {
     carouselCommand.cancel();
     shooter.calibratePID(0.00017, 0.00000013, 0);
-    //shooter.testSpin();
+    shooter.testSpin();
     shooter.setHood(60);
     startTime = System.nanoTime();
     shooter.setLEDRing(true);
@@ -51,10 +50,10 @@ public class TemporaryShooterCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    /*if ((double)(System.nanoTime() - startTime) / 1_000_000_000.0 > 2.5);
+    if ((double)(System.nanoTime() - startTime) / 1_000_000_000.0 > 2.5);
       shooter.shoot();
     shooter.testSpin();
-    carousel.spin(0.7);*/
+    carousel.spin(0.7);
 
   }
 
