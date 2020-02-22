@@ -12,7 +12,7 @@ import frc.robot.subsystems.Carousel;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
-import jdk.vm.ci.meta.Constant;
+// import jdk.vm.ci.meta.Constant;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.commands.RunWinch;
 import frc.robot.commands.ShooterTuner;
@@ -60,11 +60,13 @@ public class RobotContainer {
 
   private final Shoulder shoulder = new Shoulder();
   public final RunShoulder runShoulder = new RunShoulder(climber, shoulder);
+  public JoystickButton winchRun;
 
   public CarouselCommand carouselCommand = new CarouselCommand (carousel);
   public TestIntake testIntake = new TestIntake(intake);
   public TestFlup testFlup;
 
+  
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -102,6 +104,7 @@ public class RobotContainer {
       return xbox.getTriggerAxis(Hand.kRight) - xbox.getTriggerAxis(Hand.kLeft);// set shoulder speed 
     }
   }
+
   private void configureButtonBindings() {
     JoystickButton xboxA = new JoystickButton(xbox, Constants.XBOX_A);
     JoystickButton xboxB = new JoystickButton(xbox, Constants.XBOX_B);
@@ -110,12 +113,14 @@ public class RobotContainer {
     JoystickButton xboxLine = new JoystickButton(xbox, Constants.XBOX_START);
     JoystickButton bumperRight = new JoystickButton(xbox, Constants.XBOX_RB);
     JoystickButton bumperLeft = new JoystickButton(xbox, Constants.XBOX_LB);
-    bumperRight.whileHeld(new IntakeCommand(intake, 0.3));
-    bumperLeft.whileHeld(new IntakeCommand(intake, -0.3));
+    winchRun = new JoystickButton(xbox, Constants.XBOX_START);
+    bumperRight.whileHeld(new IntakeCommand(intake, climber, 0.4));
+    bumperLeft.whileHeld(new IntakeCommand(intake, climber, -0.4));
     xboxB.whileHeld(new ManualCarousel(carousel, carouselCommand));
     xboxA.whenPressed(new TemporaryShooterCommand(shooter, carousel, robotDrive, carouselCommand));
     xboxX.whenPressed(new ShooterTuner(shooter));
     xboxY.whenPressed(new FaceShootingTarget(robotDrive, 2.0));
+
         //xboxA.whenPressed(new ClimberCommand()); //shootercomand
   }
 

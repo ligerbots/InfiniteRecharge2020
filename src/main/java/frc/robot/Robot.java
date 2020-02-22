@@ -116,9 +116,9 @@ public class Robot extends TimedRobot {
     m_robotContainer.carouselCommand.schedule();
     //m_robotContainer.testFlup.schedule();
     //m_robotContainer.testIntake.schedule();
-    //m_robotContainer.runShoulder.schedule();
-    /*RunWinch aaa = new RunWinch(m_robotContainer.climber, m_robotContainer);
-    aaa.schedule();*/
+    m_robotContainer.runShoulder.schedule();
+    RunWinch aaa = new RunWinch(m_robotContainer.climber, m_robotContainer);
+    aaa.schedule();
   }
 
   /**
