@@ -12,8 +12,10 @@ import frc.robot.subsystems.Carousel;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
+import jdk.vm.ci.meta.Constant;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.commands.RunWinch;
+import frc.robot.commands.ShooterTuner;
 import frc.robot.commands.TemporaryShooterCommand;
 import frc.robot.commands.TestCarousel;
 import frc.robot.commands.TestFlup;
@@ -21,6 +23,7 @@ import frc.robot.commands.TestIntake;
 import frc.robot.commands.CarouselCommand;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.EightBallAuto;
+import frc.robot.commands.FaceShootingTarget;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.ManualCarousel;
 import frc.robot.commands.RunShoulder;
@@ -60,12 +63,13 @@ public class RobotContainer {
 
   public CarouselCommand carouselCommand = new CarouselCommand (carousel);
   public TestIntake testIntake = new TestIntake(intake);
-  public TestFlup testFlup = new TestFlup(shooter);
+  public TestFlup testFlup;
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
+    testFlup = new TestFlup(shooter);
     // Configure the button bindings
     configureButtonBindings();
   }
@@ -101,6 +105,8 @@ public class RobotContainer {
   private void configureButtonBindings() {
     JoystickButton xboxA = new JoystickButton(xbox, Constants.XBOX_A);
     JoystickButton xboxB = new JoystickButton(xbox, Constants.XBOX_B);
+    JoystickButton xboxX = new JoystickButton(xbox, Constants.XBOX_X);
+    JoystickButton xboxY = new JoystickButton(xbox, Constants.XBOX_Y);
     JoystickButton xboxLine = new JoystickButton(xbox, Constants.XBOX_START);
     JoystickButton bumperRight = new JoystickButton(xbox, Constants.XBOX_RB);
     JoystickButton bumperLeft = new JoystickButton(xbox, Constants.XBOX_LB);
@@ -108,7 +114,9 @@ public class RobotContainer {
     bumperLeft.whileHeld(new IntakeCommand(intake, -0.3));
     xboxB.whileHeld(new ManualCarousel(carousel, carouselCommand));
     xboxA.whenPressed(new TemporaryShooterCommand(shooter, carousel, robotDrive, carouselCommand));
-    //xboxA.whenPressed(new ClimberCommand()); //shootercomand
+    xboxX.whenPressed(new ShooterTuner(shooter));
+    xboxY.whenPressed(new FaceShootingTarget(robotDrive, 2.0));
+        //xboxA.whenPressed(new ClimberCommand()); //shootercomand
   }
 
   /*public boolean APressed () {

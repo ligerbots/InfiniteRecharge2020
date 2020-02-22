@@ -7,44 +7,43 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Carousel;
+import frc.robot.subsystems.DriveTrain;
 
-public class ManualCarousel extends CommandBase {
+public class FaceShootingTarget extends CommandBase {
   /**
-   * Creates a new ManualCarousel.
+   * Creates a new FaceShootingTarget.
    */
-  Carousel carousel;
-  CarouselCommand carouselCommand;
-  public ManualCarousel(Carousel carousel, CarouselCommand carouselCommand) {
-    this.carousel = carousel;
-    this.carouselCommand = carouselCommand;
+  double angleOffset;
+  double acceptableError;
+  DriveTrain robotDrive;
+  public FaceShootingTarget(DriveTrain robotDrive, double acceptableError) {
+    this.robotDrive = robotDrive;
+    this.acceptableError = acceptableError;
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    carouselCommand.cancel();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    carousel.spin(0.35);
+    angleOffset = SmartDashboard.getNumberArray("vision/target_info", new double[]{0,0,0,0,0,0,0})[4];
+    robotDrive.allDrive(0, robotDrive.turnSpeedCalc(angleOffset));
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    if (interrupted) {
-      carouselCommand.schedule();
-    }
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return Math.abs(angleOffset) < acceptableError;
   }
 }
