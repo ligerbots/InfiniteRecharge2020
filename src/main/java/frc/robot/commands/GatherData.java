@@ -7,44 +7,68 @@
 
 package frc.robot.commands;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.DriveTrain;
 
-public class FaceShootingTarget extends CommandBase {
+public class GatherData extends CommandBase {
   /**
-   * Creates a new FaceShootingTarget.
+   * Creates a new GatherData.
    */
-  double angleOffset;
-  double acceptableError;
-  DriveTrain robotDrive;
-  public FaceShootingTarget(DriveTrain robotDrive, double acceptableError) {
-    this.robotDrive = robotDrive;
-    this.acceptableError = acceptableError;
+  File dataFile;
+  FileWriter fileWriter;
+
+  public GatherData() {
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    SmartDashboard.putString("vision/active_mode/selected", "goalfinder");
+
+    
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    angleOffset = SmartDashboard.getNumberArray("vision/target_info", new double[]{0,0,0,0,0,0,0})[4];
-    robotDrive.allDrive(0, robotDrive.turnSpeedCalc(angleOffset));
+    try {
+      dataFile = new File("/home/lvuser/ShooterData.csv");
+      if (dataFile.createNewFile()) {
+        System.out.println("Created the shooter data file");
+      }
+      else {
+        System.out.println("Found the shooter data file");
+      }
+      fileWriter = new FileWriter(dataFile, true);
+      fileWriter.write(new Double(SmartDashboard.getNumber("Distance", 0)).toString() + ", " + 
+        new Double(SmartDashboard.getNumber("TSR", 0)).toString() + ", " +
+        new Double(SmartDashboard.getNumber("Target Hood Angle", 0)).toString() + 
+        System.getProperty("line.separator"));
+    } catch(IOException e) {
+      System.out.println("Error with finding the shooter file");
+      e.printStackTrace();
+    }
+    
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    try {
+      fileWriter.close();
+    } catch (IOException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Math.abs(angleOffset) < acceptableError;
+    return true;
   }
 }

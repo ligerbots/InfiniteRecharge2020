@@ -35,22 +35,22 @@ public class ShootFromNinetyInches extends CommandBase {
     carouselCommand.cancel();
     shooter.setHood(105);
     shooter.setShooterRPM(-4600);
-    carousel.spin(0.5);
+    shooter.shoot();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     if (shooter.getSpeed() < -4570) {
-      shooter.shoot();
+      carousel.spin(0.5);
     }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    shooter.setHood(160);
-    carouselCommand.schedule();
+    shooter.stopAll();
+    //carouselCommand.schedule();
   }
 
   // Returns true when the command should end.

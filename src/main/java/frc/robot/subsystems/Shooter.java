@@ -111,7 +111,8 @@ public class Shooter extends SubsystemBase {
     }
 
     public void shoot () {
-        flup.set(-0.5); // TODO: figure out what to do with this constant
+        System.out.println("Flup current: " + flup.getOutputCurrent());
+        flup.set(-0.5);
     }
 
     public void testSpin () {
@@ -151,14 +152,15 @@ public class Shooter extends SubsystemBase {
         return hoodServo.getAngle() > targetAngle - 0.5 && hoodServo.getAngle() < targetAngle + 0.5;
     }
 
-    public void calibratePID (final double p, final double i, final double d) {
+    public void calibratePID (final double p, final double i, final double d, final double f) {
         pidController.setP(p);
         pidController.setI(i);
         pidController.setD(d);
+        pidController.setFF(f);
     }
 
     public void stopAll () {
-        pidController.setReference(0, ControlType.kVelocity);
+        pidController.setReference(0, ControlType.kVoltage);
         flup.set(0);
         hoodServo.setAngle(160);
     }

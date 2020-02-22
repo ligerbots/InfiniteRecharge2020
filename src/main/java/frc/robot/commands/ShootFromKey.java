@@ -32,22 +32,23 @@ public class ShootFromKey extends CommandBase {
   public void initialize() {
     startTicks = carousel.getTicks();
     carouselCommand.cancel();
-    shooter.setHood(160);
+    shooter.setHood(155);
     shooter.setShooterRPM(-4000);
-    carousel.spin(0.5);
+    shooter.shoot();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (shooter.getSpeed() < -3970) {
-      shooter.shoot();
+    if (shooter.getSpeed() < -3950) {
+      carousel.spin(0.5);
     }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    shooter.stopAll();
     carouselCommand.schedule();
   }
 

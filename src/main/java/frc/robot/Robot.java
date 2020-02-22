@@ -36,6 +36,9 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
 
+    m_robotContainer.shooter.calibratePID(0.00019, 0.00000014, 0, 1.0/6000.0);
+
+
     // Reset Smart Dashboard for shooter test
     SmartDashboard.putString("Shooting", "Idle");
     
@@ -116,7 +119,7 @@ public class Robot extends TimedRobot {
     m_robotContainer.carouselCommand.schedule();
     //m_robotContainer.testFlup.schedule();
     //m_robotContainer.testIntake.schedule();
-    m_robotContainer.runShoulder.schedule();
+    //m_robotContainer.runShoulder.schedule();
     RunWinch aaa = new RunWinch(m_robotContainer.climber, m_robotContainer);
     aaa.schedule();
   }

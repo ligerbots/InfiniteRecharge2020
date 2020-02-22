@@ -25,23 +25,19 @@ public class ShooterTuner extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    
-
+    shooter.setLEDRing(true);
+    SmartDashboard.putString("vision/active_mode/selected", "goalfinder");
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    SmartDashboard.putNumber("Distance", SmartDashboard.getNumberArray("vision/target_info", new double[]{0,0,0,0,0,0,0})[3]);
     System.out.println("Shooter Tuner going!");
     shooter.shoot();
     shooter.setHood(SmartDashboard.getNumber("Target Hood Angle", 60));
     shooter.setShooterRPM(SmartDashboard.getNumber("TSR", -1000));
     shooter.setTurret(SmartDashboard.getNumber("Turret Angle", 75));
-    shooter.setLEDRing(true);
-    SmartDashboard.putString("vision/active_mode/selected", "goalfinder");
-    System.out.println("Distance: " + SmartDashboard.getNumberArray("vision/target_info", new double[]{0,0,0,0,0,0,0})[3]);
-    SmartDashboard.putNumber("Shooter Voltage", shooter.getVoltage());
-    SmartDashboard.putNumber("Distance", SmartDashboard.getNumberArray("vision/target_info", new double[]{0,0,0,0,0,0,0})[3]);
   }
 
   // Called once the command ends or is interrupted.
