@@ -12,6 +12,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
+import java.util.Map.Entry;
+
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
@@ -37,7 +40,7 @@ public class Shooter extends SubsystemBase {
 
     Servo hoodServo, turretServo;
 
-    private HashMap<Double,Double> distanceLookUp = new HashMap<Double,Double>() {}; //set up lookup table for ranges
+    private TreeMap<Double, Double[]> distanceLookUp = new TreeMap<Double,Double[]>() {}; //set up lookup table for ranges
 
     CANPIDController pidController;
 
@@ -75,6 +78,15 @@ public class Shooter extends SubsystemBase {
         spike = new Relay(0);
 
         //TODO: Populate lookup table
+
+        distanceLookUp.put(new Double(112.6), new Double[] {new Double(-5500), new Double(90)});
+        distanceLookUp.put(new Double(137.1), new Double[] {new Double(-5500), new Double(80)});
+        distanceLookUp.put(new Double(168.9), new Double[] {new Double(-6000), new Double(70)});
+        distanceLookUp.put(new Double(227.0), new Double[] {new Double(-7000), new Double(65)});
+        distanceLookUp.put(new Double(318.1), new Double[] {new Double(-8000), new Double(60)});
+        distanceLookUp.put(new Double(253.4), new Double[] {new Double(-7500), new Double(60)});
+        distanceLookUp.put(new Double(235.2), new Double[] {new Double(-7500), new Double(55)});
+
         
     }
 
@@ -127,14 +139,38 @@ public class Shooter extends SubsystemBase {
 
     public double calculateShooterSpeed (final double distance) {
         // TODO: Some logic 
-        return 0;
+        Entry<Double, Double[]> floorEntry = distanceLookUp.floorEntry(distance);
+        Entry<Double, Double[]> ceilingEntry = distanceLookUp.higherEntry(distance);
+
+        if (floorEntry != null && ceilingEntry != null) {
+            double result = (ceilingEntry.getValue()[0] - floorEntry.getValue()[0]) / 
+                                (ceilingEntry.getKey() - floorEntry.getKey())
+                              * (ceilingEntry.getKey() - distance) / 
+                                (ceilingEntry.getKey() - floorEntry.getKey()) + floorEntry.getValue()[0];
+            System.out.println("Interpolated Shooter Speed: " + result);
+            return result;
+        }
+        else {
+            return -1000;
+        }
     }
 
     public double calculateShooterHood (final double distance) {
-        // TODO: Some logic (should return degrees)
-        final float maxShootingDistance = 40; // set placeholder for max shooting distance (in feet)(YJ)
-        return 0.0; // (YJ) TODO: determine how to integrate angle slope equation into calculations
-        
+        // TODO: Some logic 
+        Entry<Double, Double[]> floorEntry = distanceLookUp.floorEntry(distance);
+        Entry<Double, Double[]> ceilingEntry = distanceLookUp.higherEntry(distance);
+
+        if (floorEntry != null && ceilingEntry != null) {
+            double result = (ceilingEntry.getValue()[1] - floorEntry.getValue()[1]) / (ceilingEntry.getKey() - floorEntry.getKey()) * (ceilingEntry.getKey() - distance) / (ceilingEntry.getKey() - floorEntry.getKey())  + floorEntry.getValue()[1];
+            System.out.println("Interpolated Hood Angle: " + result);
+            System.out.println("Distance Floor " + floorEntry.getKey());
+            System.out.println("Distance Ceiling " + ceilingEntry.getKey());
+            System.out.println("Current Distance " + distance);
+            return result;
+        }
+        else {
+            return 60;
+        }
     }
 
     public void warmUp () {
@@ -144,7 +180,7 @@ public class Shooter extends SubsystemBase {
     public boolean speedOnTarget (final double targetVelocity, final double percentAllowedError) {
         final double max = targetVelocity * (1.0 + (percentAllowedError / 100.0));
         final double min = targetVelocity * (1.0 - (percentAllowedError / 100.0));
-        return shooterEncoder.getVelocity() > min && shooterEncoder.getVelocity() <  max; 
+        return shooterEncoder.getVelocity() > max && shooterEncoder.getVelocity() < min;  //this is wack cause it's negative
     }
 
     public boolean hoodOnTarget (final double targetAngle) {

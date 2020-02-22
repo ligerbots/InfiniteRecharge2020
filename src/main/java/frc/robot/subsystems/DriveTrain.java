@@ -127,8 +127,14 @@ public class DriveTrain extends SubsystemBase {
         // This method will be called once per scheduler run
     }
 
-    public void allDrive(double throttle, double rotate) {
-        robotDrive.arcadeDrive(throttle, -rotate);
+    public void allDrive(double throttle, double rotate, boolean squaredInputs) {
+        if (squaredInputs) {
+            if (Math.abs(throttle) < 0.1)
+                throttle = 0;
+            if (Math.abs(rotate) < 0.1) 
+                rotate = 0;
+        }
+        robotDrive.arcadeDrive(throttle, -rotate, squaredInputs);
     }
 
     public int getLeftEncoderTicks () {
