@@ -14,11 +14,11 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class Climber extends SubsystemBase {
-    CANSparkMax shoulder; // declare new motor
+    public final CANSparkMax shoulder; // declare new motor
     CANSparkMax winch; // declare new motor
     public Climber() {
         shoulder = new CANSparkMax(Constants.SHOULDER_MOTOR_CAN_ID, MotorType.kBrushless); //init motor type and can id
-        shoulder.setIdleMode(IdleMode.kCoast);
+        shoulder.setIdleMode(IdleMode.kBrake);
         winch = new CANSparkMax(Constants.WINCH_MOTOR_CAN_ID, MotorType.kBrushless); //init motor type and can id
         winch.setIdleMode(IdleMode.kBrake);
     }
