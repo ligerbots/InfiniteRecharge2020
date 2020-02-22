@@ -15,11 +15,13 @@ import frc.robot.subsystems.Shooter;
 // import jdk.vm.ci.meta.Constant;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.commands.RunWinch;
+import frc.robot.commands.ShootFromKey;
 import frc.robot.commands.ShooterTuner;
 import frc.robot.commands.TemporaryShooterCommand;
 import frc.robot.commands.TestCarousel;
 import frc.robot.commands.TestFlup;
 import frc.robot.commands.TestIntake;
+import frc.robot.commands.TurnAndShoot;
 import frc.robot.commands.CarouselCommand;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.EightBallAuto;
@@ -117,9 +119,9 @@ public class RobotContainer {
     bumperRight.whileHeld(new IntakeCommand(intake, climber, 0.4));
     bumperLeft.whileHeld(new IntakeCommand(intake, climber, -0.4));
     xboxB.whileHeld(new ManualCarousel(carousel, carouselCommand));
-    xboxA.whenPressed(new TemporaryShooterCommand(shooter, carousel, robotDrive, carouselCommand));
+    xboxA.whenPressed(new ShootFromKey(shooter, carousel, carouselCommand));
     xboxX.whenPressed(new ShooterTuner(shooter));
-    xboxY.whenPressed(new FaceShootingTarget(robotDrive, 2.0));
+    xboxY.whenPressed(new TurnAndShoot(robotDrive, shooter, carousel, carouselCommand));
 
         //xboxA.whenPressed(new ClimberCommand()); //shootercomand
   }
