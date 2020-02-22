@@ -40,7 +40,6 @@ public class TemporaryShooterCommand extends CommandBase {
   @Override
   public void initialize() {
     carouselCommand.cancel();
-    shooter.calibratePID(0.00017, 0.00000013, 0);
     shooter.testSpin();
     shooter.setHood(60);
     startTime = System.nanoTime();

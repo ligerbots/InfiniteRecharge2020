@@ -17,6 +17,7 @@ import frc.robot.subsystems.DriveTrain;
 import frc.robot.commands.RunWinch;
 import frc.robot.commands.ShootFromKey;
 import frc.robot.commands.ShooterTuner;
+import frc.robot.commands.StopAllShooting;
 import frc.robot.commands.TemporaryShooterCommand;
 import frc.robot.commands.TestCarousel;
 import frc.robot.commands.TestFlup;
@@ -26,8 +27,10 @@ import frc.robot.commands.CarouselCommand;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.EightBallAuto;
 import frc.robot.commands.FaceShootingTarget;
+import frc.robot.commands.GatherData;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.ManualCarousel;
+import frc.robot.commands.ResetCarousel;
 import frc.robot.commands.RunShoulder;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -119,10 +122,11 @@ public class RobotContainer {
     bumperRight.whileHeld(new IntakeCommand(intake, climber, 0.4));
     bumperLeft.whileHeld(new IntakeCommand(intake, climber, -0.4));
     xboxB.whileHeld(new ManualCarousel(carousel, carouselCommand));
-    xboxA.whenPressed(new ShootFromKey(shooter, carousel, carouselCommand));
-    xboxX.whenPressed(new ShooterTuner(shooter));
+    xboxA.whenPressed(new ShootFromKey(shooter, carousel, carouselCommand).andThen(new ResetCarousel(carousel, carouselCommand)));
+    xboxX.whenPressed(new FaceShootingTarget(robotDrive, 3).andThen(new ShooterTuner(shooter)));
     xboxY.whenPressed(new TurnAndShoot(robotDrive, shooter, carousel, carouselCommand));
-
+    //xboxY.whenPressed(new StopAllShooting(shooter));
+    //xboxA.whenPressed(new GatherData());
         //xboxA.whenPressed(new ClimberCommand()); //shootercomand
   }
 
@@ -136,7 +140,8 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
-  EightBallAuto auto = new EightBallAuto(robotDrive, shooter, carousel, intake);
+  //EightBallAuto auto = new EightBallAuto(robotDrive, shooter, carousel, intake);
+  TurnAndShoot auto = new TurnAndShoot(robotDrive, shooter, carousel, carouselCommand);
   public Command getAutonomousCommand() {
      return auto;
   }

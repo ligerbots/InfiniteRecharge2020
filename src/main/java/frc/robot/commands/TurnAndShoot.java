@@ -22,6 +22,6 @@ public class TurnAndShoot extends SequentialCommandGroup {
   public TurnAndShoot(DriveTrain robotDrive, Shooter shooter, Carousel carousel, CarouselCommand carouselCommand) {
     // Add your commands in the super() call, e.g.
     // super(new FooCommand(), new BarCommand());
-    super(new FaceShootingTarget(robotDrive, 3), new ShootFromNinetyInches(shooter, carousel, carouselCommand));
+    super(new FaceShootingTarget(robotDrive, 3), new ShootFromNinetyInches(shooter, carousel, carouselCommand), new ResetCarousel(carousel, carouselCommand));
   }
 }

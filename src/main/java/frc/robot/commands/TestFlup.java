@@ -36,7 +36,6 @@ public class TestFlup extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    shooter.calibratePID(SmartDashboard.getNumber("Shooter P", 0), SmartDashboard.getNumber("Shooter I", 0.00), SmartDashboard.getNumber("Shooter D", 0));
     shooter.shoot();
     shooter.testSpin();
     System.out.println("Shooting");

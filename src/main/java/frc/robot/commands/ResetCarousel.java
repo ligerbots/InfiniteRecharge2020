@@ -7,44 +7,55 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.Carousel;
 
-public class FaceShootingTarget extends CommandBase {
+public class ResetCarousel extends CommandBase {
   /**
-   * Creates a new FaceShootingTarget.
+   * Creates a new ResetCarousel.
    */
-  double angleOffset;
-  double acceptableError;
-  DriveTrain robotDrive;
-  public FaceShootingTarget(DriveTrain robotDrive, double acceptableError) {
-    this.robotDrive = robotDrive;
-    this.acceptableError = acceptableError;
+  int currentCheckpoint;
+  int startCheckpoint;
+  int currentTicks;
+
+  Carousel carousel;
+  final int fifthRotationTicks = 12561;
+
+  CarouselCommand carouselCommand;
+
+
+  public ResetCarousel(Carousel carousel, CarouselCommand carouselCommand) {
+    this.carousel = carousel;
+    this.carouselCommand = carouselCommand;
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    SmartDashboard.putString("vision/active_mode/selected", "goalfinder");
+    startCheckpoint = -carousel.getTicks() / fifthRotationTicks;
+    carousel.spin(0.5);
+    carouselCommand.cancel();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    angleOffset = SmartDashboard.getNumberArray("vision/target_info", new double[]{0,0,0,0,0,0,0})[4];
-    robotDrive.allDrive(0, robotDrive.turnSpeedCalc(angleOffset));
+
+    currentTicks = -carousel.getTicks();
+    currentCheckpoint = currentTicks / fifthRotationTicks;
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    carousel.spin(0);
+    carouselCommand.schedule();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Math.abs(angleOffset) < acceptableError;
+    return currentCheckpoint > startCheckpoint;
   }
 }
