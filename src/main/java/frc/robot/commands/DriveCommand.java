@@ -39,7 +39,7 @@ public class DriveCommand extends CommandBase {
   public void execute() {
     SmartDashboard.putNumber("left encoder", driveTrain.getLeftEncoderTicks());
     SmartDashboard.putNumber("right encoder", driveTrain.getRightEncoderTicks());
-    driveTrain.allDrive(throttle.getAsDouble(), turn.getAsDouble());
+    driveTrain.allDrive(throttle.getAsDouble(), turn.getAsDouble(), false);
   }
 
   // Called once the command ends or is interrupted.

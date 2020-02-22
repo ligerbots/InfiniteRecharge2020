@@ -34,7 +34,7 @@ public class FaceShootingTarget extends CommandBase {
   @Override
   public void execute() {
     angleOffset = SmartDashboard.getNumberArray("vision/target_info", new double[]{0,0,0,0,0,0,0})[4];
-    robotDrive.allDrive(0, robotDrive.turnSpeedCalc(angleOffset));
+    robotDrive.allDrive(0, robotDrive.turnSpeedCalc(angleOffset), false);
   }
 
   // Called once the command ends or is interrupted.

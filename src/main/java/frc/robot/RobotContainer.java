@@ -16,6 +16,7 @@ import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.commands.RunWinch;
 import frc.robot.commands.ShootFromKey;
+import frc.robot.commands.ShooterCommand;
 import frc.robot.commands.ShooterTuner;
 import frc.robot.commands.StopAllShooting;
 import frc.robot.commands.TemporaryShooterCommand;
@@ -123,7 +124,7 @@ public class RobotContainer {
     bumperLeft.whileHeld(new IntakeCommand(intake, climber, -0.4));
     xboxB.whileHeld(new ManualCarousel(carousel, carouselCommand));
     xboxA.whenPressed(new ShootFromKey(shooter, carousel, carouselCommand).andThen(new ResetCarousel(carousel, carouselCommand)));
-    xboxX.whenPressed(new FaceShootingTarget(robotDrive, 3).andThen(new ShooterTuner(shooter)));
+    xboxX.whenPressed(new ShooterCommand(shooter, carousel, robotDrive, 5, carouselCommand).andThen(new ResetCarousel(carousel, carouselCommand)));
     xboxY.whenPressed(new TurnAndShoot(robotDrive, shooter, carousel, carouselCommand));
     //xboxY.whenPressed(new StopAllShooting(shooter));
     //xboxA.whenPressed(new GatherData());
