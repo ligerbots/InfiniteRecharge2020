@@ -25,6 +25,7 @@ public class ShooterTuner extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    shooter.calibratePID(0.00013, 0.00000001, 0, 6.776 * 0.00001);
     shooter.setLEDRing(true);
     SmartDashboard.putString("vision/active_mode/selected", "goalfinder");
   }
