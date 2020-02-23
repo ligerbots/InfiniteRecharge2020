@@ -59,6 +59,22 @@ public class ShooterCommand extends CommandBase {
 
     // stor current carouselTick value
     initialCarouselTicks = carousel.getTicks();
+    visionInfo = SmartDashboard.getNumberArray("vision/target_info", empty); // TODO: need actual vision info
+
+    if (visionInfo[0] != 0) { // figure out if we see a vision target
+        angleError = visionInfo[4];
+        distance = visionInfo[3];
+
+        shooter.prepareShooter(distance);
+
+        if (Math.abs(angleError) > 2) {
+          robotDrive.allDrive(0, robotDrive.turnSpeedCalc(angleError), false);
+        }
+        else {
+          robotDrive.allDrive(0, 0, false);
+          //shooter.setTurret(angleError *  Math.signum(angleError));
+        }
+      }
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -71,29 +87,13 @@ public class ShooterCommand extends CommandBase {
 
   @Override
   public void execute() {
-    visionInfo = SmartDashboard.getNumberArray("vision/target_info", empty); // TODO: need actual vision info
 
-    if (visionInfo[0] != 0) { // figure out if we see a vision target
-        angleError = visionInfo[4];
-        distance = visionInfo[3];
+    speedOnTarget = shooter.speedOnTarget(shooter.calculateShooterSpeed(distance), 5); //TODO: May need to adjust acceptable error
+    hoodOnTarget = (double)(System.nanoTime() - startTime) / 1_000_000_000 > 0.75;//shooter.hoodOnTarget(shooter.calculateShooterHood(distance));
+    angleOnTarget = Math.abs(shooter.getTurretAngle() + angleError) <= 1.5; // They should be opposites so I added them
 
-        shooter.prepareShooter(distance);
-
-        if (Math.abs(angleError) > 5) {
-          robotDrive.allDrive(0, robotDrive.turnSpeedCalc(angleError), false);
-        }
-        else {
-          robotDrive.allDrive(0, 0, false);
-          //shooter.setTurret(angleError *  Math.signum(angleError));
-        }
-
-        speedOnTarget = shooter.speedOnTarget(shooter.calculateShooterSpeed(distance), 5); //TODO: May need to adjust acceptable error
-        hoodOnTarget = (double)(System.nanoTime() - startTime) / 1_000_000_000 > 0.75;//shooter.hoodOnTarget(shooter.calculateShooterHood(distance));
-        angleOnTarget = Math.abs(shooter.getTurretAngle() + angleError) <= 1.5; // They should be opposites so I added them
-
-        if (speedOnTarget && hoodOnTarget/* && angleOnTarget*/)
-            rapidFire();
-    }
+    if (speedOnTarget && hoodOnTarget/* && angleOnTarget*/)
+        rapidFire();
 
   }
 

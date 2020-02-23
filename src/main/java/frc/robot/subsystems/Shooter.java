@@ -117,11 +117,10 @@ public class Shooter extends SubsystemBase {
     }
 
     public void prepareShooter(final double distance) {
-
-        pidController.setReference(calculateShooterSpeed(distance), ControlType.kVelocity);
-        hoodServo.setAngle(calculateShooterHood(distance));
-        // TODO: The idea was that this would set the shooter speed
-        // and hoodServo value based on the input distance.
+        if (distance > 0.0) {
+            pidController.setReference(calculateShooterSpeed(distance), ControlType.kVelocity);
+            hoodServo.setAngle(calculateShooterHood(distance));
+            }
     }
 
     public void shoot () {
@@ -142,13 +141,14 @@ public class Shooter extends SubsystemBase {
     public double calculateShooterSpeed (final double distance) {
         Entry<Double, Double[]> floorEntry = distanceLookUp.floorEntry(distance);
         Entry<Double, Double[]> ceilingEntry = distanceLookUp.higherEntry(distance);
-        System.out.format("Distance Floor %4.1f%n", floorEntry.getKey());
-        System.out.format("Distance current %4.1f%n", distance);
-        System.out.format("Distance current %4.1f", ceilingEntry.getKey());
-
+   
         if (floorEntry != null && ceilingEntry != null) {
+            System.out.format("Distance Floor %4.1f%n", floorEntry.getKey());
+            System.out.format("Distance current %4.1f%n", distance);
+            System.out.format("Distance current %4.1f%n", ceilingEntry.getKey());
+    
             // Charles' calculation
-            double ratio = (ceilingEntry.getKey() - distance) / (ceilingEntry.getKey() - floorEntry.getKey());
+            double ratio = (distance - floorEntry.getKey()) / (ceilingEntry.getKey() - floorEntry.getKey());
             System.out.format("Ratio %4.1f", ratio);
             double result = floorEntry.getValue()[0] + ratio * (ceilingEntry.getValue()[0] - floorEntry.getValue()[0]);
             System.out.format("Interpolated shooter speed %4.1f", result);
@@ -170,8 +170,12 @@ public class Shooter extends SubsystemBase {
         Entry<Double, Double[]> ceilingEntry = distanceLookUp.higherEntry(distance);
 
         if (floorEntry != null && ceilingEntry != null) {
+            System.out.format("Distance Floor %4.1f%n", floorEntry.getKey());
+            System.out.format("Distance current %4.1f%n", distance);
+            System.out.format("Distance current %4.1f%n", ceilingEntry.getKey());
+            
             // Charles calculation
-            double ratio = (ceilingEntry.getKey() - distance) / (ceilingEntry.getKey() - floorEntry.getKey());
+            double ratio = (distance - floorEntry.getKey()) / (ceilingEntry.getKey() - floorEntry.getKey());
             double result = floorEntry.getValue()[1] + ratio * (ceilingEntry.getValue()[1] - floorEntry.getValue()[1]);
 
             // Mark's calculation
