@@ -65,6 +65,10 @@ public class Shooter extends SubsystemBase {
 
         spike = new Relay(0);
 
+        motor1.setSmartCurrentLimit(40);
+        motor2.setSmartCurrentLimit(40);
+        motor3.setSmartCurrentLimit(40);
+
         try (BufferedReader br = new BufferedReader(new FileReader("/home/lvuser/ShooterData.csv"))) {
             String line;
             while ((line = br.readLine()) != null) {
