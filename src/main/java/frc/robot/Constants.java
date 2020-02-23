@@ -101,21 +101,21 @@ public final class Constants {
 
     // AUTO CHARACTERIZATION CONSTANTS
 
-    public static final double DISTANCE_PER_PULSE = 0.00187022937;
+    public static final double DISTANCE_PER_PULSE = 0.00155852448;
 
     //FEEDFORWARD AND FEEDBACK GAINS
     public static final double ksVolts = 0.182; 
     public static final double kvVoltSecondsPerMeter = 2.64; 
     public static final double kaVoltSecondsSquaredPerMeter = 0.324; 
-    public static final double kPDriveVel = 12.2; 
+    public static final double kPDriveVel = 8; 
 
     //DIFFERENTIAL DRIVE KINEMATICS
     public static final double kTrackwidth = 0.6604; // in meters
     public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(kTrackwidth);
 
     //MAX TRAJECTORY VELOCITY AND ACCELERATION
-    public static final double kMaxSpeed = 1.5; // TODO: ASSIGN A REAL VALUE meters per second
-    public static final double kMaxAcceleration = 0.5; // TODO: ASSIGN A REAL VALUE meters per second per second
+    public static final double kMaxSpeed = 1.22; // TODO: ASSIGN A REAL VALUE meters per second
+    public static final double kMaxAcceleration = 1; // TODO: ASSIGN A REAL VALUE meters per second per second
 
     //RAMSETE PARAMETERS
     public static final double kRamseteB = 2; // generic ramsete values

@@ -31,8 +31,9 @@ public class EightBallAuto extends SequentialCommandGroup {
   /**
    * Add your docs here.
    */
-  public EightBallAuto(DriveTrain robotDrive, Shooter shooter, Carousel carousel, Intake intake) {
-
+  public EightBallAuto(DriveTrain robotDrive, Shooter shooter, Carousel carousel, Intake intake, DriveCommand driveCommand) {
+    driveCommand.cancel();
+    intake.run(0.4);
     robotDrive.resetOdometry(new Pose2d());
     var autoVoltageConstraint =
         new DifferentialDriveVoltageConstraint(
@@ -59,9 +60,19 @@ public class EightBallAuto extends SequentialCommandGroup {
         // Start at the origin facing the +X direction
         new Pose2d(0, 0, new Rotation2d(0)), 
         List.of(
-            
+            new Translation2d(-1.2, -0.63)
         ),
-        new Pose2d(1, 0, new Rotation2d(0)),
+        new Pose2d(-5.5, -0.63, Rotation2d.fromDegrees(0)),
+        configBackward
+    ); 
+
+    Trajectory comeBackTrajectory = TrajectoryGenerator.generateTrajectory(
+        // Start at the origin facing the +X direction
+        new Pose2d(-5.5, -0.63, new Rotation2d(0)), 
+        List.of(
+            new Translation2d(-1.2, -0.63)
+        ),
+        new Pose2d(0, 0, Rotation2d.fromDegrees(20)),
         configForward
     ); 
 
@@ -81,8 +92,23 @@ public class EightBallAuto extends SequentialCommandGroup {
         robotDrive
     );
 
+    RamseteCommand ramseteCommand2 = new RamseteCommand(
+        temporaryTrajectory,
+        robotDrive::getPose,
+        new RamseteController(Constants.kRamseteB, Constants.kRamseteZeta),
+        new SimpleMotorFeedforward(Constants.ksVolts,
+                                   Constants.kvVoltSecondsPerMeter,
+                                   Constants.kaVoltSecondsSquaredPerMeter),
+        Constants.kDriveKinematics,
+        robotDrive::getWheelSpeeds,
+        new PIDController(Constants.kPDriveVel, 0, 0),
+        new PIDController(Constants.kPDriveVel, 0, 0),
+        robotDrive::tankDriveVolts,
+        robotDrive
+    );
 
-    addCommands(ramseteCommand1);//new StartMatchCommand(), new ShooterCommand (shooter, carousel, robotDrive, 3.0));
+
+    addCommands(ramseteCommand1, ramseteCommand2.andThen(() -> robotDrive.tankDriveVolts(0, 0)));//new StartMatchCommand(), new ShooterCommand (shooter, carousel, robotDrive, 3.0));
     
   }
 }
