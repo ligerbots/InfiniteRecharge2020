@@ -24,19 +24,37 @@ public final class Constants {
 
     // Drive Train SPARK MAXes
     public static final int LEADER_LEFT_CAN_ID = 1; //Drive Train Cansparkmaxes :D
+<<<<<<< HEAD
     public static final int LEADER_RIGHT_CAN_ID = 3;
     public static final int FOLLOWER_LEFT_CAN_ID = 2;
+=======
+
+    public static final int LEADER_RIGHT_CAN_ID = 3;
+
+    public static final int FOLLOWER_LEFT_CAN_ID = 2;
+
+>>>>>>> 0c6d213410d6b23f5da6a27234968b5cb2e831a7
     public static final int FOLLOWER_RIGHT_CAN_ID = 4;//Sparkmaxes for drivetrain end here
 
     // Drive Train Encoders
     public static final int[] LEFT_ENCODER_PORTS = new int[]{0, 1};//DriveTrain Encoder
+<<<<<<< HEAD
+=======
+    
+>>>>>>> 0c6d213410d6b23f5da6a27234968b5cb2e831a7
     public static final int[] RIGHT_ENCODER_PORTS = new int[]{2, 3};//DriveTrain Encoder
 
     //DistanceperPulse
     
     //Talon SRX for the Carousel
     public static final int CAROUSEL_CAN_ID = 12; // CAN ID for the spinner for carousel
+<<<<<<< HEAD
     public static final double CAROUSEL_SHOOTER_SPEED = 0.8; // This is just percent output
+=======
+
+    public static final double CAROUSEL_SHOOTER_SPEED = 0.8; // This is just percent output
+
+>>>>>>> 0c6d213410d6b23f5da6a27234968b5cb2e831a7
     public static final double CAROUSEL_INTAKE_SPEED = 0.5; // This is just percent output
 
     // Talon SRX for the grabber (Carousel)
@@ -90,20 +108,40 @@ public final class Constants {
 
     //FEEDFORWARD AND FEEDBACK GAINS
     public static final double ksVolts = 0.182; 
+<<<<<<< HEAD
     public static final double kvVoltSecondsPerMeter = 2.64; 
     public static final double kaVoltSecondsSquaredPerMeter = 0.324; 
+=======
+
+    public static final double kvVoltSecondsPerMeter = 2.64; 
+
+    public static final double kaVoltSecondsSquaredPerMeter = 0.324; 
+
+>>>>>>> 0c6d213410d6b23f5da6a27234968b5cb2e831a7
     public static final double kPDriveVel = 12.2; 
 
     //DIFFERENTIAL DRIVE KINEMATICS
     public static final double kTrackwidth = 0.6604; // in meters
+<<<<<<< HEAD
+=======
+
+>>>>>>> 0c6d213410d6b23f5da6a27234968b5cb2e831a7
     public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(kTrackwidth);
 
     //MAX TRAJECTORY VELOCITY AND ACCELERATION
     public static final double kMaxSpeed = 1.5; // TODO: ASSIGN A REAL VALUE meters per second
+<<<<<<< HEAD
+=======
+
+>>>>>>> 0c6d213410d6b23f5da6a27234968b5cb2e831a7
     public static final double kMaxAcceleration = 0.5; // TODO: ASSIGN A REAL VALUE meters per second per second
 
     //RAMSETE PARAMETERS
     public static final double kRamseteB = 2; // generic ramsete values
+<<<<<<< HEAD
+=======
+
+>>>>>>> 0c6d213410d6b23f5da6a27234968b5cb2e831a7
     public static final double kRamseteZeta = 0.7; // generic ramsete values
 
 }
