@@ -90,40 +90,20 @@ public final class Constants {
 
     //FEEDFORWARD AND FEEDBACK GAINS
     public static final double ksVolts = 0.182; 
-<<<<<<< HEAD
     public static final double kvVoltSecondsPerMeter = 2.64; 
     public static final double kaVoltSecondsSquaredPerMeter = 0.324; 
-=======
-
-    public static final double kvVoltSecondsPerMeter = 2.64; 
-
-    public static final double kaVoltSecondsSquaredPerMeter = 0.324; 
-
->>>>>>> 0c6d213410d6b23f5da6a27234968b5cb2e831a7
     public static final double kPDriveVel = 12.2; 
 
     //DIFFERENTIAL DRIVE KINEMATICS
     public static final double kTrackwidth = 0.6604; // in meters
-<<<<<<< HEAD
-=======
-
->>>>>>> 0c6d213410d6b23f5da6a27234968b5cb2e831a7
     public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(kTrackwidth);
 
     //MAX TRAJECTORY VELOCITY AND ACCELERATION
     public static final double kMaxSpeed = 1.5; // TODO: ASSIGN A REAL VALUE meters per second
-<<<<<<< HEAD
-=======
-
->>>>>>> 0c6d213410d6b23f5da6a27234968b5cb2e831a7
     public static final double kMaxAcceleration = 0.5; // TODO: ASSIGN A REAL VALUE meters per second per second
 
     //RAMSETE PARAMETERS
     public static final double kRamseteB = 2; // generic ramsete values
-<<<<<<< HEAD
-=======
-
->>>>>>> 0c6d213410d6b23f5da6a27234968b5cb2e831a7
     public static final double kRamseteZeta = 0.7; // generic ramsete values
 
 }

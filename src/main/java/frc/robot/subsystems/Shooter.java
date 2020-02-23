@@ -7,6 +7,8 @@
 package frc.robot.subsystems;
 
 import java.util.Arrays;
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -63,17 +65,30 @@ public class Shooter extends SubsystemBase {
 
         spike = new Relay(0);
 
-        //TODO: Populate lookup table
-        // Consider using java.util.scanner - https://docs.oracle.com/javase/7/docs/api/java/util/Scanner.html
+        try (BufferedReader br = new BufferedReader(new FileReader("/home/lvuser/ShooterData.csv"))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String values_str[] = line.split(",");
+                double values[] = new double[values_str.length];
+                for(int i = 0; i < values.length; i++) {
+                    values[i] = Double.parseDouble(values_str[i].trim());
+                    distanceLookUp.put(values[0], new Double[] {values[1], values[2]});
+                  }               
+            }
+        }
+        catch (Exception e) {
+            System.err.println("Error trying to read or parse ShooterData.csv: " + e.getMessage()); 
+            System.err.println("Using original hard-coded table instead");
 
-        distanceLookUp.put(new Double(112.6), new Double[] {new Double(-5500), new Double(90)});
-        distanceLookUp.put(new Double(137.1), new Double[] {new Double(-5500), new Double(80)});
-        distanceLookUp.put(new Double(168.9), new Double[] {new Double(-6000), new Double(70)});
-        distanceLookUp.put(new Double(227.0), new Double[] {new Double(-7000), new Double(65)});
-        distanceLookUp.put(new Double(318.1), new Double[] {new Double(-8000), new Double(60)});
-        distanceLookUp.put(new Double(253.4), new Double[] {new Double(-7500), new Double(60)});
-        distanceLookUp.put(new Double(235.2), new Double[] {new Double(-7500), new Double(55)});
-       
+            distanceLookUp.put(new Double(112.6), new Double[] {new Double(-5500), new Double(90)});
+            distanceLookUp.put(new Double(137.1), new Double[] {new Double(-5500), new Double(80)});
+            distanceLookUp.put(new Double(168.9), new Double[] {new Double(-6000), new Double(70)});
+            distanceLookUp.put(new Double(227.0), new Double[] {new Double(-7000), new Double(65)});
+            distanceLookUp.put(new Double(318.1), new Double[] {new Double(-8000), new Double(60)});
+            distanceLookUp.put(new Double(253.4), new Double[] {new Double(-7500), new Double(60)});
+            distanceLookUp.put(new Double(235.2), new Double[] {new Double(-7500), new Double(55)});            
+        }
+      
     }
 
     @Override
