@@ -126,7 +126,7 @@ public class RobotContainer {
     bumperLeft.whileHeld(new IntakeCommand(intake, climber, -0.4));
     xboxB.whileHeld(new ManualCarousel(carousel, carouselCommand));
     xboxA.whenPressed(new ShootFromKey(shooter, carousel, carouselCommand).andThen(new ResetCarousel(carousel, carouselCommand)));
-    xboxX.whenPressed(new ShooterCommand(shooter, carousel, robotDrive, 5, carouselCommand).andThen(new ResetCarousel(carousel, carouselCommand)));
+    xboxX.whenPressed(new ShooterCommand(shooter, carousel, robotDrive, 5, carouselCommand, driveCommand).andThen(new ResetCarousel(carousel, carouselCommand)));
     xboxY.whenPressed(new TurnAndShoot(robotDrive, shooter, carousel, carouselCommand));
     //xboxX.whenPressed(new ShooterTuner(shooter));
     //xboxY.whenPressed(new StopAllShooting(shooter));
@@ -147,8 +147,7 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
-  //EightBallAuto auto = new EightBallAuto(robotDrive, shooter, carousel, intake);
-  TurnAndShoot auto = new TurnAndShoot(robotDrive, shooter, carousel, carouselCommand);
+  EightBallAuto auto = new EightBallAuto(robotDrive, shooter, carousel, intake);
   public Command getAutonomousCommand() {
      return auto;
   }

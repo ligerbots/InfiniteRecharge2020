@@ -122,7 +122,7 @@ public class Shooter extends SubsystemBase {
 
     public void prepareShooter(final double distance) {
 
-        pidController.setReference(calculateShooterSpeed(distance), ControlType.kVelocity);
+        pidController.setReference(-calculateShooterSpeed(distance), ControlType.kVelocity);
         hoodServo.setAngle(calculateShooterHood(distance));
         // TODO: The idea was that this would set the shooter speed
         // and hoodServo value based on the input distance.
@@ -152,7 +152,7 @@ public class Shooter extends SubsystemBase {
 
         if (floorEntry != null && ceilingEntry != null) {
             // Charles' calculation
-            double ratio = (ceilingEntry.getKey() - distance) / (ceilingEntry.getKey() - floorEntry.getKey());
+            double ratio = 1 - (ceilingEntry.getKey() - distance) / (ceilingEntry.getKey() - floorEntry.getKey());
             System.out.format("Ratio %4.1f", ratio);
             double result = floorEntry.getValue()[0] + ratio * (ceilingEntry.getValue()[0] - floorEntry.getValue()[0]);
             System.out.format("Interpolated shooter speed %4.1f", result);
@@ -175,7 +175,7 @@ public class Shooter extends SubsystemBase {
 
         if (floorEntry != null && ceilingEntry != null) {
             // Charles calculation
-            double ratio = (ceilingEntry.getKey() - distance) / (ceilingEntry.getKey() - floorEntry.getKey());
+            double ratio = 1 - (ceilingEntry.getKey() - distance) / (ceilingEntry.getKey() - floorEntry.getKey());
             double result = floorEntry.getValue()[1] + ratio * (ceilingEntry.getValue()[1] - floorEntry.getValue()[1]);
 
             // Mark's calculation
