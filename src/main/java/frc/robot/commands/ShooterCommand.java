@@ -21,6 +21,8 @@ public class ShooterCommand extends CommandBase {
 
   double[] visionInfo;
   double[] empty = new double[] {0.0,0.0,0.0,0.0,0.0,0.0,0.0}; 
+  double waitTime;
+  double startTime;
 
   Shooter shooter;
   Carousel carousel;
@@ -28,11 +30,14 @@ public class ShooterCommand extends CommandBase {
 
   boolean startShooting;
 
-  public ShooterCommand(Shooter shooter, Carousel carousel, DriveTrain robotDrive) {
+  CarouselCommand carouselCommand;
+
+  public ShooterCommand(Shooter shooter, Carousel carousel, DriveTrain robotDrive, double waitTime, CarouselCommand carouselCommand) {
     this.shooter = shooter;
     this.carousel = carousel;
     this.robotDrive = robotDrive;
-
+    this.waitTime = waitTime;
+    this.carouselCommand = carouselCommand;
     startShooting = false;
   }
 
@@ -44,7 +49,11 @@ public class ShooterCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    startTime = System.nanoTime();
+    SmartDashboard.putString("vision/active_mode/selected", "goalfinder");
+    shooter.setLEDRing(true);
     //TODO: remember to set to shooting camera mode!!
+    carouselCommand.cancel();
 
   }
 
@@ -58,29 +67,27 @@ public class ShooterCommand extends CommandBase {
 
   @Override
   public void execute() {
-    visionInfo = SmartDashboard.getNumberArray("visionInfo", empty); // TODO: need actual vision info
+    visionInfo = SmartDashboard.getNumberArray("vision/target_info", empty); // TODO: need actual vision info
 
     if (visionInfo[0] != 0) { // figure out if we see a vision target
-        angleError = visionInfo[3];
-        distance = visionInfo[2];
+        angleError = visionInfo[4];
+        distance = visionInfo[3];
 
         shooter.prepareShooter(distance);
 
-        if (Math.abs(angleError) > Constants.MAX_TURRET_OFFSET) {
-          robotDrive.allDrive(0, 0.4 * Math.signum(angleError));
+        if (Math.abs(angleError) > 5) {
+          robotDrive.allDrive(0, robotDrive.turnSpeedCalc(angleError), false);
         }
         else {
-          robotDrive.allDrive(0, 0);
-          shooter.setTurret(angleError *  Math.signum(angleError));
+          robotDrive.allDrive(0, 0, false);
+          //shooter.setTurret(angleError *  Math.signum(angleError));
         }
 
-        speedOnTarget = shooter.speedOnTarget(shooter.calculateShooterSpeed(visionInfo[2]), 1); //TODO: May need to adjust acceptable error
-        hoodOnTarget = shooter.hoodOnTarget(shooter.calculateShooterHood(visionInfo[2]));
+        speedOnTarget = shooter.speedOnTarget(shooter.calculateShooterSpeed(distance), 5); //TODO: May need to adjust acceptable error
+        hoodOnTarget = (double)(System.nanoTime() - startTime) / 1_000_000_000 > 0.75;//shooter.hoodOnTarget(shooter.calculateShooterHood(distance));
         angleOnTarget = Math.abs(shooter.getTurretAngle() + angleError) <= 1.5; // They should be opposites so I added them
 
-
-
-        if (speedOnTarget && hoodOnTarget && angleOnTarget)
+        if (speedOnTarget && hoodOnTarget/* && angleOnTarget*/)
             rapidFire();
     }
 
@@ -94,12 +101,21 @@ public class ShooterCommand extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     shooter.stopAll();
-    carousel.spin(Constants.CAROUSEL_INTAKE_SPEED);
+    shooter.setLEDRing(false);
+    carouselCommand.schedule();
   }
 
   // Returns true when the command should end.
+
+
+
   @Override
   public boolean isFinished() {
-    return false;
+    if (waitTime == 0.0) {
+      return false;
+    }
+    else {
+      return ((System.nanoTime() - startTime) / 1_000_000_000.0 >= waitTime);
+    }
   }
 }

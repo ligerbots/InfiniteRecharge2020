@@ -7,45 +7,49 @@
 
 package frc.robot.commands;
 
-import java.util.function.DoubleSupplier;
+import com.revrobotics.CANSparkMax.IdleMode;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Climber;
 
-public class DriveCommand extends CommandBase {
+public class IntakeCommand extends CommandBase {
   /**
-   * Creates a new DriveCommand.
-   */
+   * Creates a new IntakeCommand.
+  */
 
-  DriveTrain driveTrain;
-  DoubleSupplier throttle;
-  DoubleSupplier turn;
-
-  public DriveCommand(DriveTrain driveTrain, DoubleSupplier throttle, DoubleSupplier turn) {
-    this.driveTrain = driveTrain;
-    this.throttle = throttle;
-    this.turn = turn;
+  Intake intake;
+  Climber climber;
+  double speed;
+  public IntakeCommand(Intake intake, Climber climber, double speed) {
+    this.intake = intake;
+    this.climber = climber;
+    this.speed = speed;
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    climber.shoulder.setIdleMode(IdleMode.kCoast);
+    intake.run(speed);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    SmartDashboard.putNumber("left encoder", driveTrain.getLeftEncoderTicks());
-    SmartDashboard.putNumber("right encoder", driveTrain.getRightEncoderTicks());
-    driveTrain.allDrive(throttle.getAsDouble(), turn.getAsDouble(), false);
+
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    if (interrupted) {
+      intake.run(0);
+      climber.shoulder.setIdleMode(IdleMode.kBrake);
   }
+  }
+
 
   // Returns true when the command should end.
   @Override

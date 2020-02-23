@@ -6,6 +6,7 @@
 /*----------------------------------------------------------------------------*/
 package frc.robot;
 
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -23,34 +24,25 @@ public final class Constants {
 
     // Drive Train SPARK MAXes
     public static final int LEADER_LEFT_CAN_ID = 1; //Drive Train Cansparkmaxes :D
-
     public static final int LEADER_RIGHT_CAN_ID = 3;
-
     public static final int FOLLOWER_LEFT_CAN_ID = 2;
-
     public static final int FOLLOWER_RIGHT_CAN_ID = 4;//Sparkmaxes for drivetrain end here
 
     // Drive Train Encoders
-    public static final int[] LEFT_ENCODER_PORTS = new int[]{1, 2};//DriveTrain Encoder
-    
-    public static final int[] RIGHT_ENCODER_PORTS = new int[]{3, 4};//DriveTrain Encoder
+    public static final int[] LEFT_ENCODER_PORTS = new int[]{0, 1};//DriveTrain Encoder
+    public static final int[] RIGHT_ENCODER_PORTS = new int[]{2, 3};//DriveTrain Encoder
 
     //DistanceperPulse
-
-    public static final double DISTANCE_PER_PULSE = 0.0001; // TODO: find real number ~ This is the coefficient of encoder ticks to convert to distance
     
     //Talon SRX for the Carousel
     public static final int CAROUSEL_CAN_ID = 12; // CAN ID for the spinner for carousel
-
     public static final double CAROUSEL_SHOOTER_SPEED = 0.8; // This is just percent output
-
     public static final double CAROUSEL_INTAKE_SPEED = 0.5; // This is just percent output
 
     // Talon SRX for the grabber (Carousel)
     public static final int GRABBER_TALON_ID = 1; //TALON SRX ID for grabber
 
     // SPARKMAX for the intake motor (Intake)
-
     public static final int INTAKE_MOTOR_CAN_ID = 10; //CAN ID for intake motor
 
     // Intake Color Sensor
@@ -62,8 +54,8 @@ public final class Constants {
     public static final int SHOOTER_ONE_CAN_ID = 5; // Motor 1 on shooter
     public static final int SHOOTER_TWO_CAN_ID = 6; // Motor 2 on shooter
     public static final int SHOOTER_THREE_CAN_ID = 7; // Motor 3 on shooter
-    public static final int SHOOTER_SERVO_PWM_ID = 1; // Servo to controll hood angle 
-    public static final int SHOOTER_TURRET_SERVO_ID = 0; // TODO: Fix this
+    public static final int SHOOTER_SERVO_PWM_ID = 0; // Servo to controll hood angle 
+    public static final int SHOOTER_TURRET_SERVO_ID = 1; // TODO: Fix this
 
     public static final double TURRET_ANGLE_COEFFICIENT = 180; // TODO: Fix this
 
@@ -91,5 +83,27 @@ public final class Constants {
     // joy stick button
     public static final int XBOX_JL = 9;
     public static final int XBOX_JR = 10;
+
+    // AUTO CHARACTERIZATION CONSTANTS
+
+    public static final double DISTANCE_PER_PULSE = 0.00187022937;
+
+    //FEEDFORWARD AND FEEDBACK GAINS
+    public static final double ksVolts = 0.182; 
+    public static final double kvVoltSecondsPerMeter = 2.64; 
+    public static final double kaVoltSecondsSquaredPerMeter = 0.324; 
+    public static final double kPDriveVel = 12.2; 
+
+    //DIFFERENTIAL DRIVE KINEMATICS
+    public static final double kTrackwidth = 0.6604; // in meters
+    public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(kTrackwidth);
+
+    //MAX TRAJECTORY VELOCITY AND ACCELERATION
+    public static final double kMaxSpeed = 1.5; // TODO: ASSIGN A REAL VALUE meters per second
+    public static final double kMaxAcceleration = 0.5; // TODO: ASSIGN A REAL VALUE meters per second per second
+
+    //RAMSETE PARAMETERS
+    public static final double kRamseteB = 2; // generic ramsete values
+    public static final double kRamseteZeta = 0.7; // generic ramsete values
 
 }

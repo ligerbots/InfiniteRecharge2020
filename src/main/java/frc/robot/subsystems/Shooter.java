@@ -7,11 +7,16 @@
 package frc.robot.subsystems;
 
 import java.util.Arrays;
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
+import java.util.Map.Entry;
+
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
@@ -19,7 +24,10 @@ import com.revrobotics.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.Servo;
+import edu.wpi.first.wpilibj.Relay.Value;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Constants;
@@ -27,22 +35,14 @@ import frc.robot.Constants;
 public class Shooter extends SubsystemBase {
 
     CANSparkMax motor1, motor2, motor3;
-
     static CANSparkMax flup;
-
     CANEncoder shooterEncoder;
-
     Servo hoodServo, turretServo;
-
-    private HashMap<Double,Double> distanceLookUp = new HashMap<Double,Double>() {}; //set up lookup table for ranges
-
+    private TreeMap<Double, Double[]> distanceLookUp = new TreeMap<Double,Double[]>() {}; //set up lookup table for ranges
     CANPIDController pidController;
-    // TODO: Need to add velocity PID for shooter
-
-
+    Relay spike;
 
     public Shooter() {
-
         motor1 = new CANSparkMax(Constants.SHOOTER_ONE_CAN_ID,MotorType.kBrushless);
         motor2 = new CANSparkMax(Constants.SHOOTER_TWO_CAN_ID,MotorType.kBrushless);
         motor3 = new CANSparkMax(Constants.SHOOTER_THREE_CAN_ID,MotorType.kBrushless);
@@ -53,31 +53,66 @@ public class Shooter extends SubsystemBase {
         Arrays.asList(motor1, motor2, motor3, flup)
                 .forEach((CANSparkMax spark) -> spark.setIdleMode(IdleMode.kCoast));
 
-
         hoodServo = new Servo(Constants.SHOOTER_SERVO_PWM_ID);
-
         turretServo = new Servo(Constants.SHOOTER_TURRET_SERVO_ID);
-
-        shooterEncoder = new CANEncoder(motor1);
-
-        pidController = new CANPIDController(motor1);
-
+        shooterEncoder = new CANEncoder(motor2);
+        shooterEncoder.setVelocityConversionFactor(2.666);
+        pidController = new CANPIDController(motor2);
         pidController.setFeedbackDevice(shooterEncoder);
 
-        motor2.follow(motor1);  //  We want motor1 to be master and motor2 and 3 follow the speed of motor1
-        motor3.follow(motor1);
+        motor1.follow(motor2, true);  //  We want motor1 to be master and motor2 and 3 follow the speed of motor1
+        motor3.follow(motor2);
 
-        //TODO: Populate lookup table
-        
+        spike = new Relay(0);
+
+        try (BufferedReader br = new BufferedReader(new FileReader("/home/lvuser/ShooterData.csv"))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String values_str[] = line.split(",");
+                double values[] = new double[values_str.length];
+                for(int i = 0; i < values.length; i++) {
+                    values[i] = Double.parseDouble(values_str[i].trim());
+                    distanceLookUp.put(values[0], new Double[] {values[1], values[2]});
+                  }               
+            }
+        }
+        catch (Exception e) {
+            System.err.println("Error trying to read or parse ShooterData.csv: " + e.getMessage()); 
+            System.err.println("Using original hard-coded table instead");
+
+            distanceLookUp.put(new Double(112.6), new Double[] {new Double(-5500), new Double(90)});
+            distanceLookUp.put(new Double(137.1), new Double[] {new Double(-5500), new Double(80)});
+            distanceLookUp.put(new Double(168.9), new Double[] {new Double(-6000), new Double(70)});
+            distanceLookUp.put(new Double(227.0), new Double[] {new Double(-7000), new Double(65)});
+            distanceLookUp.put(new Double(318.1), new Double[] {new Double(-8000), new Double(60)});
+            distanceLookUp.put(new Double(253.4), new Double[] {new Double(-7500), new Double(60)});
+            distanceLookUp.put(new Double(235.2), new Double[] {new Double(-7500), new Double(55)});            
+        }
+      
     }
 
     @Override
     public void periodic() {
-        // This method will be called once per scheduler run every 20ms
+        SmartDashboard.putNumber("Shooter RPM", getSpeed());
+    }
+
+    public double getVoltage() {
+        return motor2.getBusVoltage();
     }
 
     public void setHood (double angle) {
+        System.out.println("hood angle SET!!!!");
+        if (angle < 40) {
+            angle = 40;
+        }
+        if (angle > 160) {
+            angle = 160;
+        }
         hoodServo.setAngle(angle);
+    }
+
+    public double getSpeed () {
+        return shooterEncoder.getVelocity();
     }
 
     public void prepareShooter(final double distance) {
@@ -89,23 +124,64 @@ public class Shooter extends SubsystemBase {
     }
 
     public void shoot () {
-        flup.set(-0.5); // TODO: figure out what to do with this constant
+        System.out.println("Flup current: " + flup.getOutputCurrent());
+        flup.set(-0.5);
     }
 
     public void testSpin () {
-        motor1.set(-0.35);
+        pidController.setReference(-4000, ControlType.kVelocity);
+        SmartDashboard.putString("Shooting", "Shooting");
+    }
+
+    public void setShooterRPM (double rpm) {
+        System.out.println("Shooter RPM SET!!!!!");
+        pidController.setReference(rpm, ControlType.kVelocity);
     }
 
     public double calculateShooterSpeed (final double distance) {
-        // TODO: Some logic 
-        return 0;
+        Entry<Double, Double[]> floorEntry = distanceLookUp.floorEntry(distance);
+        Entry<Double, Double[]> ceilingEntry = distanceLookUp.higherEntry(distance);
+        System.out.format("Distance Floor %4.1f%n", floorEntry.getKey());
+        System.out.format("Distance current %4.1f%n", distance);
+        System.out.format("Distance current %4.1f", ceilingEntry.getKey());
+
+        if (floorEntry != null && ceilingEntry != null) {
+            // Charles' calculation
+            double ratio = (ceilingEntry.getKey() - distance) / (ceilingEntry.getKey() - floorEntry.getKey());
+            System.out.format("Ratio %4.1f", ratio);
+            double result = floorEntry.getValue()[0] + ratio * (ceilingEntry.getValue()[0] - floorEntry.getValue()[0]);
+            System.out.format("Interpolated shooter speed %4.1f", result);
+
+            // Mark's calculation
+            // double result = (ceilingEntry.getValue()[0] - floorEntry.getValue()[0]) / 
+            //                     (ceilingEntry.getKey() - floorEntry.getKey())
+            //                   * (ceilingEntry.getKey() - distance) / 
+            //                     (ceilingEntry.getKey() - floorEntry.getKey()) + floorEntry.getValue()[0];
+            return result;
+        }
+        else {
+            return -1000;
+        }
     }
 
     public double calculateShooterHood (final double distance) {
-        // TODO: Some logic (should return degrees)
-        final float maxShootingDistance = 40; // set placeholder for max shooting distance (in feet)(YJ)
-        return 0.0; // (YJ) TODO: determine how to integrate angle slope equation into calculations
-        
+        Entry<Double, Double[]> floorEntry = distanceLookUp.floorEntry(distance);
+        Entry<Double, Double[]> ceilingEntry = distanceLookUp.higherEntry(distance);
+
+        if (floorEntry != null && ceilingEntry != null) {
+            // Charles calculation
+            double ratio = (ceilingEntry.getKey() - distance) / (ceilingEntry.getKey() - floorEntry.getKey());
+            double result = floorEntry.getValue()[1] + ratio * (ceilingEntry.getValue()[1] - floorEntry.getValue()[1]);
+
+            // Mark's calculation
+            // double result = (ceilingEntry.getValue()[1] - floorEntry.getValue()[1]) / (ceilingEntry.getKey() - floorEntry.getKey()) * (ceilingEntry.getKey() - distance) / (ceilingEntry.getKey() - floorEntry.getKey())  + floorEntry.getValue()[1];
+            System.out.format("Interpolated Hood Angle %4.1f%n", result);
+
+            return result;
+        }
+        else {
+            return 60;
+        }
     }
 
     public void warmUp () {
@@ -115,22 +191,25 @@ public class Shooter extends SubsystemBase {
     public boolean speedOnTarget (final double targetVelocity, final double percentAllowedError) {
         final double max = targetVelocity * (1.0 + (percentAllowedError / 100.0));
         final double min = targetVelocity * (1.0 - (percentAllowedError / 100.0));
-        return shooterEncoder.getVelocity() > min && shooterEncoder.getVelocity() <  max; 
+        return shooterEncoder.getVelocity() > max && shooterEncoder.getVelocity() < min;  //this is wack cause it's negative
     }
 
     public boolean hoodOnTarget (final double targetAngle) {
-        return hoodServo.getAngle() > targetAngle - 1 && hoodServo.getAngle() < targetAngle + 1;
+        System.out.println("ServoPosition: " + hoodServo.getPosition());
+        return hoodServo.getAngle() > targetAngle - 0.5 && hoodServo.getAngle() < targetAngle + 0.5;
     }
 
-    public void calibratePID (final double p, final double i, final double d) {
+    public void calibratePID (final double p, final double i, final double d, final double f) {
         pidController.setP(p);
         pidController.setI(i);
         pidController.setD(d);
+        pidController.setFF(f);
     }
 
     public void stopAll () {
         pidController.setReference(0, ControlType.kVoltage);
-        hoodServo.setAngle(0);
+        flup.set(0);
+        hoodServo.setAngle(160);
     }
 
     public double getTurretAngle () {
@@ -138,6 +217,10 @@ public class Shooter extends SubsystemBase {
     }
 
     public void setTurret (double angle) {
-        turretServo.set(angle / Constants.TURRET_ANGLE_COEFFICIENT);
+        turretServo.setAngle(angle);
+    }
+
+    public void setLEDRing (boolean on) {
+        spike.set(on ? Value.kForward : Value.kReverse);
     }
 }

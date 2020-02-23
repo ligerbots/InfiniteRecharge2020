@@ -14,12 +14,13 @@ import frc.robot.subsystems.Climber;
 public class RunShoulder extends CommandBase {
 
   DoubleSupplier climb; // declare class to get climb speed
-  public static Climber shoulder; // declare motor class
+  Climber climber; // declare motor class
 
   /**
    * Creates a new RunClimber.
    */
-  public RunShoulder(DoubleSupplier climb) {
+  public RunShoulder(Climber climber, DoubleSupplier climb) {
+    this.climber = climber;
     this.climb = climb; // init climber 
   }
 
@@ -31,7 +32,7 @@ public class RunShoulder extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-      shoulder.moveShoulder(climb.getAsDouble()); // set speed of soulder motors based on climb speed
+      climber.moveShoulder(climb.getAsDouble()); // set speed of soulder motors based on climb speed
   }
 
   // Called once the command ends or is interrupted.

@@ -7,39 +7,34 @@
 
 package frc.robot.commands;
 
-import java.util.function.DoubleSupplier;
-
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveTrain;
 
-public class DriveCommand extends CommandBase {
+public class FaceShootingTarget extends CommandBase {
   /**
-   * Creates a new DriveCommand.
+   * Creates a new FaceShootingTarget.
    */
-
-  DriveTrain driveTrain;
-  DoubleSupplier throttle;
-  DoubleSupplier turn;
-
-  public DriveCommand(DriveTrain driveTrain, DoubleSupplier throttle, DoubleSupplier turn) {
-    this.driveTrain = driveTrain;
-    this.throttle = throttle;
-    this.turn = turn;
+  double angleOffset;
+  double acceptableError;
+  DriveTrain robotDrive;
+  public FaceShootingTarget(DriveTrain robotDrive, double acceptableError) {
+    this.robotDrive = robotDrive;
+    this.acceptableError = acceptableError;
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    SmartDashboard.putString("vision/active_mode/selected", "goalfinder");
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    SmartDashboard.putNumber("left encoder", driveTrain.getLeftEncoderTicks());
-    SmartDashboard.putNumber("right encoder", driveTrain.getRightEncoderTicks());
-    driveTrain.allDrive(throttle.getAsDouble(), turn.getAsDouble(), false);
+    angleOffset = SmartDashboard.getNumberArray("vision/target_info", new double[]{0,0,0,0,0,0,0})[4];
+    robotDrive.allDrive(0, robotDrive.turnSpeedCalc(angleOffset), false);
   }
 
   // Called once the command ends or is interrupted.
@@ -50,6 +45,6 @@ public class DriveCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return Math.abs(angleOffset) < acceptableError;
   }
 }

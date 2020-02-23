@@ -7,49 +7,54 @@
 
 package frc.robot.commands;
 
-import java.util.function.DoubleSupplier;
-
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.Carousel;
+import frc.robot.subsystems.Shooter;
 
-public class DriveCommand extends CommandBase {
+public class ShootFromKey extends CommandBase {
   /**
-   * Creates a new DriveCommand.
+   * Creates a new ShootFromKey.
    */
+  Shooter shooter;
+  Carousel carousel;
+  CarouselCommand carouselCommand;
+  int startTicks;
 
-  DriveTrain driveTrain;
-  DoubleSupplier throttle;
-  DoubleSupplier turn;
-
-  public DriveCommand(DriveTrain driveTrain, DoubleSupplier throttle, DoubleSupplier turn) {
-    this.driveTrain = driveTrain;
-    this.throttle = throttle;
-    this.turn = turn;
+  public ShootFromKey(Shooter shooter, Carousel carousel, CarouselCommand carouselCommand) {
+    this.shooter = shooter;
+    this.carousel = carousel;
+    this.carouselCommand = carouselCommand;
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    startTicks = carousel.getTicks();
+    carouselCommand.cancel();
+    shooter.setHood(155);
+    shooter.setShooterRPM(-4000);
+    shooter.shoot();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    SmartDashboard.putNumber("left encoder", driveTrain.getLeftEncoderTicks());
-    SmartDashboard.putNumber("right encoder", driveTrain.getRightEncoderTicks());
-    driveTrain.allDrive(throttle.getAsDouble(), turn.getAsDouble(), false);
+    if (shooter.getSpeed() < -3950) {
+      carousel.spin(0.5);
+    }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    shooter.stopAll();
+    carouselCommand.schedule();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return startTicks - 62805 >= carousel.getTicks();
   }
 }

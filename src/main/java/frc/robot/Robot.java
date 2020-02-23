@@ -7,8 +7,10 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commands.RunWinch;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -33,6 +35,15 @@ public class Robot extends TimedRobot {
     // and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+
+    m_robotContainer.shooter.calibratePID(0.00019, 0.00000014, 0, 1.0/6000.0);
+
+
+    // Reset Smart Dashboard for shooter test
+    SmartDashboard.putString("Shooting", "Idle");
+    
+    
+    // SmartDashboard.putData(new TestTurret(m_robotContainer.shooter));
   }
 
   /**
@@ -41,7 +52,9 @@ public class Robot extends TimedRobot {
    * teleoperated and test.
    *
    * <p>
-   * This runs after the mode specific periodic functions, but before LiveWindow
+   * This runs after the]\[
+   * [\]
+   * ] mode specific periodic functions, but before LiveWindow
    * and SmartDashboard integrated updating.
    */
   @Override
@@ -73,7 +86,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = null;//m_robotContainer.getAutonomousCommand();
+    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null)
       m_autonomousCommand.schedule();
@@ -88,17 +101,27 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    SmartDashboard.putNumber("Turret Angle", 75);
+    SmartDashboard.putNumber("Target Hood Angle", 60);
+    SmartDashboard.putNumber("TSR", -5500);
+    System.out.println("teleopInit");
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
+    //SmartDashboard.putData(m_robotContainer.testFlup);
     if (m_autonomousCommand != null)
       m_autonomousCommand.cancel();
     m_robotContainer.carousel.resetEncoder();
     m_robotContainer.driveCommand.schedule();
+    //m_robotContainer.testFlup.schedule();
+    //m_robotContainer.shooter.testSpin();
     m_robotContainer.carouselCommand.schedule();
-    m_robotContainer.testFlup.schedule();
-    m_robotContainer.testIntake.schedule();
+    //m_robotContainer.testFlup.schedule();
+    //m_robotContainer.testIntake.schedule();
+    //m_robotContainer.runShoulder.schedule();
+    RunWinch aaa = new RunWinch(m_robotContainer.climber, m_robotContainer);
+    aaa.schedule();
   }
 
   /**
