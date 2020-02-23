@@ -24,37 +24,19 @@ public final class Constants {
 
     // Drive Train SPARK MAXes
     public static final int LEADER_LEFT_CAN_ID = 1; //Drive Train Cansparkmaxes :D
-<<<<<<< HEAD
     public static final int LEADER_RIGHT_CAN_ID = 3;
     public static final int FOLLOWER_LEFT_CAN_ID = 2;
-=======
-
-    public static final int LEADER_RIGHT_CAN_ID = 3;
-
-    public static final int FOLLOWER_LEFT_CAN_ID = 2;
-
->>>>>>> 0c6d213410d6b23f5da6a27234968b5cb2e831a7
     public static final int FOLLOWER_RIGHT_CAN_ID = 4;//Sparkmaxes for drivetrain end here
 
     // Drive Train Encoders
     public static final int[] LEFT_ENCODER_PORTS = new int[]{0, 1};//DriveTrain Encoder
-<<<<<<< HEAD
-=======
-    
->>>>>>> 0c6d213410d6b23f5da6a27234968b5cb2e831a7
     public static final int[] RIGHT_ENCODER_PORTS = new int[]{2, 3};//DriveTrain Encoder
 
     //DistanceperPulse
     
     //Talon SRX for the Carousel
     public static final int CAROUSEL_CAN_ID = 12; // CAN ID for the spinner for carousel
-<<<<<<< HEAD
     public static final double CAROUSEL_SHOOTER_SPEED = 0.8; // This is just percent output
-=======
-
-    public static final double CAROUSEL_SHOOTER_SPEED = 0.8; // This is just percent output
-
->>>>>>> 0c6d213410d6b23f5da6a27234968b5cb2e831a7
     public static final double CAROUSEL_INTAKE_SPEED = 0.5; // This is just percent output
 
     // Talon SRX for the grabber (Carousel)
