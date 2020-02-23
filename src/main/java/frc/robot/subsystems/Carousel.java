@@ -9,10 +9,7 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-import com.revrobotics.CANSparkMax;
 import com.revrobotics.ColorSensorV3;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -26,6 +23,7 @@ public class Carousel extends SubsystemBase {
     WPI_TalonSRX spinner;
     Encoder carouselEncoder;
     ColorSensorV3 colorSensor = new ColorSensorV3(I2C.Port.kMXP);
+    int ballCount = 0;
 
 
     public Carousel() {
@@ -66,5 +64,17 @@ public class Carousel extends SubsystemBase {
 
     public int getColorSensorProximity() {
         return colorSensor.getProximity();
+    }
+
+    public void setBallCount (int ballCount) {
+        this.ballCount = ballCount;
+    }
+
+    public void resetBallCount () {
+        ballCount = 0;
+    }
+
+    public int getBallCount () {
+        return ballCount;
     }
 }
