@@ -134,7 +134,7 @@ public class Shooter extends SubsystemBase {
             // Charles' calculation
             double ratio = (ceilingEntry.getKey() - distance) / (ceilingEntry.getKey() - floorEntry.getKey());
             System.out.format("Ratio %4.1f", ratio);
-            double result = ceilingEntry.getValue()[0]  + ratio * (ceilingEntry.getValue()[0] - floorEntry.getValue()[0]);
+            double result = floorEntry.getValue()[0] + ratio * (ceilingEntry.getValue()[0] - floorEntry.getValue()[0]);
             System.out.format("Interpolated shooter speed %4.1f", result);
 
             // Mark's calculation
@@ -156,7 +156,7 @@ public class Shooter extends SubsystemBase {
         if (floorEntry != null && ceilingEntry != null) {
             // Charles calculation
             double ratio = (ceilingEntry.getKey() - distance) / (ceilingEntry.getKey() - floorEntry.getKey());
-            double result = ceilingEntry.getValue()[1]  + ratio * (ceilingEntry.getValue()[1] - floorEntry.getValue()[1]);
+            double result = floorEntry.getValue()[1] + ratio * (ceilingEntry.getValue()[1] - floorEntry.getValue()[1]);
 
             // Mark's calculation
             // double result = (ceilingEntry.getValue()[1] - floorEntry.getValue()[1]) / (ceilingEntry.getKey() - floorEntry.getKey()) * (ceilingEntry.getKey() - distance) / (ceilingEntry.getKey() - floorEntry.getKey())  + floorEntry.getValue()[1];
