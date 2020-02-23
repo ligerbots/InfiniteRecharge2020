@@ -94,6 +94,7 @@ public class Shooter extends SubsystemBase {
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Shooter RPM", getSpeed());
+        SmartDashboard.putNumber("Shooter motor current", motor2.getOutputCurrent());
     }
 
     public double getVoltage() {

@@ -24,6 +24,7 @@ import frc.robot.commands.TestCarousel;
 import frc.robot.commands.TestFlup;
 import frc.robot.commands.TestIntake;
 import frc.robot.commands.TurnAndShoot;
+import frc.robot.commands.VisionTargetDistance;
 import frc.robot.commands.CarouselCommand;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.EightBallAuto;
@@ -120,7 +121,7 @@ public class RobotContainer {
     JoystickButton xboxLine = new JoystickButton(xbox, Constants.XBOX_START);
     JoystickButton bumperRight = new JoystickButton(xbox, Constants.XBOX_RB);
     JoystickButton bumperLeft = new JoystickButton(xbox, Constants.XBOX_LB);
-    winchRun = new JoystickButton(xbox, Constants.XBOX_START);
+    //winchRun = new JoystickButton(xbox, Constants.XBOX_START);
     bumperRight.whileHeld(new IntakeCommand(intake, climber, 0.4));
     bumperLeft.whileHeld(new IntakeCommand(intake, climber, -0.4));
     xboxB.whileHeld(new ManualCarousel(carousel, carouselCommand));
@@ -129,10 +130,12 @@ public class RobotContainer {
     xboxY.whenPressed(new TurnAndShoot(robotDrive, shooter, carousel, carouselCommand));
     xboxX.whenPressed(new ShooterTuner(shooter));
     xboxY.whenPressed(new StopAllShooting(shooter));
+    JoystickButton xboxStart = new JoystickButton(xbox, Constants.XBOX_START);
+    xboxStart.whenPressed(new VisionTargetDistance(shooter));
     xbox7.whenPressed(new GatherData());
         //xboxA.whenPressed(new ClimberCommand()); //shootercomand
   }
-  
+
 
   /*public boolean APressed () {
     return xboxA.get();

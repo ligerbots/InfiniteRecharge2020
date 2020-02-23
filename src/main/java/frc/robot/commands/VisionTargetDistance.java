@@ -11,13 +11,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Shooter;
 
-public class ShooterTuner extends CommandBase {
+public class VisionTargetDistance extends CommandBase {
   /**
-   * Creates a new ShooterTuner.
+   * Creates a new VisionTargetDistance.
    */
-
   Shooter shooter;
-  public ShooterTuner(Shooter shooter) {
+  public VisionTargetDistance(Shooter shooter) {
     this.shooter = shooter;
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -25,20 +24,15 @@ public class ShooterTuner extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    shooter.calibratePID(0.00013, 0.00000002, 0, 6.776 * 0.00001);
-    shooter.setLEDRing(true);
-    SmartDashboard.putString("vision/active_mode/selected", "goalfinder");
+      System.out.println("Getting distance");
+      shooter.setLEDRing(true);
+      SmartDashboard.putString("vision/active_mode/selected", "goalfinder");
+      SmartDashboard.putNumber("Distance", SmartDashboard.getNumberArray("vision/target_info", new double[]{0,0,0,0,0,0,0})[3]);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    SmartDashboard.putNumber("Distance", SmartDashboard.getNumberArray("vision/target_info", new double[]{0,0,0,0,0,0,0})[3]);
-    System.out.println("Shooter Tuner going!");
-    shooter.shoot();
-    shooter.setHood(SmartDashboard.getNumber("Target Hood Angle", 60));
-    shooter.setShooterRPM(SmartDashboard.getNumber("TSR", -1000));
-    shooter.setTurret(SmartDashboard.getNumber("Turret Angle", 75));
   }
 
   // Called once the command ends or is interrupted.
