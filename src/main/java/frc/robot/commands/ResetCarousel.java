@@ -7,49 +7,55 @@
 
 package frc.robot.commands;
 
-import java.util.function.DoubleSupplier;
-
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.Carousel;
 
-public class DriveCommand extends CommandBase {
+public class ResetCarousel extends CommandBase {
   /**
-   * Creates a new DriveCommand.
+   * Creates a new ResetCarousel.
    */
+  int currentCheckpoint;
+  int startCheckpoint;
+  int currentTicks;
 
-  DriveTrain driveTrain;
-  DoubleSupplier throttle;
-  DoubleSupplier turn;
+  Carousel carousel;
+  final int fifthRotationTicks = 12561;
 
-  public DriveCommand(DriveTrain driveTrain, DoubleSupplier throttle, DoubleSupplier turn) {
-    this.driveTrain = driveTrain;
-    this.throttle = throttle;
-    this.turn = turn;
+  CarouselCommand carouselCommand;
+
+
+  public ResetCarousel(Carousel carousel, CarouselCommand carouselCommand) {
+    this.carousel = carousel;
+    this.carouselCommand = carouselCommand;
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    startCheckpoint = -carousel.getTicks() / fifthRotationTicks;
+    carousel.spin(0.5);
+    carouselCommand.cancel();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    SmartDashboard.putNumber("left encoder", driveTrain.getLeftEncoderTicks());
-    SmartDashboard.putNumber("right encoder", driveTrain.getRightEncoderTicks());
-    driveTrain.allDrive(throttle.getAsDouble(), turn.getAsDouble(), false);
+
+    currentTicks = -carousel.getTicks();
+    currentCheckpoint = currentTicks / fifthRotationTicks;
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    carousel.spin(0);
+    carouselCommand.schedule();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return currentCheckpoint > startCheckpoint;
   }
 }

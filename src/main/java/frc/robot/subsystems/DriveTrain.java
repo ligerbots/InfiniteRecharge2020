@@ -81,8 +81,8 @@ public class DriveTrain extends SubsystemBase {
     }
 
     public void tankDriveVolts (double leftVolts, double rightVolts) {
-        leftMotors.setVoltage(leftVolts);
-        rightMotors.setVoltage(-rightVolts);// make sure right is negative becuase sides are opposite
+        leftMotors.setVoltage(-leftVolts);
+        rightMotors.setVoltage(rightVolts);// make sure right is negative becuase sides are opposite
         robotDrive.feed();
       }
     
@@ -106,6 +106,7 @@ public class DriveTrain extends SubsystemBase {
         navX.reset();
     }
     
+    
     public void resetEncoders () {
         leftEncoder.reset();
         rightEncoder.reset();
@@ -126,11 +127,25 @@ public class DriveTrain extends SubsystemBase {
         // This method will be called once per scheduler run
     }
 
-    public void allDrive(double throttle, double rotate) {
-        robotDrive.arcadeDrive(throttle, -rotate);
+    public void allDrive(double throttle, double rotate, boolean squaredInputs) {
+        if (squaredInputs) {
+            if (Math.abs(throttle) < 0.1)
+                throttle = 0;
+            if (Math.abs(rotate) < 0.1) 
+                rotate = 0;
+        }
+        robotDrive.arcadeDrive(throttle, -rotate, squaredInputs);
     }
 
-    public void slide(double distance) {
+    public int getLeftEncoderTicks () {
+        return leftEncoder.get();
+    }
 
+    public int getRightEncoderTicks () {
+        return rightEncoder.get();
+    }
+
+    public double turnSpeedCalc(double angleError) {
+        return 0.021 * angleError;
     }
 }

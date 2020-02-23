@@ -7,49 +7,66 @@
 
 package frc.robot.commands;
 
-import java.util.function.DoubleSupplier;
-
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.Carousel;
 import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.Shooter;
 
-public class DriveCommand extends CommandBase {
+public class TemporaryShooterCommand extends CommandBase {
   /**
-   * Creates a new DriveCommand.
+   * Creates a new TemporaryShooterCommand.
    */
 
-  DriveTrain driveTrain;
-  DoubleSupplier throttle;
-  DoubleSupplier turn;
+  CarouselCommand carouselCommand;
+  Shooter shooter;
+  Carousel carousel;
+  DriveTrain robotDrive;
+  int startTicks;
 
-  public DriveCommand(DriveTrain driveTrain, DoubleSupplier throttle, DoubleSupplier turn) {
-    this.driveTrain = driveTrain;
-    this.throttle = throttle;
-    this.turn = turn;
+  long startTime;
+  
+
+  public TemporaryShooterCommand(Shooter shooter, Carousel carousel, DriveTrain robotDrive, CarouselCommand carouselCommand) {
+    this.shooter = shooter;
+    this.carousel = carousel;
+    this.robotDrive = robotDrive;
+    this.carouselCommand = carouselCommand;
+
+    startTicks = carousel.getTicks();
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    carouselCommand.cancel();
+    shooter.testSpin();
+    shooter.setHood(60);
+    startTime = System.nanoTime();
+    shooter.setLEDRing(true);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    SmartDashboard.putNumber("left encoder", driveTrain.getLeftEncoderTicks());
-    SmartDashboard.putNumber("right encoder", driveTrain.getRightEncoderTicks());
-    driveTrain.allDrive(throttle.getAsDouble(), turn.getAsDouble(), false);
+    if ((double)(System.nanoTime() - startTime) / 1_000_000_000.0 > 2.5);
+      shooter.shoot();
+    shooter.testSpin();
+    carousel.spin(0.7);
+
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    shooter.stopAll();
+    carouselCommand.schedule();
+    shooter.setLEDRing(false);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return (double)(System.nanoTime() - startTime) / 1_000_000_000 > 5; //startTicks - 62805 >= carousel.getTicks();
   }
 }
