@@ -33,22 +33,14 @@ import frc.robot.Constants;
 public class Shooter extends SubsystemBase {
 
     CANSparkMax motor1, motor2, motor3;
-
     static CANSparkMax flup;
-
     CANEncoder shooterEncoder;
-
     Servo hoodServo, turretServo;
-
     private TreeMap<Double, Double[]> distanceLookUp = new TreeMap<Double,Double[]>() {}; //set up lookup table for ranges
-
     CANPIDController pidController;
-
     Relay spike;
 
-
     public Shooter() {
-
         motor1 = new CANSparkMax(Constants.SHOOTER_ONE_CAN_ID,MotorType.kBrushless);
         motor2 = new CANSparkMax(Constants.SHOOTER_TWO_CAN_ID,MotorType.kBrushless);
         motor3 = new CANSparkMax(Constants.SHOOTER_THREE_CAN_ID,MotorType.kBrushless);
@@ -59,18 +51,12 @@ public class Shooter extends SubsystemBase {
         Arrays.asList(motor1, motor2, motor3, flup)
                 .forEach((CANSparkMax spark) -> spark.setIdleMode(IdleMode.kCoast));
 
-
         hoodServo = new Servo(Constants.SHOOTER_SERVO_PWM_ID);
-
         turretServo = new Servo(Constants.SHOOTER_TURRET_SERVO_ID);
-
         shooterEncoder = new CANEncoder(motor2);
         shooterEncoder.setVelocityConversionFactor(2.666);
-
         pidController = new CANPIDController(motor2);
-
         pidController.setFeedbackDevice(shooterEncoder);
-
 
         motor1.follow(motor2, true);  //  We want motor1 to be master and motor2 and 3 follow the speed of motor1
         motor3.follow(motor2);
@@ -78,6 +64,7 @@ public class Shooter extends SubsystemBase {
         spike = new Relay(0);
 
         //TODO: Populate lookup table
+        // Consider using java.util.scanner - https://docs.oracle.com/javase/7/docs/api/java/util/Scanner.html
 
         distanceLookUp.put(new Double(112.6), new Double[] {new Double(-5500), new Double(90)});
         distanceLookUp.put(new Double(137.1), new Double[] {new Double(-5500), new Double(80)});
@@ -86,8 +73,7 @@ public class Shooter extends SubsystemBase {
         distanceLookUp.put(new Double(318.1), new Double[] {new Double(-8000), new Double(60)});
         distanceLookUp.put(new Double(253.4), new Double[] {new Double(-7500), new Double(60)});
         distanceLookUp.put(new Double(235.2), new Double[] {new Double(-7500), new Double(55)});
-
-        
+       
     }
 
     @Override
@@ -138,16 +124,24 @@ public class Shooter extends SubsystemBase {
     }
 
     public double calculateShooterSpeed (final double distance) {
-        // TODO: Some logic 
         Entry<Double, Double[]> floorEntry = distanceLookUp.floorEntry(distance);
         Entry<Double, Double[]> ceilingEntry = distanceLookUp.higherEntry(distance);
+        System.out.format("Distance Floor %4.1f%n", floorEntry.getKey());
+        System.out.format("Distance current %4.1f%n", distance);
+        System.out.format("Distance current %4.1f", ceilingEntry.getKey());
 
         if (floorEntry != null && ceilingEntry != null) {
-            double result = (ceilingEntry.getValue()[0] - floorEntry.getValue()[0]) / 
-                                (ceilingEntry.getKey() - floorEntry.getKey())
-                              * (ceilingEntry.getKey() - distance) / 
-                                (ceilingEntry.getKey() - floorEntry.getKey()) + floorEntry.getValue()[0];
-            System.out.println("Interpolated Shooter Speed: " + result);
+            // Charles' calculation
+            double ratio = (ceilingEntry.getKey() - distance) / (ceilingEntry.getKey() - floorEntry.getKey());
+            System.out.format("Ratio %4.1f", ratio);
+            double result = ceilingEntry.getValue()[0]  + ratio * (ceilingEntry.getValue()[0] - floorEntry.getValue()[0]);
+            System.out.format("Interpolated shooter speed %4.1f", result);
+
+            // Mark's calculation
+            // double result = (ceilingEntry.getValue()[0] - floorEntry.getValue()[0]) / 
+            //                     (ceilingEntry.getKey() - floorEntry.getKey())
+            //                   * (ceilingEntry.getKey() - distance) / 
+            //                     (ceilingEntry.getKey() - floorEntry.getKey()) + floorEntry.getValue()[0];
             return result;
         }
         else {
@@ -156,16 +150,18 @@ public class Shooter extends SubsystemBase {
     }
 
     public double calculateShooterHood (final double distance) {
-        // TODO: Some logic 
         Entry<Double, Double[]> floorEntry = distanceLookUp.floorEntry(distance);
         Entry<Double, Double[]> ceilingEntry = distanceLookUp.higherEntry(distance);
 
         if (floorEntry != null && ceilingEntry != null) {
-            double result = (ceilingEntry.getValue()[1] - floorEntry.getValue()[1]) / (ceilingEntry.getKey() - floorEntry.getKey()) * (ceilingEntry.getKey() - distance) / (ceilingEntry.getKey() - floorEntry.getKey())  + floorEntry.getValue()[1];
-            System.out.println("Interpolated Hood Angle: " + result);
-            System.out.println("Distance Floor " + floorEntry.getKey());
-            System.out.println("Distance Ceiling " + ceilingEntry.getKey());
-            System.out.println("Current Distance " + distance);
+            // Charles calculation
+            double ratio = (ceilingEntry.getKey() - distance) / (ceilingEntry.getKey() - floorEntry.getKey());
+            double result = ceilingEntry.getValue()[1]  + ratio * (ceilingEntry.getValue()[1] - floorEntry.getValue()[1]);
+
+            // Mark's calculation
+            // double result = (ceilingEntry.getValue()[1] - floorEntry.getValue()[1]) / (ceilingEntry.getKey() - floorEntry.getKey()) * (ceilingEntry.getKey() - distance) / (ceilingEntry.getKey() - floorEntry.getKey())  + floorEntry.getValue()[1];
+            System.out.format("Interpolated Hood Angle %4.1f%n", result);
+
             return result;
         }
         else {
