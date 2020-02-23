@@ -32,6 +32,8 @@ public class ShooterCommand extends CommandBase {
 
   CarouselCommand carouselCommand;
 
+  int initialCarouselTicks;
+
   public ShooterCommand(Shooter shooter, Carousel carousel, DriveTrain robotDrive, double waitTime, CarouselCommand carouselCommand) {
     this.shooter = shooter;
     this.carousel = carousel;
@@ -55,6 +57,8 @@ public class ShooterCommand extends CommandBase {
     //TODO: remember to set to shooting camera mode!!
     carouselCommand.cancel();
 
+    // stor current carouselTick value
+    initialCarouselTicks = carousel.getTicks();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -102,6 +106,7 @@ public class ShooterCommand extends CommandBase {
   public void end(boolean interrupted) {
     shooter.stopAll();
     shooter.setLEDRing(false);
+    carousel.setBallCount(0);
     carouselCommand.schedule();
   }
 
@@ -111,11 +116,13 @@ public class ShooterCommand extends CommandBase {
 
   @Override
   public boolean isFinished() {
-    if (waitTime == 0.0) {
-      return false;
-    }
-    else {
-      return ((System.nanoTime() - startTime) / 1_000_000_000.0 >= waitTime);
-    }
+    // TODO: this should just check to see if the carousel has rotated 5 CAROUSEL_FIFTH_ROTATION_TICKS intervals
+    return (carousel.getTicks() -initialCarouselTicks) > 5 * Constants.CAROUSEL_FIFTH_ROTATION_TICKS;
+    // if (waitTime == 0.0) {
+    //   return false;
+    // }
+    // else {
+    //   return ((System.nanoTime() - startTime) / 1_000_000_000.0 >= waitTime);
+    // }
   }
 }
