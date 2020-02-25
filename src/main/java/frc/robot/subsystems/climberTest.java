@@ -15,17 +15,17 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-public class Climber extends SubsystemBase {
+public class climberTest extends SubsystemBase {
     public final CANSparkMax shoulder; // declare new motor
     CANSparkMax winch; // declare new motor
     DutyCycleEncoder shoulderEncoder;
     double zeroAngle = shoulderEncoder.get()-Constants.MAX_SHOULDER_ANGLE;
-    double motorSpeed = 0.2; // set shoulder movement speed
-    double winchSpeed = 0.7; // set the wich speed when running
+    double motorSpeed = 0; // set shoulder movement speed
+    double winchSpeed = 0; // set the wich speed when running
 
     //SHOULDER ENCODER IS AT 0.44 WHEN DOWN ALL THE WAY
 
-    public Climber() {
+    public climberTest() {
         shoulder = new CANSparkMax(Constants.SHOULDER_MOTOR_CAN_ID, MotorType.kBrushless); //init motor type and can id
         shoulder.setIdleMode(IdleMode.kBrake); // set to break when the motor is speed 0
         winch = new CANSparkMax(Constants.WINCH_MOTOR_CAN_ID, MotorType.kBrushless); //init motor type and can id
@@ -35,6 +35,9 @@ public class Climber extends SubsystemBase {
 
     @Override
     public void periodic() {
+        SmartDashboard.putNumber("Shoulder Encoder Location", shoulderEncoder.get());
+        winchSpeed = SmartDashboard.getNumber("winch speed", 0);
+        motorSpeed = SmartDashboard.getNumber("shoulder speed", 0);
     }
 
     public void deploy() {
@@ -42,13 +45,7 @@ public class Climber extends SubsystemBase {
     }
 
     public void moveShoulder(final double angle) {
-        if(shoulderEncoder.get() > angle) { // we cant go over so move motor back down
-        shoulder.set(-motorSpeed); // set speed of motor going down
-        }else if (shoulderEncoder.get() < angle-3){ // we can go under by 3 degrees
-            shoulder.set(motorSpeed); // set speed of motor going up
-        } else {
-            shoulder.set(0); // dont go any where if the angle is ok
-        }
+            shoulder.set(motorSpeed); // dont go any where if the angle is ok
     }
 
     public void moveWinch() {
