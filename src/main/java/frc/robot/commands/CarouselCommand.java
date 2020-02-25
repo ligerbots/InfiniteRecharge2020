@@ -32,7 +32,7 @@ public class CarouselCommand extends CommandBase {
   boolean stopForOpenSpace;
   int checkForFullnessCount = 0;
 
-  final int fifthRotationTicks = 12561;
+  final int fifthRotationTicks = Constants.CAROUSEL_FIFTH_ROTATION_TICKS;
   final double pauseTime = 0.04; // seconds
 
   public CarouselCommand(Carousel carousel) {

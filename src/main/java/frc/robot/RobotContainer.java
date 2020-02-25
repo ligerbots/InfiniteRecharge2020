@@ -24,6 +24,7 @@ import frc.robot.commands.TestCarousel;
 import frc.robot.commands.TestFlup;
 import frc.robot.commands.TestIntake;
 import frc.robot.commands.TurnAndShoot;
+import frc.robot.commands.VisionTargetDistance;
 import frc.robot.commands.CarouselCommand;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.EightBallAuto;
@@ -116,21 +117,25 @@ public class RobotContainer {
     JoystickButton xboxB = new JoystickButton(xbox, Constants.XBOX_B);
     JoystickButton xboxX = new JoystickButton(xbox, Constants.XBOX_X);
     JoystickButton xboxY = new JoystickButton(xbox, Constants.XBOX_Y);
-    JoystickButton xbox7 = new JoystickButton(xbox, 7);
+    JoystickButton xbox7 = new JoystickButton(xbox, Constants.XBOX_BACK);
     JoystickButton xboxLine = new JoystickButton(xbox, Constants.XBOX_START);
     JoystickButton bumperRight = new JoystickButton(xbox, Constants.XBOX_RB);
     JoystickButton bumperLeft = new JoystickButton(xbox, Constants.XBOX_LB);
-    winchRun = new JoystickButton(xbox, Constants.XBOX_START);
+    //winchRun = new JoystickButton(xbox, Constants.XBOX_START);
     bumperRight.whileHeld(new IntakeCommand(intake, climber, 0.4));
     bumperLeft.whileHeld(new IntakeCommand(intake, climber, -0.4));
     xboxB.whileHeld(new ManualCarousel(carousel, carouselCommand));
     xboxA.whenPressed(new ShootFromKey(shooter, carousel, carouselCommand).andThen(new ResetCarousel(carousel, carouselCommand)));
-    xboxX.whenPressed(new ShooterCommand(shooter, carousel, robotDrive, 5, carouselCommand).andThen(new ResetCarousel(carousel, carouselCommand)));
-    xboxY.whenPressed(new TurnAndShoot(robotDrive, shooter, carousel, carouselCommand));
+    xboxX.whenPressed(new ShooterCommand(shooter, carousel, robotDrive, 5, carouselCommand, driveCommand).andThen(new ResetCarousel(carousel, carouselCommand)));
+    xboxY.whenPressed(new TurnAndShoot(robotDrive, shooter, carousel, carouselCommand, driveCommand));
+    //xboxX.whenPressed(new ShooterTuner(shooter));
     //xboxY.whenPressed(new StopAllShooting(shooter));
-    xbox7.whenPressed(new GatherData());
+    JoystickButton xboxStart = new JoystickButton(xbox, Constants.XBOX_START);
+    xboxStart.whenPressed(new ShooterTuner(shooter));
+    xbox7.whenPressed(new FaceShootingTarget(robotDrive, 3, driveCommand, shooter));
         //xboxA.whenPressed(new ClimberCommand()); //shootercomand
   }
+
 
   /*public boolean APressed () {
     return xboxA.get();
@@ -142,8 +147,7 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
-  //EightBallAuto auto = new EightBallAuto(robotDrive, shooter, carousel, intake);
-  TurnAndShoot auto = new TurnAndShoot(robotDrive, shooter, carousel, carouselCommand);
+  EightBallAuto auto = new EightBallAuto(robotDrive, shooter, carousel, intake, driveCommand);
   public Command getAutonomousCommand() {
      return auto;
   }

@@ -31,7 +31,7 @@ public class ManualCarousel extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    carousel.spin(0.35);
+    carousel.spin(0.4);
   }
 
   // Called once the command ends or is interrupted.

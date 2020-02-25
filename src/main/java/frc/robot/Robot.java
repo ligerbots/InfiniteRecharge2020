@@ -6,6 +6,8 @@
 /*----------------------------------------------------------------------------*/
 package frc.robot;
 
+import com.revrobotics.CANSparkMax.IdleMode;
+
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -36,7 +38,7 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
 
-    m_robotContainer.shooter.calibratePID(0.00019, 0.00000014, 0, 1.0/6000.0);
+    m_robotContainer.shooter.calibratePID(0.00008, 0.000000025, 0, 6.776 * 0.00001);
 
 
     // Reset Smart Dashboard for shooter test
@@ -74,6 +76,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void disabledInit() {
+    m_robotContainer.climber.shoulder.setIdleMode(IdleMode.kCoast);
   }
 
   @Override
@@ -87,6 +90,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    m_robotContainer.carouselCommand.schedule();
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null)
       m_autonomousCommand.schedule();
@@ -120,8 +124,8 @@ public class Robot extends TimedRobot {
     //m_robotContainer.testFlup.schedule();
     //m_robotContainer.testIntake.schedule();
     //m_robotContainer.runShoulder.schedule();
-    RunWinch aaa = new RunWinch(m_robotContainer.climber, m_robotContainer);
-    aaa.schedule();
+    //RunWinch aaa = new RunWinch(m_robotContainer.climber, m_robotContainer);
+    //aaa.schedule();
   }
 
   /**

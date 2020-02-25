@@ -57,14 +57,31 @@ public final class Constants {
     public static final int SHOOTER_SERVO_PWM_ID = 0; // Servo to controll hood angle 
     public static final int SHOOTER_TURRET_SERVO_ID = 1; // TODO: Fix this
 
+    public static final double FLUP_STOP_CURRENT = 10; //TODO: FIX THIS VALUE
+
     public static final double TURRET_ANGLE_COEFFICIENT = 180; // TODO: Fix this
 
     public static final double WARM_UP_RPM = 3000; // TODO: find a good valuabl
 
     public static final double MAX_TURRET_OFFSET = 10; // in degrees (may be more)
-    public static final int WINCH_MOTOR_CAN_ID = 9; // Winch for the climber
+    
+    // Set Shoulder parameters
     public static final int SHOULDER_MOTOR_CAN_ID = 11;; // shoulder for the climber
-    public static final double WINCH_SPEED = 0.3; // set default value for winch for now; requires further testing
+    public static final double SHOULDER_MIN_HEIGHT = 0.44;
+    // If arm gets below 10 degrees above min height, we'll either stop the motor and let if fall in brake mode
+    // or we'll just move t down really slowly.
+    public static final double SHOULDER_MIN_VELOCITY_HEGHT = ((SHOULDER_MIN_HEIGHT * 360.0) + 10.0)/360.0;
+    public static final double SHOULDER_MAX_HEIGHT = 0.6; // TODO: measure max height of shoulder.
+    public static final double SHOULDER_START_HEIGHT = 0.58; // TODO: measure starting height of the shoulder.
+    public static final double SHOULDER_HEIGHT_FOR_SPRNIG_TO_LIFT = 0.25; // TODO: Armmmm height where upper arm won't
+    // go out of frame perimeter;
+    public static final double SHOULDER_HEIGHT_FOR_FRAME_PERIMITER = 0.3; // Max height where upper arm won't go out of
+    // frame permter
+
+    public static final int CAROUSEL_FIFTH_ROTATION_TICKS = 12561;
+    public static final int WINCH_MOTOR_CAN_ID = 9; // Winch for the climber
+    public static final double WINCH_SPEED = 0.7; // set default value for winch for now; requires further testing
+    public static final double WINCH_MAX_HEIGHT_TICK_COUNT = 1000; // TODO: Measure ticks at max climber winch extension
 
 
     // xbox button mapimng 
@@ -86,21 +103,21 @@ public final class Constants {
 
     // AUTO CHARACTERIZATION CONSTANTS
 
-    public static final double DISTANCE_PER_PULSE = 0.00187022937;
+    public static final double DISTANCE_PER_PULSE = 0.00155852448;
 
     //FEEDFORWARD AND FEEDBACK GAINS
     public static final double ksVolts = 0.182; 
     public static final double kvVoltSecondsPerMeter = 2.64; 
     public static final double kaVoltSecondsSquaredPerMeter = 0.324; 
-    public static final double kPDriveVel = 12.2; 
+    public static final double kPDriveVel = 8; 
 
     //DIFFERENTIAL DRIVE KINEMATICS
     public static final double kTrackwidth = 0.6604; // in meters
     public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(kTrackwidth);
 
     //MAX TRAJECTORY VELOCITY AND ACCELERATION
-    public static final double kMaxSpeed = 1.5; // TODO: ASSIGN A REAL VALUE meters per second
-    public static final double kMaxAcceleration = 0.5; // TODO: ASSIGN A REAL VALUE meters per second per second
+    public static final double kMaxSpeed = 1.22; // TODO: ASSIGN A REAL VALUE meters per second
+    public static final double kMaxAcceleration = 1; // TODO: ASSIGN A REAL VALUE meters per second per second
 
     //RAMSETE PARAMETERS
     public static final double kRamseteB = 2; // generic ramsete values

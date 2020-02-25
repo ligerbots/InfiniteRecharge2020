@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
@@ -58,15 +59,15 @@ public class DriveTrain extends SubsystemBase {
 
         // Set current limiting on drve train to prevent brown outs
         Arrays.asList(leftLeader, leftFollower, rightLeader, rightFollower)
-                .forEach((CANSparkMax spark) -> spark.setSmartCurrentLimit(40));
+                .forEach((CANSparkMax spark) -> spark.setSmartCurrentLimit(35));
 
         // Set motors to brake when idle. We don't want the drive train to coast.
         Arrays.asList(leftLeader, leftFollower, rightLeader, rightFollower)
                 .forEach((CANSparkMax spark) -> spark.setIdleMode(IdleMode.kBrake));
 
         //TODO determine real numbers to use here
-        rightLeader.setOpenLoopRampRate(0.0065);
-        leftLeader.setOpenLoopRampRate(0.0065);
+        //rightLeader.setOpenLoopRampRate(0.0065);
+        //leftLeader.setOpenLoopRampRate(0.0065);
 
         ////////////////////////////ODOMETRY SET UP//////////////////////////////////
 
@@ -124,6 +125,9 @@ public class DriveTrain extends SubsystemBase {
 
     @Override
     public void periodic() {
+        odometry.update(Rotation2d.fromDegrees(getHeading()), leftEncoder.getDistance(), rightEncoder.getDistance());
+        SmartDashboard.putNumber("Heading", getHeading());
+        SmartDashboard.putString("Pose", getPose().toString());
         // This method will be called once per scheduler run
     }
 
