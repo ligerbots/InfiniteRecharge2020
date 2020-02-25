@@ -62,7 +62,6 @@ public class ShooterCommand extends CommandBase {
 
     // stor current carouselTick value
     initialCarouselTicks = carousel.getTicks();
-
     visionInfo = SmartDashboard.getNumberArray("vision/target_info", empty); 
 
     angleError = visionInfo[4];

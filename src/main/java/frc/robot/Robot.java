@@ -40,7 +40,6 @@ public class Robot extends TimedRobot {
 
     m_robotContainer.shooter.calibratePID(0.00008, 0.000000025, 0, 6.776 * 0.00001);
 
-
     // Reset Smart Dashboard for shooter test
     SmartDashboard.putString("Shooting", "Idle");
     
