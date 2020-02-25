@@ -84,6 +84,8 @@ public class ShooterCommand extends CommandBase {
   public void execute() {
     visionInfo = SmartDashboard.getNumberArray("vision/target_info", empty); // TODO: need actual vision info
 
+    angleError = visionInfo[4] * 180 / 3.1416;
+
     if (visionInfo[0] != 0) { // figure out if we see a vision target
   
         if (Math.abs(angleError) > 5) {
@@ -96,9 +98,13 @@ public class ShooterCommand extends CommandBase {
 
         speedOnTarget = shooter.speedOnTarget(shooter.calculateShooterSpeed(distance), 5); //TODO: May need to adjust acceptable error
         hoodOnTarget = (double)(System.nanoTime() - startTime) / 1_000_000_000 > 0.75;//shooter.hoodOnTarget(shooter.calculateShooterHood(distance));
-        angleOnTarget = Math.abs(shooter.getTurretAngle() + angleError) <= 1.5; // They should be opposites so I added them
+        angleOnTarget = Math.abs(angleError) <= 4.5; // They should be opposites so I added them
 
-        if (speedOnTarget && hoodOnTarget/* && angleOnTarget*/)
+        if (angleOnTarget) {
+          shooter.setTurretAdjusted(-angleError);
+        }
+
+        if (speedOnTarget && hoodOnTarget && angleOnTarget)
             rapidFire();
     }
 

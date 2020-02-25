@@ -93,7 +93,7 @@ public class EightBallAuto extends SequentialCommandGroup {
     );
 
     RamseteCommand ramseteCommand2 = new RamseteCommand(
-        temporaryTrajectory,
+        comeBackTrajectory,
         robotDrive::getPose,
         new RamseteController(Constants.kRamseteB, Constants.kRamseteZeta),
         new SimpleMotorFeedforward(Constants.ksVolts,

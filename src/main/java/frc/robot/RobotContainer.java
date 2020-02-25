@@ -127,12 +127,12 @@ public class RobotContainer {
     xboxB.whileHeld(new ManualCarousel(carousel, carouselCommand));
     xboxA.whenPressed(new ShootFromKey(shooter, carousel, carouselCommand).andThen(new ResetCarousel(carousel, carouselCommand)));
     xboxX.whenPressed(new ShooterCommand(shooter, carousel, robotDrive, 5, carouselCommand, driveCommand).andThen(new ResetCarousel(carousel, carouselCommand)));
-    xboxY.whenPressed(new TurnAndShoot(robotDrive, shooter, carousel, carouselCommand));
+    xboxY.whenPressed(new TurnAndShoot(robotDrive, shooter, carousel, carouselCommand, driveCommand));
     //xboxX.whenPressed(new ShooterTuner(shooter));
     //xboxY.whenPressed(new StopAllShooting(shooter));
     JoystickButton xboxStart = new JoystickButton(xbox, Constants.XBOX_START);
-    xboxStart.whenPressed(new VisionTargetDistance(shooter));
-    xbox7.whenPressed(new GatherData());
+    xboxStart.whenPressed(new ShooterTuner(shooter));
+    xbox7.whenPressed(new FaceShootingTarget(robotDrive, 3, driveCommand, shooter));
         //xboxA.whenPressed(new ClimberCommand()); //shootercomand
   }
 
