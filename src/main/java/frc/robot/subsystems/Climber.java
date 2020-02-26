@@ -25,7 +25,6 @@ public class Climber extends SubsystemBase {
     DutyCycleEncoder shoulderEncoder;
     double zeroAngle = 0.44*360;
     double motorSpeed = 0.2; // set shoulder movement speed
-    double winchSpeed = 0.7; // set the wich speed when running
     boolean deployed = false;
   
     CANEncoder winchEncoder;
@@ -39,14 +38,13 @@ public class Climber extends SubsystemBase {
         shoulderEncoder = new DutyCycleEncoder(9);
         angle = shoulderEncoder.get();
         winchEncoder = new CANEncoder(winch);
-        shoulderEncoder = new DutyCycleEncoder(9);
     }
 
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Shoulder Encoder Location", shoulderEncoder.get());
-        winch.set(winchSpeed = SmartDashboard.getNumber("winch speed", 0));
-        shoulder.set(SmartDashboard.getNumber("shoulder speed", 0));
+        //winch.set(winchSpeed = SmartDashboard.getNumber("winch speed", 0));
+        //shoulder.set(SmartDashboard.getNumber("shoulder speed", 0));
     }
 
     public void deploy() {
@@ -67,6 +65,8 @@ public class Climber extends SubsystemBase {
             }
         }
     }
+
+    //TODO: FIX THIS MESS!!! WE DON'T USE WHILE LOOPS BECAUSE WE HAVE EXECUTE
     public void deployShoulder() { 
         while((shoulderEncoder.get()*360) < (shoulderEncoder.get()*360)+5){ // we can go under by 3 degrees
                 shoulder.set(motorSpeed); // set speed of motor going up
@@ -78,7 +78,7 @@ public class Climber extends SubsystemBase {
         angle = 0.0; // set shoulder angle to zero 
         deployed = true; // we are now deployed so allow controll
     }
-    public void moveWinch() {
+    public void moveWinch(double winchSpeed) {
         winch.set(winchSpeed); // set speed of motor
     }
 

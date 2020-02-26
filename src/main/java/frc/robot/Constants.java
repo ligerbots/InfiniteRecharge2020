@@ -87,7 +87,7 @@ public final class Constants {
     public static final double WINCH_MAX_HEIGHT_TICK_COUNT = 1000; // TODO: Measure ticks at max climber winch extension
     public static final double WINCH_LEVEL_BAR_TICK_COUNT_UP = 0; 
     public static final double WINCH_LEVEL_BAR_TICK_COUNT_DOWN = 0;
-    public static final double WINCH_CONVERSION_FACTOR = 0;
+    public static final double WINCH_CONVERSION_FACTOR = 30.0;
 
     // xbox button mapimng 
     public static final int XBOX_A = 1;

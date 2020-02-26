@@ -12,30 +12,32 @@ import frc.robot.Constants;
 import frc.robot.subsystems.Climber;
 
 public class WinchCommand extends CommandBase {
-  Climber shoulder;
-  Climber winch;
+  Climber climber;
   double winchTicks;
 
-  public WinchCommand(Climber shoulder, Climber winch) {
-    this.shoulder = shoulder;
-    this.winch = winch;
+  public WinchCommand(Climber climber) {
+    this.climber = climber;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-      winchTicks = winch.getTicks();
+      winchTicks = climber.getTicks();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
+    winchUp();
+    winchMax();
+    winchDown();
+    winchClimb();
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    climber.moveWinch(0);
   }
 
   // Returns true when the command should end.
@@ -46,34 +48,34 @@ public class WinchCommand extends CommandBase {
 
   public void winchUp() {
     if (winchTicks < Constants.WINCH_LEVEL_BAR_TICK_COUNT_UP) {
-      winch.moveWinch(Constants.WINCH_SPEED_FAST);
+      climber.moveWinch(Constants.WINCH_SPEED_FAST);
     }
     else {
-      winch.moveWinch(0.0);
+      climber.moveWinch(0.0);
     }
   }
 
   public void winchMax() {
     if (winchTicks < Constants.WINCH_MAX_HEIGHT_TICK_COUNT && winchTicks > Constants.WINCH_LEVEL_BAR_TICK_COUNT_UP) {
-      winch.moveWinch(Constants.WINCH_SPEED_SLOW);
+      climber.moveWinch(Constants.WINCH_SPEED_SLOW);
     }
     else {
-      winch.moveWinch(0.0);
+      climber.moveWinch(0.0);
     }
   }
 
   public void winchDown() {
     if (winchTicks > Constants.WINCH_MAX_HEIGHT_TICK_COUNT && winchTicks < Constants.WINCH_LEVEL_BAR_TICK_COUNT_DOWN) {
-      winch.moveWinch(Constants.WINCH_SPEED_SLOW);
+      climber.moveWinch(Constants.WINCH_SPEED_SLOW);
     }
     else {
-      winch.moveWinch(0.0);
+      climber.moveWinch(0.0);
     }
   }
 
   public void winchClimb() {
     if (winchTicks > Constants.WINCH_LEVEL_BAR_TICK_COUNT_DOWN) {
-      winch.moveWinch(Constants.WINCH_SPEED_CLIMB);
+      climber.moveWinch(Constants.WINCH_SPEED_CLIMB);
+    }
   }
-}
 }
