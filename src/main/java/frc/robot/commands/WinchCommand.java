@@ -19,7 +19,6 @@ public class WinchCommand extends CommandBase {
   public WinchCommand(Climber shoulder, Climber winch) {
     this.shoulder = shoulder;
     this.winch = winch;
-
   }
 
   // Called when the command is initially scheduled.
@@ -46,36 +45,35 @@ public class WinchCommand extends CommandBase {
   }
 
   public void winchUp() {
-    if(winchTicks < Constants.WINCH_LEVEL_BAR_TICK_COUNT_UP){
+    if (winchTicks < Constants.WINCH_LEVEL_BAR_TICK_COUNT_UP) {
       winch.moveWinch(Constants.WINCH_SPEED_FAST);
     }
-    else{
+    else {
       winch.moveWinch(0.0);
     }
   }
 
   public void winchMax() {
-    if(winchTicks < Constants.WINCH_MAX_HEIGHT_TICK_COUNT && winchTicks > Constants.WINCH_LEVEL_BAR_TICK_COUNT_UP){
+    if (winchTicks < Constants.WINCH_MAX_HEIGHT_TICK_COUNT && winchTicks > Constants.WINCH_LEVEL_BAR_TICK_COUNT_UP) {
       winch.moveWinch(Constants.WINCH_SPEED_SLOW);
     }
-    else{
+    else {
       winch.moveWinch(0.0);
     }
   }
 
   public void winchDown() {
-    if(winchTicks > Constants.WINCH_MAX_HEIGHT_TICK_COUNT && winchTicks < Constants.WINCH_LEVEL_BAR_TICK_COUNT_DOWN){
+    if (winchTicks > Constants.WINCH_MAX_HEIGHT_TICK_COUNT && winchTicks < Constants.WINCH_LEVEL_BAR_TICK_COUNT_DOWN) {
       winch.moveWinch(Constants.WINCH_SPEED_SLOW);
     }
-    else{
+    else {
       winch.moveWinch(0.0);
     }
   }
 
   public void winchClimb() {
-    if (winchTicks > Constants.WINCH_LEVEL_BAR_TICK_COUNT_DOWN){
-
-    winch.moveWinch(Constants.WINCH_SPEED_CLIMB);
+    if (winchTicks > Constants.WINCH_LEVEL_BAR_TICK_COUNT_DOWN) {
+      winch.moveWinch(Constants.WINCH_SPEED_CLIMB);
   }
 }
 }
