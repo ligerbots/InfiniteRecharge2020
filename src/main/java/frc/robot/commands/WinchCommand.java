@@ -8,23 +8,30 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
+import frc.robot.subsystems.Climber;
 
-public class TestClimberCommand extends CommandBase {
-  /**
-   * Creates a new TestClimberCommand.
-   */
-  public TestClimberCommand() {
-    // Use addRequirements() here to declare subsystem dependencies.
+public class WinchCommand extends CommandBase {
+  Climber shoulder;
+  Climber winch;
+  double winchTicks;
+
+  public WinchCommand(Climber shoulder, Climber winch) {
+    this.shoulder = shoulder;
+    this.winch = winch;
+
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+      winchTicks = winch.getTicks();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+
   }
 
   // Called once the command ends or is interrupted.
@@ -37,4 +44,38 @@ public class TestClimberCommand extends CommandBase {
   public boolean isFinished() {
     return false;
   }
+
+  public void winchUp() {
+    if(winchTicks < Constants.WINCH_LEVEL_BAR_TICK_COUNT_UP){
+      winch.moveWinch(Constants.WINCH_SPEED_FAST);
+    }
+    else{
+      winch.moveWinch(0.0);
+    }
+  }
+
+  public void winchMax() {
+    if(winchTicks < Constants.WINCH_MAX_HEIGHT_TICK_COUNT && winchTicks > Constants.WINCH_LEVEL_BAR_TICK_COUNT_UP){
+      winch.moveWinch(Constants.WINCH_SPEED_SLOW);
+    }
+    else{
+      winch.moveWinch(0.0);
+    }
+  }
+
+  public void winchDown() {
+    if(winchTicks > Constants.WINCH_MAX_HEIGHT_TICK_COUNT && winchTicks < Constants.WINCH_LEVEL_BAR_TICK_COUNT_DOWN){
+      winch.moveWinch(Constants.WINCH_SPEED_SLOW);
+    }
+    else{
+      winch.moveWinch(0.0);
+    }
+  }
+
+  public void winchClimb() {
+    if (winchTicks > Constants.WINCH_LEVEL_BAR_TICK_COUNT_DOWN){
+
+    winch.moveWinch(Constants.WINCH_SPEED_CLIMB);
+  }
+}
 }
