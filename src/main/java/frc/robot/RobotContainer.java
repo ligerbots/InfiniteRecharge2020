@@ -14,15 +14,10 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 // import jdk.vm.ci.meta.Constant;
 import frc.robot.subsystems.DriveTrain;
-import frc.robot.commands.RunWinch;
 import frc.robot.commands.ShootFromKey;
 import frc.robot.commands.ShooterCommand;
 import frc.robot.commands.ShooterTuner;
 import frc.robot.commands.StopAllShooting;
-import frc.robot.commands.TemporaryShooterCommand;
-import frc.robot.commands.TestCarousel;
-import frc.robot.commands.TestFlup;
-import frc.robot.commands.TestIntake;
 import frc.robot.commands.TurnAndShoot;
 import frc.robot.commands.VisionTargetDistance;
 import frc.robot.commands.CarouselCommand;
@@ -31,7 +26,6 @@ import frc.robot.commands.EightBallAuto;
 import frc.robot.commands.FaceShootingTarget;
 import frc.robot.commands.GatherData;
 import frc.robot.commands.IntakeCommand;
-import frc.robot.commands.ManualCarousel;
 import frc.robot.commands.ResetCarousel;
 import frc.robot.commands.RunShoulder;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -70,15 +64,12 @@ public class RobotContainer {
   public JoystickButton winchRun;
 
   public CarouselCommand carouselCommand = new CarouselCommand (carousel);
-  public TestIntake testIntake = new TestIntake(intake);
-  public TestFlup testFlup;
 
   
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
-    testFlup = new TestFlup(shooter);
     // Configure the button bindings
     configureButtonBindings();
   }
@@ -124,7 +115,7 @@ public class RobotContainer {
     //winchRun = new JoystickButton(xbox, Constants.XBOX_START);
     bumperRight.whileHeld(new IntakeCommand(intake, climber, 0.4));
     bumperLeft.whileHeld(new IntakeCommand(intake, climber, -0.4));
-    xboxB.whileHeld(new ManualCarousel(carousel, carouselCommand));
+    //xboxB.whileHeld(new ManualCarousel(carousel, carouselCommand));
     xboxA.whenPressed(new ShootFromKey(shooter, carousel, carouselCommand).andThen(new ResetCarousel(carousel, carouselCommand)));
     xboxX.whenPressed(new ShooterCommand(shooter, carousel, robotDrive, 5, carouselCommand, driveCommand).andThen(new ResetCarousel(carousel, carouselCommand)));
     xboxY.whenPressed(new TurnAndShoot(robotDrive, shooter, carousel, carouselCommand, driveCommand));

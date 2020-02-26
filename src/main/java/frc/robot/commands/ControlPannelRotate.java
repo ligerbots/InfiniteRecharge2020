@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Intake.OutColor;
 
-public class RotateTimes extends CommandBase {
+public class ControlPannelRotate extends CommandBase {
   /**
    * Creates a new RotateTimes.
    */
@@ -29,7 +29,7 @@ public class RotateTimes extends CommandBase {
   boolean newColor;
   boolean startingFlag;
 
-  public RotateTimes(Intake intake, int rotations) {
+  public ControlPannelRotate(Intake intake, int rotations) {
     rotationCount = 0;
     this.intake = intake;
     this.rotationsToGo = rotations *  2;
