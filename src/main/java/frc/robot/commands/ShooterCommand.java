@@ -13,6 +13,7 @@ import frc.robot.Constants;
 import frc.robot.subsystems.Carousel;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Shooter;
+import frc.robot.CircularBuffer;
 
 public class ShooterCommand extends CommandBase {
   /**
@@ -34,6 +35,19 @@ public class ShooterCommand extends CommandBase {
   DriveCommand driveCommand;
 
   int initialCarouselTicks;
+
+  long stableRPMTime;
+  boolean startedTimerFlag;
+
+  private CircularBuffer kFEstimator = new CircularBuffer(20);
+
+  public enum ControlMethod {
+    SPIN_UP, // PIDF to desired RPM
+    HOLD_WHEN_READY, // calculate average kF
+    HOLD, // switch to pure kF control
+  }
+
+  ControlMethod currentControlMode;
 
   public ShooterCommand(Shooter shooter, Carousel carousel, DriveTrain robotDrive, double waitTime, CarouselCommand carouselCommand, DriveCommand driveCommand) {
     this.shooter = shooter;
@@ -59,6 +73,7 @@ public class ShooterCommand extends CommandBase {
     shooter.setLEDRing(true);
     //TODO: remember to set to shooting camera mode!!
     carouselCommand.cancel();
+    currentControlMode = ControlMethod.SPIN_UP;
 
     // stor current carouselTick value
     initialCarouselTicks = carousel.getTicks();
@@ -68,7 +83,9 @@ public class ShooterCommand extends CommandBase {
     distance = visionInfo[3];
 
     shooter.prepareShooter(distance);
-    shooter.shoot();
+    currentControlMode = ControlMethod.SPIN_UP;
+    startedTimerFlag = false;
+    //shooter.shoot();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -85,6 +102,27 @@ public class ShooterCommand extends CommandBase {
 
     angleError = visionInfo[4] * 180 / 3.1416;
 
+    if (currentControlMode == ControlMethod.SPIN_UP){ 
+      if (shooter.speedOnTarget(shooter.calculateShooterSpeed(distance), 5)) {
+        if (startedTimerFlag) {
+          if (System.nanoTime() - stableRPMTime > 0.5 * 1_000_000_000) {
+            currentControlMode = ControlMethod.HOLD;
+          }
+        }
+        else {
+          stableRPMTime = System.nanoTime();
+          startedTimerFlag = true;
+        }
+      }
+      else {
+        startedTimerFlag = false;
+      }
+    }
+    else if (currentControlMode == ControlMethod.HOLD) {
+      //kFEstimator.addValue(val);
+      shooter.calibratePID(0, 0, 0, 1/ (5700 * 2.6666));
+    }
+
     if (visionInfo[0] != 0) { // figure out if we see a vision target
   
         if (Math.abs(angleError) > 5) {
@@ -95,7 +133,7 @@ public class ShooterCommand extends CommandBase {
           //shooter.setTurret(angleError *  Math.signum(angleError));
         }
 
-        speedOnTarget = shooter.speedOnTarget(shooter.calculateShooterSpeed(distance), 5); //TODO: May need to adjust acceptable error
+        speedOnTarget = shooter.speedOnTarget(shooter.calculateShooterSpeed(distance), 5) && currentControlMode == ControlMethod.HOLD; //TODO: May need to adjust acceptable error
         hoodOnTarget = (double)(System.nanoTime() - startTime) / 1_000_000_000 > 0.75;//shooter.hoodOnTarget(shooter.calculateShooterHood(distance));
         angleOnTarget = Math.abs(angleError) <= 4.5; // They should be opposites so I added them
 
@@ -122,6 +160,10 @@ public class ShooterCommand extends CommandBase {
     carouselCommand.schedule();
     driveCommand.schedule();
   }
+
+  /*public double estimateKF (double rpm, double voltage) {
+    final double speed_in_ticks_per_20ms = 
+  }*/
 
   // Returns true when the command should end.
 
