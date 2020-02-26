@@ -35,6 +35,9 @@ public class Climber extends SubsystemBase {
 
     @Override
     public void periodic() {
+        SmartDashboard.putNumber("Shoulder Encoder Location", shoulderEncoder.get());
+        winch.set(winchSpeed = SmartDashboard.getNumber("winch speed", 0));
+        shoulder.set(SmartDashboard.getNumber("shoulder speed", 0));
     }
 
     public void deploy() {

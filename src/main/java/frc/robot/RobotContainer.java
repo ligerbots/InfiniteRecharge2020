@@ -34,7 +34,6 @@ import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.ManualCarousel;
 import frc.robot.commands.ResetCarousel;
 import frc.robot.commands.RunShoulder;
-import frc.robot.subsystems.climberTest;
 import frc.robot.subsystems.Climber;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -65,11 +64,10 @@ public class RobotContainer {
   public final Carousel carousel = new Carousel();
   public final Shooter shooter = new Shooter();
   public final Climber climber = new Climber();
-  public final climberTest climbertest = new climberTest();
 
 
   private final Shoulder shoulder = new Shoulder();
-  //public final RunShoulder runShoulder = new RunShoulder(climber, shoulder);
+  public final RunShoulder runShoulder = new RunShoulder(climber, shoulder);
   public JoystickButton winchRun;
 
   public CarouselCommand carouselCommand = new CarouselCommand (carousel);
