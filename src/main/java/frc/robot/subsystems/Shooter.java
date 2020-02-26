@@ -143,6 +143,10 @@ public class Shooter extends SubsystemBase {
         // and hoodServo value based on the input distance.
     }
 
+    public void setShooterVoltage (double voltage) {
+        pidController.setReference(voltage, ControlType.kVoltage);
+    }
+
     public void shoot () {
         System.out.println("Flup current: " + flup.getOutputCurrent());
         if (flup.getOutputCurrent() < Constants.FLUP_STOP_CURRENT) {
