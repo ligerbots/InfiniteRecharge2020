@@ -123,6 +123,6 @@ public final class Constants {
     public static final double kRamseteB = 2; // generic ramsete values
     public static final double kRamseteZeta = 0.7; // generic ramsete values
 
-    public static final double MAX_SHOULDER_ANGLE = 20; // max shoulder angle to be in perimiter
+    public static final double MAX_SHOULDER_ANGLE = 20; //TODO: max shoulder angle to be in perimiter
 
 }
