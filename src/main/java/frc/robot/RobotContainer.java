@@ -33,6 +33,7 @@ import frc.robot.commands.GatherData;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.ManualCarousel;
 import frc.robot.commands.ResetCarousel;
+import frc.robot.commands.RunShoulder;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
  //import edu.wpi.first.wpilibj.XboxController; will need later
@@ -61,12 +62,11 @@ public class RobotContainer {
   private final Intake intake = new Intake();
   public final Carousel carousel = new Carousel();
   public final Shooter shooter = new Shooter();
+  public final Climber climber = new Climber();
 
 
   private final Shoulder shoulder = new Shoulder();
-  public final Climber climber = new Climber(shoulder);
-
-
+  public final RunShoulder runShoulder = new RunShoulder(climber, shoulder);
   public JoystickButton winchRun;
 
   public CarouselCommand carouselCommand = new CarouselCommand (carousel);
@@ -108,7 +108,7 @@ public class RobotContainer {
 
     @Override
     public double getAsDouble() {
-      return xbox.getTriggerAxis(Hand.kRight)*Constants.MAX_SHOULDER_ANGLE;// set shoulder speed 
+      return xbox.getTriggerAxis(Hand.kRight) - xbox.getTriggerAxis(Hand.kLeft);// set shoulder speed 
     }
   }
 
