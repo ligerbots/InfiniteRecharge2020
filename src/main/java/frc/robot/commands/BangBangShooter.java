@@ -13,33 +13,30 @@ import frc.robot.Constants;
 import frc.robot.subsystems.Carousel;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Shooter;
-import frc.robot.CircularBuffer;
 
-public class ShooterCommand extends CommandBase {
+public class BangBangShooter extends CommandBase {
   /**
-   * Creates a new ShooterCommand.
+   * Creates a new BangBangShooter.
    */
 
   double[] visionInfo;
   double[] empty = new double[] {0.0,0.0,0.0,0.0,0.0,0.0,0.0}; 
-  double waitTime;
-  double startTime;
+
+  int initialCarouselTicks;
+
+  double angleError;
+  double distance;
 
   Shooter shooter;
   Carousel carousel;
   DriveTrain robotDrive;
 
-  boolean startShooting;
-
   CarouselCommand carouselCommand;
   DriveCommand driveCommand;
 
-  int initialCarouselTicks;
-
   long stableRPMTime;
   boolean startedTimerFlag;
-
-  private CircularBuffer kFEstimator = new CircularBuffer(20);
+  double startTime;
 
   public enum ControlMethod {
     SPIN_UP, // PIDF to desired RPM
@@ -49,14 +46,14 @@ public class ShooterCommand extends CommandBase {
 
   ControlMethod currentControlMode;
 
-  public ShooterCommand(Shooter shooter, Carousel carousel, DriveTrain robotDrive, double waitTime, CarouselCommand carouselCommand, DriveCommand driveCommand) {
+
+  public BangBangShooter(Shooter shooter, Carousel carousel, DriveTrain robotDrive, CarouselCommand carouselCommand, DriveCommand driveCommand) {
     this.shooter = shooter;
     this.carousel = carousel;
     this.robotDrive = robotDrive;
-    this.waitTime = waitTime;
     this.carouselCommand = carouselCommand;
     this.driveCommand = driveCommand;
-    startShooting = false;
+    // Use addRequirements() here to declare subsystem dependencies.
   }
 
   public void rapidFire() {
@@ -67,13 +64,12 @@ public class ShooterCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    driveCommand.cancel();
     startTime = System.nanoTime();
+    driveCommand.cancel();
     SmartDashboard.putString("vision/active_mode/selected", "goalfinder");
     shooter.setLEDRing(true);
     //TODO: remember to set to shooting camera mode!!
     carouselCommand.cancel();
-    currentControlMode = ControlMethod.SPIN_UP;
 
     // stor current carouselTick value
     initialCarouselTicks = carousel.getTicks();
@@ -83,24 +79,23 @@ public class ShooterCommand extends CommandBase {
     distance = visionInfo[3];
 
     shooter.prepareShooter(distance);
-    currentControlMode = ControlMethod.SPIN_UP;
+
     startedTimerFlag = false;
-    //shooter.shoot();
+
   }
 
   // Called every time the scheduler runs while the command is scheduled.
-  double angleError;
-  double distance;
 
-  boolean speedOnTarget = false;
-  boolean hoodOnTarget = false;
-  boolean angleOnTarget = false;
+  boolean speedOnTarget;
+  boolean hoodOnTarget;
+  boolean angleOnTarget;
 
   @Override
   public void execute() {
+
     visionInfo = SmartDashboard.getNumberArray("vision/target_info", empty); // TODO: need actual vision info
 
-    angleError = visionInfo[4] * 180 / 3.1416;
+    angleError = visionInfo[4];
 
     if (currentControlMode == ControlMethod.SPIN_UP){ 
       if (shooter.speedOnTarget(shooter.calculateShooterSpeed(distance), 5)) {
@@ -120,36 +115,38 @@ public class ShooterCommand extends CommandBase {
     }
     else if (currentControlMode == ControlMethod.HOLD) {
       //kFEstimator.addValue(val);
-      shooter.calibratePID(0, 0, 0, 1 / (5700 * 2.6666));
+      if (shooter.getSpeed() <= shooter.calculateShooterSpeed(distance)) {
+        shooter.setShooterVoltage(12);
+      }
+      else {
+        shooter.setShooterVoltage(0);
+      }
     }
+
 
     if (visionInfo[0] != 0) { // figure out if we see a vision target
   
-        if (Math.abs(angleError) > 5) {
-          robotDrive.allDrive(0, robotDrive.turnSpeedCalc(angleError), false);
-        }
-        else {
-          robotDrive.allDrive(0, 0, false);
-          //shooter.setTurret(angleError *  Math.signum(angleError));
-        }
+      if (Math.abs(angleError) > 5) {
+        robotDrive.allDrive(0, robotDrive.turnSpeedCalc(angleError), false);
+      }
+      else {
+        robotDrive.allDrive(0, 0, false);
+        //shooter.setTurret(angleError *  Math.signum(angleError));
+      }
 
-        speedOnTarget = shooter.speedOnTarget(shooter.calculateShooterSpeed(distance), 5) && currentControlMode == ControlMethod.HOLD; //TODO: May need to adjust acceptable error
-        hoodOnTarget = (double)(System.nanoTime() - startTime) / 1_000_000_000 > 0.75;//shooter.hoodOnTarget(shooter.calculateShooterHood(distance));
-        angleOnTarget = Math.abs(angleError) <= 4.5; // They should be opposites so I added them
+      speedOnTarget = shooter.speedOnTarget(shooter.calculateShooterSpeed(distance), 5) && currentControlMode == ControlMethod.HOLD; //TODO: May need to adjust acceptable error
+      hoodOnTarget = (double)(System.nanoTime() - startTime) / 1_000_000_000 > 0.75;//shooter.hoodOnTarget(shooter.calculateShooterHood(distance));
+      angleOnTarget = Math.abs(angleError) <= 4.5; // They should be opposites so I added them
 
-        if (angleOnTarget) {
+      if (angleOnTarget) {
           shooter.setTurretAdjusted(-angleError);
-        }
+      }
 
-        if (speedOnTarget && hoodOnTarget && angleOnTarget)
-            rapidFire();
+      if (speedOnTarget && hoodOnTarget && angleOnTarget)
+          rapidFire();
+      
     }
-
   }
-
-  // if (shooter.speedOnTarget(shooter.calculateShooterSpeed(visionInfo[1]), 1) && shooter.hoodOnTarget(shooter.calculateShooterHood(visionInfo[1]))) {
-  //   shooter.shoot();
-  // } //The allowed error here matters a lot
 
   // Called once the command ends or is interrupted.
   @Override
@@ -161,23 +158,9 @@ public class ShooterCommand extends CommandBase {
     driveCommand.schedule();
   }
 
-  /*public double estimateKF (double rpm, double voltage) {
-    final double speed_in_ticks_per_20ms = 
-  }*/
-
   // Returns true when the command should end.
-
-
-
   @Override
   public boolean isFinished() {
-    // TODO: this should just check to see if the carousel has rotated 5 CAROUSEL_FIFTH_ROTATION_TICKS intervals
     return (carousel.getTicks() -initialCarouselTicks) > 5 * Constants.CAROUSEL_FIFTH_ROTATION_TICKS;
-    // if (waitTime == 0.0) {
-    //   return false;
-    // }
-    // else {
-    //   return ((System.nanoTime() - startTime) / 1_000_000_000.0 >= waitTime);
-    // }
   }
 }
