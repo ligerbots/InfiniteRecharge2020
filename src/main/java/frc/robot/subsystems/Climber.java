@@ -6,11 +6,14 @@
 /*----------------------------------------------------------------------------*/
 package frc.robot.subsystems;
 
+import com.revrobotics.CANEncoder;
+import com.revrobotics.CANError;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -24,7 +27,8 @@ public class Climber extends SubsystemBase {
     double motorSpeed = 0.2; // set shoulder movement speed
     double winchSpeed = 0.7; // set the wich speed when running
     boolean deployed = false;
-
+  
+    CANEncoder winchEncoder;
     //SHOULDER ENCODER IS AT 0.44 WHEN DOWN ALL THE WAY
 
     public Climber() {
@@ -34,6 +38,8 @@ public class Climber extends SubsystemBase {
         winch.setIdleMode(IdleMode.kBrake);// set to break when the motor is speed 0
         shoulderEncoder = new DutyCycleEncoder(9);
         angle = shoulderEncoder.get();
+        winchEncoder = new CANEncoder(winch);
+        shoulderEncoder = new DutyCycleEncoder(9);
     }
 
     @Override
@@ -72,4 +78,11 @@ public class Climber extends SubsystemBase {
     public void moveWinch() {
         winch.set(winchSpeed); // set speed of motor
     }
+
+    public double getTicks(){
+        winchEncoder.setPositionConversionFactor(Constants.WINCH_CONVERSION_FACTOR);
+        return winchEncoder.getPosition();
+    }
+
+   
 }
