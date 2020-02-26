@@ -16,12 +16,14 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class Climber extends SubsystemBase {
+    Double angle;
     public final CANSparkMax shoulder; // declare new motor
     CANSparkMax winch; // declare new motor
     DutyCycleEncoder shoulderEncoder;
-    double zeroAngle = shoulderEncoder.get()-Constants.MAX_SHOULDER_ANGLE;
+    double zeroAngle = 0.44*360;
     double motorSpeed = 0.2; // set shoulder movement speed
     double winchSpeed = 0.7; // set the wich speed when running
+    boolean deployed = false;
 
     //SHOULDER ENCODER IS AT 0.44 WHEN DOWN ALL THE WAY
 
@@ -31,6 +33,7 @@ public class Climber extends SubsystemBase {
         winch = new CANSparkMax(Constants.WINCH_MOTOR_CAN_ID, MotorType.kBrushless); //init motor type and can id
         winch.setIdleMode(IdleMode.kBrake);// set to break when the motor is speed 0
         shoulderEncoder = new DutyCycleEncoder(9);
+        angle = shoulderEncoder.get();
     }
 
     @Override
@@ -45,15 +48,27 @@ public class Climber extends SubsystemBase {
     }
 
     public void moveShoulder(final double angle) {
-        if(shoulderEncoder.get() > angle) { // we cant go over so move motor back down
-        shoulder.set(-motorSpeed); // set speed of motor going down
-        }else if (shoulderEncoder.get() < angle-3){ // we can go under by 3 degrees
-            shoulder.set(motorSpeed); // set speed of motor going up
-        } else {
-            shoulder.set(0); // dont go any where if the angle is ok
+        if (deployed) {
+            if((shoulderEncoder.get()*360)-zeroAngle > angle+1) { // we cant go over so move motor back down
+                shoulder.set(-motorSpeed/2.0); // set speed of motor going down
+            }else if ((shoulderEncoder.get()*360)-zeroAngle < angle-3){ // we can go under by 3 degrees
+                    shoulder.set(motorSpeed); // set speed of motor going up
+            } else {
+                    shoulder.set(0); // dont go any where if the angle is ok
+            }
         }
     }
-
+    public void deployShoulder() { 
+        while((shoulderEncoder.get()*360) < (shoulderEncoder.get()*360)+5){ // we can go under by 3 degrees
+                shoulder.set(motorSpeed); // set speed of motor going up
+        }
+        while((shoulderEncoder.get()*360)-zeroAngle > 3){ // we dont want to go under 0 degrees
+            shoulder.set(-motorSpeed/2); // set speed of motor going up
+        }
+        shoulder.set(0); // dont go any where if the angle is ok
+        angle = 0.0; // set shoulder angle to zero 
+        deployed = true; // we are now deployed so allow controll
+    }
     public void moveWinch() {
         winch.set(winchSpeed); // set speed of motor
     }

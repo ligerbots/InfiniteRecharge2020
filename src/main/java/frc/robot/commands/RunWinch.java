@@ -32,10 +32,10 @@ public class RunWinch extends CommandBase {
   @Override
   public void execute() {
     if (container.winchRun.get()) {
-      climber.moveWinch(0.6);
+      //climber.moveWinch(0.6);
     }
     else {
-      climber.moveWinch(0);
+      //climber.moveWinch(0);
     }
   }
 
