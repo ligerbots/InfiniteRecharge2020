@@ -11,7 +11,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.Climber;
+import frc.robot.commands.ShoulderCommand;;
 
 public class IntakeCommand extends CommandBase {
   /**
@@ -19,11 +19,11 @@ public class IntakeCommand extends CommandBase {
   */
 
   Intake intake;
-  Climber climber;
+  ShoulderCommand shoulder;
   double speed;
-  public IntakeCommand(Intake intake, Climber climber, double speed) {
+  public IntakeCommand(Intake intake, ShoulderCommand shoulder, double speed) {
     this.intake = intake;
-    this.climber = climber;
+    this.shoulder = shoulder;
     this.speed = speed;
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -31,7 +31,7 @@ public class IntakeCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    climber.shoulder.setIdleMode(IdleMode.kCoast);
+    shoulder.shoulder.setIdleMode(IdleMode.kCoast);
     intake.run(speed);
   }
 
@@ -46,7 +46,7 @@ public class IntakeCommand extends CommandBase {
   public void end(boolean interrupted) {
     if (interrupted) {
       intake.run(0);
-      climber.shoulder.setIdleMode(IdleMode.kBrake);
+      shoulder.shoulder.setIdleMode(IdleMode.kBrake);
   }
   }
 

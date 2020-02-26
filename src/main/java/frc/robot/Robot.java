@@ -75,7 +75,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void disabledInit() {
-    m_robotContainer.climber.shoulder.setIdleMode(IdleMode.kCoast);
+    m_robotContainer.climber.shoulder.shoulder.setIdleMode(IdleMode.kCoast);
   }
 
   @Override

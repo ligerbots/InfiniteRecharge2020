@@ -18,6 +18,7 @@ import frc.robot.commands.RunWinch;
 import frc.robot.commands.ShootFromKey;
 import frc.robot.commands.ShooterCommand;
 import frc.robot.commands.ShooterTuner;
+import frc.robot.commands.ShoulderCommand;
 import frc.robot.commands.StopAllShooting;
 import frc.robot.commands.TemporaryShooterCommand;
 import frc.robot.commands.TestCarousel;
@@ -63,8 +64,9 @@ public class RobotContainer {
   public final Shooter shooter = new Shooter();
 
 
-  private final Shoulder shoulder = new Shoulder();
-  public final Climber climber = new Climber(shoulder);
+  public final ShoulderCommand shoulder = new ShoulderCommand();
+  private final ShoulderControl shoulderControl = new ShoulderControl();
+  public final Climber climber = new Climber(shoulderControl);
 
 
   public JoystickButton winchRun;
@@ -104,7 +106,7 @@ public class RobotContainer {
       return xbox.getX(Hand.kRight);
     }
   }
-  public class Shoulder implements DoubleSupplier{
+  public class ShoulderControl implements DoubleSupplier{
 
     @Override
     public double getAsDouble() {
@@ -122,8 +124,8 @@ public class RobotContainer {
     JoystickButton bumperRight = new JoystickButton(xbox, Constants.XBOX_RB);
     JoystickButton bumperLeft = new JoystickButton(xbox, Constants.XBOX_LB);
     //winchRun = new JoystickButton(xbox, Constants.XBOX_START);
-    bumperRight.whileHeld(new IntakeCommand(intake, climber, 0.4));
-    bumperLeft.whileHeld(new IntakeCommand(intake, climber, -0.4));
+    bumperRight.whileHeld(new IntakeCommand(intake, shoulder, 0.4));
+    bumperLeft.whileHeld(new IntakeCommand(intake, shoulder, -0.4));
     xboxB.whileHeld(new ManualCarousel(carousel, carouselCommand));
     xboxA.whenPressed(new ShootFromKey(shooter, carousel, carouselCommand).andThen(new ResetCarousel(carousel, carouselCommand)));
     xboxX.whenPressed(new ShooterCommand(shooter, carousel, robotDrive, 5, carouselCommand, driveCommand).andThen(new ResetCarousel(carousel, carouselCommand)));
