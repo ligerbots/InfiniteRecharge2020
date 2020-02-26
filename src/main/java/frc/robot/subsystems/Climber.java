@@ -55,12 +55,15 @@ public class Climber extends SubsystemBase {
 
     public void moveShoulder(final double angle) {
         if (deployed) {
-            if((shoulderEncoder.get()*360)-zeroAngle > angle+1) { // we cant go over so move motor back down
-                shoulder.set(-motorSpeed/2.0); // set speed of motor going down
-            }else if ((shoulderEncoder.get()*360)-zeroAngle < angle-3){ // we can go under by 3 degrees
-                    shoulder.set(motorSpeed); // set speed of motor going up
-            } else {
-                    shoulder.set(0); // dont go any where if the angle is ok
+            while(true){
+                if((shoulderEncoder.get()*360)-zeroAngle > angle+1) { // we cant go over so move motor back down
+                    shoulder.set(-motorSpeed/2.0); // set speed of motor going down
+                }else if ((shoulderEncoder.get()*360)-zeroAngle < angle-3){ // we can go under by 3 degrees
+                        shoulder.set(motorSpeed); // set speed of motor going up
+                } else {
+                        shoulder.set(0); // dont go any where if the angle is ok
+                        break; // stop looping
+                }
             }
         }
     }
