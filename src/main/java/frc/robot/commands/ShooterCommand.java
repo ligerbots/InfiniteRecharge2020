@@ -102,10 +102,12 @@ public class ShooterCommand extends CommandBase {
 
     angleError = visionInfo[4] * 180 / 3.1416;
 
+    System.out.println("Target Speed: " + shooter.calculateShooterSpeed(distance) + "   Current Speed: " + shooter.getSpeed() + " ");
+
     if (currentControlMode == ControlMethod.SPIN_UP){ 
-      if (shooter.speedOnTarget(shooter.calculateShooterSpeed(distance), 5)) {
+      if (shooter.speedOnTarget(-shooter.calculateShooterSpeed(distance), 15)) {
         if (startedTimerFlag) {
-          if (System.nanoTime() - stableRPMTime > 0.5 * 1_000_000_000) {
+          if (System.nanoTime() - stableRPMTime > 0.2 * 1_000_000_000) {
             currentControlMode = ControlMethod.HOLD;
           }
         }
@@ -133,7 +135,7 @@ public class ShooterCommand extends CommandBase {
           //shooter.setTurret(angleError *  Math.signum(angleError));
         }
 
-        speedOnTarget = shooter.speedOnTarget(shooter.calculateShooterSpeed(distance), 5) && currentControlMode == ControlMethod.HOLD; //TODO: May need to adjust acceptable error
+        speedOnTarget = shooter.speedOnTarget(-shooter.calculateShooterSpeed(distance), 15) && currentControlMode == ControlMethod.HOLD; //TODO: May need to adjust acceptable error
         hoodOnTarget = (double)(System.nanoTime() - startTime) / 1_000_000_000 > 0.75;//shooter.hoodOnTarget(shooter.calculateShooterHood(distance));
         angleOnTarget = Math.abs(angleError) <= 4.5; // They should be opposites so I added them
 

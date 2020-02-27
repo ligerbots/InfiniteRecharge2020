@@ -71,8 +71,6 @@ public class Robot extends TimedRobot {
       m_robotContainer.climber,
       m_robotContainer.carousel,
       m_robotContainer.driveCommand));
-    chosenAuto.addObject("DeployShoulder", new DeployShoulderCommand(
-      m_robotContainer.climber));
 
    SmartDashboard.putData("Chosen Auto", chosenAuto);
   }
@@ -169,7 +167,6 @@ public class Robot extends TimedRobot {
     m_robotContainer.carouselCommand.schedule();
     //m_robotContainer.testFlup.schedule();
     //m_robotContainer.testIntake.schedule();
-    m_robotContainer.lowerShoulder.schedule();
     //RunWinch aaa = new RunWinch(m_robotContainer.climber, m_robotContainer);
     //aaa.schedule();
   }

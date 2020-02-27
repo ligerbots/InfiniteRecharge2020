@@ -50,6 +50,14 @@ public class Climber extends SubsystemBase {
         this.driveTrain = driveTrain;
     }
 
+    public void setShoulderToCoast () {
+        shoulder.setIdleMode(IdleMode.kCoast);
+    }
+
+    public void setShoulderToBrake() {
+        shoulder.setIdleMode(IdleMode.kBrake);
+    }
+
     @Override
     public void periodic() {
 
