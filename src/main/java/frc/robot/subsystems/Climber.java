@@ -30,6 +30,14 @@ public class Climber extends SubsystemBase {
         shoulderEncoder = new DutyCycleEncoder(9);
     }
 
+    public void setShoulderToCoast () {
+        shoulder.setIdleMode(IdleMode.kCoast);
+    }
+
+    public void setShoulderToBrake() {
+        shoulder.setIdleMode(IdleMode.kBrake);
+    }
+
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Shoulder Encoder Location", shoulderEncoder.get());
