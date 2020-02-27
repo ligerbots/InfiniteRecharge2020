@@ -148,7 +148,7 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
-  EightBallAuto auto = new EightBallAuto(robotDrive, shooter, carousel, intake, driveCommand);
+  EightBallAuto auto = new EightBallAuto(robotDrive, shooter, intake, carousel, driveCommand);
   public Command getAutonomousCommand() {
      return auto;
   }
