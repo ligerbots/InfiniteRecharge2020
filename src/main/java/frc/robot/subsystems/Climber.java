@@ -117,7 +117,8 @@ public class Climber extends SubsystemBase {
         }
         // Auto levelling
         else {
-            if (driveTrain.getPitch() < Constants.ROBOT_PITCH_ANGLE_FOR_CLIMB ) {
+            System.out.println(" " + driveTrain.getPitch());
+            if (driveTrain.getPitch() > Constants.ROBOT_PITCH_ANGLE_FOR_CLIMB ) {
                 // Need to lift the front
                 shoulder.setVoltage(Constants.SHOULDER_SPEED_LEVEL);
             }
@@ -134,16 +135,24 @@ public class Climber extends SubsystemBase {
 
         currentWinchHeight = winchEncoder.getPosition();
 
+        if (requestedWinchHeight < currentWinchHeight) {
+            // Just stop the winch
+            stopWinch();
+        }
+        else {
+            winch.setVoltage(Constants.WINCH_SPEED_FAST);
+        }
+
         // The winch only moves in one direction
         // This will also stop the winch when it gets to the desired set point
-        if (requestedWinchHeight < currentWinchHeight) {
+        /*if (requestedWinchHeight < currentWinchHeight) {
             // Just stop the winch
             stopWinch();
         }
         else {
             // If we're we have to make sure that the winch
             // is below the frame perimeter height
-            if (currentShoulderAngle > Constants.SHOULDER_HEIGHT_FOR_FRAME_PERIMETER) {
+            if (currentShoulderAngle >= Constants.SHOULDER_HEIGHT_FOR_FRAME_PERIMETER) {
                 // if the winch is too low, we need to lower the shoulder to avoid exceeding
                 // frame perimeter
                 if (currentWinchHeight < Constants.WINCH_HEIGHT_FOR_LEVEL_BAR_AT_FRAME_PERIMETER) {
@@ -177,7 +186,7 @@ public class Climber extends SubsystemBase {
                     }
                 }
             }
-        }
+        }*/
     }
 
     public void moveShoulder(final double angle) {
@@ -242,5 +251,9 @@ public class Climber extends SubsystemBase {
 
    public boolean autoLeveling(){
        return autoLevel;
+   }
+
+   public boolean shoulderOnTarget () {
+       return Math.abs(requestedShoulderAngle - shoulderEncoder.get()) <= 0.05;
    }
 }

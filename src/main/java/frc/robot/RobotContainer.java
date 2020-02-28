@@ -28,6 +28,8 @@ import frc.robot.commands.TurnAndShoot;
 import frc.robot.commands.VisionTargetDistance;
 import frc.robot.commands.WinchCommand;
 import frc.robot.commands.CarouselCommand;
+import frc.robot.commands.ClimberCommand1;
+import frc.robot.commands.ClimberCommand2;
 import frc.robot.commands.DeployShoulderCommand;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.EightBallAuto;
@@ -148,7 +150,11 @@ public class RobotContainer {
     JoystickButton farm3 = new JoystickButton(farm, 3);
     farm1.whenPressed(new WinchCommand(climber, Constants.WINCH_CLIMB_HEIGHT));
 
+    JoystickButton farm4 = new JoystickButton(farm, 4);
+    farm4.whenPressed(new ClimberCommand1(climber));
 
+    JoystickButton farm5 = new JoystickButton (farm, 5);
+    farm5.whenPressed(new ClimberCommand2(climber));
     
 
   }
