@@ -170,11 +170,11 @@ public class Shooter extends SubsystemBase {
     public double calculateShooterSpeed (final double distance) {
         Entry<Double, Double[]> floorEntry = distanceLookUp.floorEntry(distance);
         Entry<Double, Double[]> ceilingEntry = distanceLookUp.higherEntry(distance);
-        System.out.format("Distance Floor %4.1f%n", floorEntry.getKey());
-        System.out.format("Distance current %4.1f%n", distance);
-        System.out.format("Distance current %4.1f", ceilingEntry.getKey());
-
         if (floorEntry != null && ceilingEntry != null) {
+            System.out.format("Distance Floor %4.1f%n", floorEntry.getKey());
+            System.out.format("Distance current %4.1f%n", distance);
+            System.out.format("Distance current %4.1f", ceilingEntry.getKey());
+
             // Charles' calculation
             double ratio = 1 - (ceilingEntry.getKey() - distance) / (ceilingEntry.getKey() - floorEntry.getKey());
             System.out.format("Ratio %4.1f", ratio);
@@ -189,6 +189,7 @@ public class Shooter extends SubsystemBase {
             return result;
         }
         else {
+            System.out.println("floorEntry or celingEntry was null");
             return -1000;
         }
     }
