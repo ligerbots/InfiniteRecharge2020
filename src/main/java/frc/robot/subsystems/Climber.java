@@ -25,10 +25,9 @@ public class Climber extends SubsystemBase {
     public final CANSparkMax shoulder; // declare new motor
     public final CANSparkMax winch; // declare new motor
     DutyCycleEncoder shoulderEncoder;
-    double zeroAngle = 0.44*360;
-    double shoulderSpeedUp = 0.8; // set shoulder movement speed
-    double shoulderSpeedHold = 0.1; //This is not enough to lift the intake, but wll hold it in place
-    double shoulderRateDown = 30.0/360.0; // a little under 2 seconds to get from max height to min height
+    double shoulderSpeedUp = Constants.SHOULDER_SPEED_UP; // set shoulder movement speed
+    double shoulderSpeedHold = Constants.SHOULDER_SPEED_HOLD; //This is not enough to lift the intake, but wll hold it in place
+    double shoulderRateDown = Constants.SHOULDER_RATE_DOWN; // a little under 2 seconds to get from max height to min height
     boolean deployed = false;
     boolean movingDown = false;
     boolean autoLevel = false;
@@ -46,6 +45,7 @@ public class Climber extends SubsystemBase {
         shoulderEncoder = new DutyCycleEncoder(9);
         currentAngle = shoulderEncoder.get();
         winchEncoder = new CANEncoder(winch);
+        winchEncoder.setPositionConversionFactor(Constants.WINCH_CONVERSION_FACTOR);
         this.driveTrain = driveTrain;
     }
 
@@ -122,13 +122,10 @@ public class Climber extends SubsystemBase {
         lastAngle = currentAngle;
     }
 
-    public void deploy() {
-        // This is for the start of the match
-        // We need to set arm to brake mode, raise it slowly to max height and then lower to min height
-    }
-
     public void moveShoulder(final double angle) {
-        
+        // This just sets parameters to be used in the periodic() method.
+        // Moving the shoulder to the correct angle will be done in the periodic() method
+
         requestedAngle = angle;
 
         // Limit max requested height
@@ -151,31 +148,12 @@ public class Climber extends SubsystemBase {
         SmartDashboard.putNumber("Shoulder Requested Angle", requestedAngle);
     }
 
-        // Moving the shoulder to the correct angle will be done in the periodic() method
-
-
-    //TODO: FIX THIS MESS!!! WE DON'T USE WHILE LOOPS BECAUSE WE HAVE EXECUTE
-    public void deployShoulder() { 
-
-        // raise shoulder to max height and then let it go down
-        shoulder.set(0.1);
-        while((shoulderEncoder.get()*360) < (shoulderEncoder.get()*360)+5){ // we can go under by 3 degrees
-                shoulder.set(shoulderSpeedUp); // set speed of motor going up
-        }
-        while((shoulderEncoder.get()*360)-zeroAngle > 3){ // we dont want to go under 0 degrees
-            shoulder.set(-shoulderSpeedUp/2); // set speed of motor going up
-        }
-        shoulder.set(0); // dont go any where if the angle is ok
-        requestedAngle = 0.0; // set shoulder angle to zero 
-        deployed = true; // we are now deployed so allow controll
-    }
 
     public void moveWinch(double winchSpeed) {
         winch.set(winchSpeed); // set speed of motor
     }
 
     public double getTicks(){
-        winchEncoder.setPositionConversionFactor(Constants.WINCH_CONVERSION_FACTOR);
         return winchEncoder.getPosition();
     }
 
@@ -189,5 +167,13 @@ public class Climber extends SubsystemBase {
 
    public boolean atMinHeight(){
        return shoulderEncoder.get() < Constants.SHOULDER_MIN_VELOCITY_HEIGHT;
+   }
+
+   public void autoLevel(boolean autoLevel){
+       this.autoLevel = autoLevel;
+   }
+
+   public boolean autoLeveling(){
+       return autoLevel;
    }
 }

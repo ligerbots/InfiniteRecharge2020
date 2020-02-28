@@ -76,10 +76,14 @@ public final class Constants {
     public static final double SHOULDER_MAX_HEIGHT = 0.604; 
     public static final double SHOULDER_RELEASE_HEIGHT = 0.6;
     public static final double SHOULDER_START_HEIGHT = 0.59;
-    public static final double SHOULDER_HEIGHT_FOR_SPRING_TO_LIFT = 0.25; // TODO: Armmmm height where upper arm won't
-    // go out of frame perimeter;
+    public static final double SHOULDER_HEIGHT_FOR_SPRING_TO_LIFT = 0.25;
+
     public static final double SHOULDER_HEIGHT_FOR_FRAME_PERIMETER = 0.56; 
     public static final double SHOULDER_HEIGHT_FOR_MAX_CLIMB = 0.62;
+
+    public static final double SHOULDER_SPEED_UP = 0.8;
+    public static final double SHOULDER_SPEED_HOLD = 0.1;
+    public static final double SHOULDER_RATE_DOWN = 30.0/360.0;
 
     public static final double ROBOT_PITCH_ANGLE_FOR_CLIMB = 10.0;
 
