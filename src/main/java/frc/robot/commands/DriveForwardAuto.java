@@ -8,23 +8,18 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants;
-import frc.robot.subsystems.Climber;
 
-public class WinchCommand extends CommandBase {
-  Climber climber;
-  double requestedWinchHeight;
-
-  public WinchCommand(Climber climber, double winchHeight) {
-    this.climber = climber;
-    requestedWinchHeight = winchHeight;
+public class DriveForwardAuto extends CommandBase {
+  /**
+   * Creates a new DriveForwardAuto.
+   */
+  public DriveForwardAuto() {
+    // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-      climber.moveWinch(requestedWinchHeight);
-      climber.moveShoulder(Constants.SHOULDER_CLIMB_HEIGHT);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -35,13 +30,11 @@ public class WinchCommand extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    climber.stopWinch();;
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return climber.getWinchPosition() >= requestedWinchHeight - 5;
+    return false;
   }
-
 }

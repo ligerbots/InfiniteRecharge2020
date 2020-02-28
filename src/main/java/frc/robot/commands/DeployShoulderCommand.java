@@ -7,41 +7,61 @@
 
 package frc.robot.commands;
 
+import com.revrobotics.CANSparkMax.IdleMode;
+
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.Climber;
 
-public class WinchCommand extends CommandBase {
+public class DeployShoulderCommand extends CommandBase {
+  /**
+   * Creates a new ShoulderCommand.
+  */
+ 
   Climber climber;
-  double requestedWinchHeight;
+  boolean deployed = false;
 
-  public WinchCommand(Climber climber, double winchHeight) {
-    this.climber = climber;
-    requestedWinchHeight = winchHeight;
+  public DeployShoulderCommand(Climber climber) {
+      this.climber = climber;
+    // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-      climber.moveWinch(requestedWinchHeight);
-      climber.moveShoulder(Constants.SHOULDER_CLIMB_HEIGHT);
+    climber.shoulder.setIdleMode(IdleMode.kCoast);
+    deployed = false;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-  }
+      if (deployed) {
+          // Just go down
+          climber.moveShoulder(Constants.SHOULDER_MIN_HEIGHT);
+      }
+      else {
+          // Need to go up a little
+          climber.moveShoulder(Constants.SHOULDER_MAX_HEIGHT);
+          if (climber.getShoulderPosition() > Constants.SHOULDER_RELEASE_HEIGHT) {
+            deployed = true;
+            SmartDashboard.putBoolean("ShoulderDeployed", deployed);
+          }
+      }
+    }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    climber.stopWinch();;
+    // Nothing to do
   }
+
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return climber.getWinchPosition() >= requestedWinchHeight - 5;
+      // This is finished once we set the min heght since the subsystem will take it the rest of the way
+    return climber.shoulderAtMinHeight();
   }
-
 }

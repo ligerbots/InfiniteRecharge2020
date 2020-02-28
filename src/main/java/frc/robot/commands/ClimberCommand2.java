@@ -11,37 +11,52 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.Climber;
 
-public class WinchCommand extends CommandBase {
+public class ClimberCommand2 extends CommandBase {
+  /**
+   * Creates a new ClimberCommand2.
+   */
   Climber climber;
-  double requestedWinchHeight;
 
-  public WinchCommand(Climber climber, double winchHeight) {
+  enum ClimbingPhase {
+    LOWER_WINCH, AUTO_LEVEL
+  }
+
+  ClimbingPhase currentPhase;
+
+  public ClimberCommand2(Climber climber) {
     this.climber = climber;
-    requestedWinchHeight = winchHeight;
+    // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-      climber.moveWinch(requestedWinchHeight);
-      climber.moveShoulder(Constants.SHOULDER_CLIMB_HEIGHT);
+    currentPhase = ClimbingPhase.LOWER_WINCH;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    switch (currentPhase) {
+      case LOWER_WINCH:
+          climber.moveWinch(Constants.WINCH_CLIMB_HEIGHT - 300);
+          if (Math.abs(climber.getWinchPosition() - (Constants.WINCH_CLIMB_HEIGHT - 300)) < 10) {
+            currentPhase = ClimbingPhase.AUTO_LEVEL;
+          }
+        case AUTO_LEVEL:
+          climber.autoLevel(true);
+          break;
+    }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    climber.stopWinch();;
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return climber.getWinchPosition() >= requestedWinchHeight - 5;
+    return currentPhase == ClimbingPhase.AUTO_LEVEL;
   }
-
 }

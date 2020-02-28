@@ -152,4 +152,15 @@ public class DriveTrain extends SubsystemBase {
     public double turnSpeedCalc(double angleError) {
         return 0.021 * angleError;
     }
+
+    public double getPitch() {
+        return navX.getPitch();
+    }
+
+    public void setIdleMode(IdleMode idleMode) {
+            Arrays.asList(leftLeader, leftFollower, rightLeader, rightFollower)
+            .forEach((CANSparkMax spark) -> spark.setIdleMode(idleMode));
+
+
+    }
 }

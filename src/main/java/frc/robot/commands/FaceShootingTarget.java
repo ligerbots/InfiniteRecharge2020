@@ -16,7 +16,8 @@ public class FaceShootingTarget extends CommandBase {
   /**
    * Creates a new FaceShootingTarget.
    */
-  double angleOffset;
+  double initialAngleOffset;
+  double startingAngle;
   double acceptableError;
   DriveTrain robotDrive;
   DriveCommand driveCommand;
@@ -36,14 +37,15 @@ public class FaceShootingTarget extends CommandBase {
     driveCommand.cancel();
     shooter.setLEDRing(true);
     SmartDashboard.putString("vision/active_mode/selected", "goalfinder");
+    startingAngle = robotDrive.getHeading();
+    initialAngleOffset = SmartDashboard.getNumberArray("vision/target_info", new double[]{0,0,0,0,0,0,0})[4] * 180 / 3.1416;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    angleOffset = SmartDashboard.getNumberArray("vision/target_info", new double[]{0,0,0,0,0,0,0})[4] * 180 / 3.1416;
-    System.out.println(angleOffset);
-    robotDrive.allDrive(0, robotDrive.turnSpeedCalc(angleOffset), false);
+    System.out.println(initialAngleOffset);
+    robotDrive.allDrive(0, robotDrive.turnSpeedCalc(robotDrive.getHeading() - (startingAngle + initialAngleOffset)), false);
   }
 
   // Called once the command ends or is interrupted.
@@ -56,6 +58,6 @@ public class FaceShootingTarget extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Math.abs(angleOffset) < acceptableError && angleOffset != 0.0;
+    return Math.abs(robotDrive.getHeading() - (startingAngle + initialAngleOffset)) < acceptableError || initialAngleOffset == 0.0;
   }
 }

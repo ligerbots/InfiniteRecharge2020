@@ -7,46 +7,51 @@
 
 package frc.robot.commands;
 
+import com.revrobotics.CANSparkMax.IdleMode;
+
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.RobotContainer;
-import frc.robot.subsystems.Climber;;
-//import frc.robot.Robot;
+import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Climber;
 
+public class ShoulderCommand extends CommandBase {
+  /**
+   * Creates a new ShoulderCommand.
+  */
 
-public class RunWinch extends CommandBase {
-
-  Climber climber; // init the motor we use 
-  RobotContainer container;
-
-  public RunWinch(Climber climber, RobotContainer container) {
+  Climber climber;
+  double requestedShoulderHeight;
+  
+  public ShoulderCommand(Climber climber, double shoulderHeight) {
     this.climber = climber;
-    this.container = container;
+    requestedShoulderHeight = shoulderHeight;
+    // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    climber.shoulder.setIdleMode(IdleMode.kCoast);
+    climber.moveShoulder(requestedShoulderHeight);
+    SmartDashboard.putNumber("Shoulder set point", requestedShoulderHeight);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (container.winchRun.get()) {
-      climber.moveWinch(0.6);
-    }
-    else {
-      climber.moveWinch(0);
-    }
+
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(final boolean interrupted) {
+  public void end(boolean interrupted) {
+
   }
+
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return (climber.getShoulderPosition() >= requestedShoulderHeight - 2.0/360.0);
   }
 }
