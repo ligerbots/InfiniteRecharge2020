@@ -21,7 +21,7 @@ import frc.robot.Constants;
 public class Climber extends SubsystemBase {
     Double angle;
     public final CANSparkMax shoulder; // declare new motor
-    CANSparkMax winch; // declare new motor
+    public final CANSparkMax winch; // declare new motor
     DutyCycleEncoder shoulderEncoder;
     double zeroAngle = 0.44*360;
     double motorSpeed = 0.2; // set shoulder movement speed
@@ -32,7 +32,7 @@ public class Climber extends SubsystemBase {
 
     public Climber() {
         shoulder = new CANSparkMax(Constants.SHOULDER_MOTOR_CAN_ID, MotorType.kBrushless); //init motor type and can id
-        shoulder.setIdleMode(IdleMode.kBrake); // set to break when the motor is speed 0
+        shoulder.setIdleMode(IdleMode.kCoast); // set to Coast at startup
         winch = new CANSparkMax(Constants.WINCH_MOTOR_CAN_ID, MotorType.kBrushless); //init motor type and can id
         winch.setIdleMode(IdleMode.kBrake);// set to break when the motor is speed 0
         shoulderEncoder = new DutyCycleEncoder(9);
@@ -43,6 +43,7 @@ public class Climber extends SubsystemBase {
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Shoulder Encoder Location", shoulderEncoder.get());
+        SmartDashboard.putNumber("Winch Encoder Location", winchEncoder.getPosition());
         //winch.set(winchSpeed = SmartDashboard.getNumber("winch speed", 0));
         //shoulder.set(SmartDashboard.getNumber("shoulder speed", 0));
     }
@@ -87,5 +88,7 @@ public class Climber extends SubsystemBase {
         return winchEncoder.getPosition();
     }
 
-   
+   public void resetWinchEncoder(){
+       winchEncoder.setPosition(0);
+   }
 }

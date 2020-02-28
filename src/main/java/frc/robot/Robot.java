@@ -38,6 +38,8 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
 
+    m_robotContainer.climber.shoulder.setIdleMode(IdleMode.kCoast);
+   
     m_robotContainer.shooter.calibratePID(0.00008, 0.000000025, 0, 6.776 * 0.00001);
 
     // Reset Smart Dashboard for shooter test
@@ -76,6 +78,7 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() {
     m_robotContainer.climber.shoulder.setIdleMode(IdleMode.kCoast);
+    m_robotContainer.climber.winch.setIdleMode(IdleMode.kCoast);
   }
 
   @Override
@@ -108,6 +111,12 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Target Hood Angle", 60);
     SmartDashboard.putNumber("TSR", -5500);
     System.out.println("teleopInit");
+
+    // Reset the wnich encoder
+    m_robotContainer.climber.resetWinchEncoder();
+    m_robotContainer.climber.winch.setIdleMode(IdleMode.kCoast);
+
+
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
