@@ -44,6 +44,7 @@ public final class Constants {
 
     // SPARKMAX for the intake motor (Intake)
     public static final int INTAKE_MOTOR_CAN_ID = 10; //CAN ID for intake motor
+    public static final double INTAKE_SPEED = 0.5;
 
     // Intake Color Sensor
 
@@ -70,11 +71,12 @@ public final class Constants {
     public static final double SHOULDER_MIN_HEIGHT = 0.44;
     // If arm gets below 10 degrees above min height, we'll either stop the motor and let if fall in brake mode
     // or we'll just move t down really slowly.
-    public static final double SHOULDER_MIN_VELOCITY_BUFFER = 10.0/360.0; // 10 degrees;
+    public static final double SHOULDER_MIN_VELOCITY_BUFFER = 2.0/360.0; // 2 degrees;
     public static final double SHOULDER_MIN_VELOCITY_HEIGHT = SHOULDER_MIN_HEIGHT + SHOULDER_MIN_VELOCITY_BUFFER;
     public static final double SHOULDER_MAX_HEIGHT = 0.604; 
-    public static final double SHOULDER_START_HEIGHT = 0.59; // TODO: measure starting height of the shoulder.
-    public static final double SHOULDER_HEIGHT_FOR_SPRNIG_TO_LIFT = 0.25; // TODO: Armmmm height where upper arm won't
+    public static final double SHOULDER_RELEASE_HEIGHT = 0.6;
+    public static final double SHOULDER_START_HEIGHT = 0.59;
+    public static final double SHOULDER_HEIGHT_FOR_SPRING_TO_LIFT = 0.25; // TODO: Armmmm height where upper arm won't
     // go out of frame perimeter;
     public static final double SHOULDER_HEIGHT_FOR_FRAME_PERIMETER = 0.56; 
     public static final double SHOULDER_HEIGHT_FOR_MAX_CLIMB = 0.62;

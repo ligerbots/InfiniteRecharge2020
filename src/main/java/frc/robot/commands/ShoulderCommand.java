@@ -33,7 +33,6 @@ public class ShoulderCommand extends CommandBase {
   @Override
   public void initialize() {
     climber.shoulder.setIdleMode(IdleMode.kCoast);
-    intake.run(speed);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -45,10 +44,7 @@ public class ShoulderCommand extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    if (interrupted) {
-      intake.run(0);
-      climber.shoulder.setIdleMode(IdleMode.kBrake);
-  }
+
   }
 
 

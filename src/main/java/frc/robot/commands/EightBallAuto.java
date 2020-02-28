@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 import frc.robot.subsystems.Carousel;
+import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
@@ -31,9 +32,10 @@ public class EightBallAuto extends SequentialCommandGroup {
   /**
    * Add your docs here.
    */
-  public EightBallAuto(DriveTrain robotDrive, Shooter shooter, Intake intake, Carousel carousel, DriveCommand driveCommand) {
+  public EightBallAuto(DriveTrain robotDrive, Shooter shooter, Intake intake, Climber climber, Carousel carousel, DriveCommand driveCommand) {
     driveCommand.cancel();
-    intake.run(0.4);
+    // intake.run(0.4);
+    IntakeCommand intakeCommand = new IntakeCommand(intake, climber, Constants.INTAKE_SPEED);
     robotDrive.resetOdometry(new Pose2d());
     var autoVoltageConstraint =
         new DifferentialDriveVoltageConstraint(
@@ -108,7 +110,7 @@ public class EightBallAuto extends SequentialCommandGroup {
     );
 
 
-    addCommands(ramseteCommand1, ramseteCommand2.andThen(() -> robotDrive.tankDriveVolts(0, 0)));//new StartMatchCommand(), new ShooterCommand (shooter, carousel, robotDrive, 3.0));
+    addCommands(intakeCommand.alongWith(ramseteCommand1), ramseteCommand2.andThen(() -> robotDrive.tankDriveVolts(0, 0)));//new StartMatchCommand(), new ShooterCommand (shooter, carousel, robotDrive, 3.0));
     
   }
 

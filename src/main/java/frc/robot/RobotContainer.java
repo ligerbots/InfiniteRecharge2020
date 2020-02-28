@@ -56,12 +56,12 @@ public class RobotContainer {
   //private final DriveTrain robotDrive = new DriveTrain();
   private final Throttle throttle = new Throttle();
   private final Turn turn = new Turn();
-  private final DriveTrain robotDrive = new DriveTrain();
+  public final DriveTrain robotDrive = new DriveTrain();
   public final DriveCommand driveCommand = new DriveCommand(robotDrive, throttle, turn);
   
   XboxController xbox = new XboxController(0);
 
-  private final Intake intake = new Intake();
+  public final Intake intake = new Intake();
   public final Carousel carousel = new Carousel();
   public final Shooter shooter = new Shooter();
 
@@ -127,8 +127,8 @@ public class RobotContainer {
     JoystickButton bumperRight = new JoystickButton(xbox, Constants.XBOX_RB);
     JoystickButton bumperLeft = new JoystickButton(xbox, Constants.XBOX_LB);
     //winchRun = new JoystickButton(xbox, Constants.XBOX_START);
-    bumperRight.whileHeld(new IntakeCommand(intake, climber, 0.4));
-    bumperLeft.whileHeld(new IntakeCommand(intake, climber, -0.4));
+    bumperRight.whileHeld(new IntakeCommand(intake, climber, Constants.INTAKE_SPEED));
+    bumperLeft.whileHeld(new IntakeCommand(intake, climber, -Constants.INTAKE_SPEED));
     xboxB.whileHeld(new ManualCarousel(carousel, carouselCommand));
     xboxA.whenPressed(new ShootFromKey(shooter, carousel, carouselCommand).andThen(new ResetCarousel(carousel, carouselCommand)));
     xboxX.whenPressed(new ShooterCommand(shooter, carousel, robotDrive, 5, carouselCommand, driveCommand).andThen(new ResetCarousel(carousel, carouselCommand)));
@@ -152,7 +152,7 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
-  EightBallAuto auto = new EightBallAuto(robotDrive, shooter, intake, carousel, driveCommand);
+  EightBallAuto auto = new EightBallAuto(robotDrive, shooter, intake, climber, carousel, driveCommand);
   public Command getAutonomousCommand() {
      return auto;
   }

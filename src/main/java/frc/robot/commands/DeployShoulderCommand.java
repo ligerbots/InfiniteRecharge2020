@@ -9,6 +9,7 @@ package frc.robot.commands;
 
 import com.revrobotics.CANSparkMax.IdleMode;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.Climber;
@@ -43,8 +44,9 @@ public class DeployShoulderCommand extends CommandBase {
       else {
           // Need to go up a little
           climber.moveShoulder(Constants.SHOULDER_MAX_HEIGHT);
-          if (climber.getShoulderPosition() > (Constants.SHOULDER_MAX_HEIGHT-Constants.SHOULDER_START_HEIGHT)*0.75+Constants.SHOULDER_START_HEIGHT) {
-              deployed = true;
+          if (climber.getShoulderPosition() > Constants.SHOULDER_RELEASE_HEIGHT) {
+            deployed = true;
+            SmartDashboard.putBoolean("ShoulderDeployed", deployed);
           }
       }
     }
@@ -60,6 +62,6 @@ public class DeployShoulderCommand extends CommandBase {
   @Override
   public boolean isFinished() {
       // This is finished once we set the min heght since the subsystem will take it the rest of the way
-    return deployed;
+    return climber.atMinHeight();
   }
 }

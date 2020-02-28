@@ -26,7 +26,7 @@ public class Climber extends SubsystemBase {
     public final CANSparkMax winch; // declare new motor
     DutyCycleEncoder shoulderEncoder;
     double zeroAngle = 0.44*360;
-    double shoulderSpeedUp = 0.65; // set shoulder movement speed
+    double shoulderSpeedUp = 0.8; // set shoulder movement speed
     double shoulderSpeedHold = 0.1; //This is not enough to lift the intake, but wll hold it in place
     double shoulderRateDown = 30.0/360.0; // a little under 2 seconds to get from max height to min height
     boolean deployed = false;
@@ -128,39 +128,30 @@ public class Climber extends SubsystemBase {
     }
 
     public void moveShoulder(final double angle) {
-        // if (deployed) {
-        //     while(true){
-        //         if((shoulderEncoder.get()*360)-zeroAngle > angle+1) { // we cant go over so move motor back down
-        //             shoulder.set(-motorSpeed/2.0); // set speed of motor going down
-        //         }else if ((shoulderEncoder.get()*360)-zeroAngle < angle-3){ // we can go under by 3 degrees
-        //                 shoulder.set(motorSpeed); // set speed of motor going up
-        //         } else {
-        //                 shoulder.set(0); // dont go any where if the angle is ok
-        //                 break; // stop looping
-        //         }
-        //     }
-        // }
+        
         requestedAngle = angle;
 
         // Limit max requested height
-        if (angle > Constants.SHOULDER_MAX_HEIGHT) {
+        if (requestedAngle > Constants.SHOULDER_MAX_HEIGHT) {
             requestedAngle = Constants.SHOULDER_MAX_HEIGHT;
         }
 
         // Limit min requested heght
-        if (angle < Constants.SHOULDER_MIN_HEIGHT) {
+        if (requestedAngle < Constants.SHOULDER_MIN_HEIGHT) {
             requestedAngle = Constants.SHOULDER_MIN_HEIGHT;
         }
 
-        if (angle > currentAngle) {
+        if (requestedAngle > currentAngle) {
             movingDown = false;
         }
         else {
             movingDown = true;
         }
+        SmartDashboard.putBoolean("Moving Down", movingDown);
+        SmartDashboard.putNumber("Shoulder Requested Angle", requestedAngle);
     }
 
-        // Moving the shoulder to the correct angle will be donw in the periodic() method
+        // Moving the shoulder to the correct angle will be done in the periodic() method
 
 
     //TODO: FIX THIS MESS!!! WE DON'T USE WHILE LOOPS BECAUSE WE HAVE EXECUTE

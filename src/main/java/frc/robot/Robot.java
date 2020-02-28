@@ -13,11 +13,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.commands.DriveCommand;
-import frc.robot.commands.DriveForwardAuto;
-import frc.robot.commands.EightBallAuto;
-import frc.robot.commands.RunWinch;
 import frc.robot.subsystems.Carousel;
+import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
@@ -34,11 +31,12 @@ import frc.robot.commands.*;
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
   private RobotContainer m_robotContainer;
-  private DriveTrain driveTrain;
-  private Carousel carousel;
-  private Intake intake;
-  private DriveCommand driveCommand;
-  private Shooter shooter;
+  // private DriveTrain driveTrain;
+  // private Carousel carousel;
+  // private Intake intake;
+  // private DriveCommand driveCommand;
+  // private Shooter shooter;
+  // private Climber climber;
   SendableChooser<Command> chosenAuto = new SendableChooser<>();
 
   /**
@@ -55,7 +53,7 @@ public class Robot extends TimedRobot {
     m_robotContainer.climber.shoulder.setIdleMode(IdleMode.kCoast);
  
     // Set motors to coast so it's easier to move the robot.
-    driveTrain.setIdleMode(IdleMode.kCoast);
+    m_robotContainer.robotDrive.setIdleMode(IdleMode.kCoast);
 
     m_robotContainer.shooter.calibratePID(0.00008, 0.000000025, 0, 6.776 * 0.00001);
 
@@ -65,8 +63,17 @@ public class Robot extends TimedRobot {
     
     // SmartDashboard.putData(new TestTurret(m_robotContainer.shooter));
 
-   chosenAuto.addDefault("Default Auto", new DriveForwardAuto());
-  //  chosenAuto.addObject("EightBallAuto", new EightBallAuto(driveTrain,shooter,intake,carousel,driveCommand));
+    chosenAuto.addDefault("Default Auto", new DriveForwardAuto());
+    chosenAuto.addObject("EightBallAuto", new EightBallAuto(
+      m_robotContainer.robotDrive,
+      m_robotContainer.shooter,
+      m_robotContainer.intake,
+      m_robotContainer.climber,
+      m_robotContainer.carousel,
+      m_robotContainer.driveCommand));
+    chosenAuto.addObject("DeployShoulder", new DeployShoulderCommand(
+      m_robotContainer.climber));
+
    SmartDashboard.putData("Chosen Auto", chosenAuto);
   }
 
@@ -101,7 +108,7 @@ public class Robot extends TimedRobot {
     m_robotContainer.climber.shoulder.setIdleMode(IdleMode.kCoast);
     m_robotContainer.climber.winch.setIdleMode(IdleMode.kCoast);
     // Set motors to coast so it's easier to move the robot.
-    driveTrain.setIdleMode(IdleMode.kCoast);
+    m_robotContainer.robotDrive.setIdleMode(IdleMode.kCoast);
   
   }
 
@@ -116,10 +123,9 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     // Set motors to brake for the drive train
-    driveTrain.setIdleMode(IdleMode.kBrake);
+    m_robotContainer.robotDrive.setIdleMode(IdleMode.kBrake);
 
     m_autonomousCommand = chosenAuto.getSelected();
-    m_autonomousCommand = m_robotContainer.deployShoulderCommand;
     m_robotContainer.carouselCommand.schedule();
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null)
@@ -136,7 +142,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
     // Set motors to brake for the drive train
-    driveTrain.setIdleMode(IdleMode.kBrake);
+    m_robotContainer.robotDrive.setIdleMode(IdleMode.kBrake);
 
     SmartDashboard.putNumber("Turret Angle", 75);
     SmartDashboard.putNumber("Target Hood Angle", 60);
