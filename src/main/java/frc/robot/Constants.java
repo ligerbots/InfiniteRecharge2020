@@ -74,29 +74,32 @@ public final class Constants {
     public static final double SHOULDER_MIN_VELOCITY_BUFFER = 2.0/360.0; // 2 degrees;
     public static final double SHOULDER_MIN_VELOCITY_HEIGHT = SHOULDER_MIN_HEIGHT + SHOULDER_MIN_VELOCITY_BUFFER;
     public static final double SHOULDER_MAX_HEIGHT = 0.604; 
+    public static final double SHOULDER_CLIMB_HEIGHT = 0.62;
     public static final double SHOULDER_RELEASE_HEIGHT = 0.6;
     public static final double SHOULDER_START_HEIGHT = 0.59;
     public static final double SHOULDER_HEIGHT_FOR_SPRING_TO_LIFT = 0.25;
 
-    public static final double SHOULDER_HEIGHT_FOR_FRAME_PERIMETER = 0.56; 
+    public static final double SHOULDER_HEIGHT_FOR_FRAME_PERIMETER = 0.56 - 2.0/360.0; 
     public static final double SHOULDER_HEIGHT_FOR_MAX_CLIMB = 0.62;
 
-    public static final double SHOULDER_SPEED_UP = 0.8;
+    public static final double SHOULDER_SPEED_UP = 1.0;
     public static final double SHOULDER_SPEED_HOLD = 0.1;
-    public static final double SHOULDER_RATE_DOWN = 30.0/360.0;
+    public static final double SHOULDER_RATE_DOWN = 40.0/360.0;
+    // NOTE: This has to be negative to keep the robot level during climb
+    public static final double SHOULDER_SPEED_LEVEL = -0.6;
 
     public static final double ROBOT_PITCH_ANGLE_FOR_CLIMB = 10.0;
 
     public static final int CAROUSEL_FIFTH_ROTATION_TICKS = 12561;
     public static final int WINCH_MOTOR_CAN_ID = 9; // Winch for the climber
-    public static final double WINCH_SPEED_FAST = 0.7; // winch speed for going fast
-    public static final double WINCH_SPEED_SLOW = 0.3; // winch speed for going slow
-    public static final double WINCH_SPEED_CLIMB = 0.5; //winch speed for actually climbing
+    public static final double WINCH_SPEED_FAST = 1.0; // winch speed for going fast
+    public static final double WINCH_SPEED_SLOW = 0.5; // winch speed for going slow
+    public static final double WINCH_SPEED_CLIMB = 0.8; //winch speed for actually climbing
 
-    public static final double WINCH_MAX_HEIGHT_TICK_COUNT = 1000; // TODO: Measure ticks at max climber winch extension
-    public static final double WINCH_LEVEL_BAR_TICK_COUNT_UP = 0; 
-    public static final double WINCH_LEVEL_BAR_TICK_COUNT_DOWN = 0;
-    public static final double WINCH_CONVERSION_FACTOR = 0;
+    public static final double WINCH_MAX_HEIGHT_TICK_COUNT = 665;
+    public static final double WINCH_HEIGHT_FOR_LEVEL_BAR_AT_FRAME_PERIMETER = 200; // TODO: Measure this
+    public static final double WINCH_LEVEL_BAR_TICK_COUNT = 862;
+    public static final double WINCH_CLIMB_HEIGHT = 1262;
 
     // xbox button mapimng 
     public static final int XBOX_A = 1;

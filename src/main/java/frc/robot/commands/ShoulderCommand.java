@@ -9,6 +9,7 @@ package frc.robot.commands;
 
 import com.revrobotics.CANSparkMax.IdleMode;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Climber;
@@ -18,14 +19,12 @@ public class ShoulderCommand extends CommandBase {
    * Creates a new ShoulderCommand.
   */
 
-  Intake intake;
   Climber climber;
-  double speed;
+  double requestedShoulderHeight;
   
-  public ShoulderCommand(Intake intake, Climber climber, double speed) {
-    this.intake = intake;
+  public ShoulderCommand(Climber climber, double shoulderHeight) {
     this.climber = climber;
-    this.speed = speed;
+    requestedShoulderHeight = shoulderHeight;
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -33,6 +32,8 @@ public class ShoulderCommand extends CommandBase {
   @Override
   public void initialize() {
     climber.shoulder.setIdleMode(IdleMode.kCoast);
+    climber.moveShoulder(requestedShoulderHeight);
+    SmartDashboard.putNumber("Shoulder set point", requestedShoulderHeight);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -51,6 +52,6 @@ public class ShoulderCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return (climber.getShoulderPosition() >= requestedShoulderHeight - 2.0/360.0);
   }
 }

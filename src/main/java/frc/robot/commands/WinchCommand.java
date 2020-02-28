@@ -13,69 +13,35 @@ import frc.robot.subsystems.Climber;
 
 public class WinchCommand extends CommandBase {
   Climber climber;
-  double winchTicks;
+  double requestedWinchHeight;
 
-  public WinchCommand(Climber climber) {
+  public WinchCommand(Climber climber, double winchHeight) {
     this.climber = climber;
+    requestedWinchHeight = winchHeight;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-      winchTicks = climber.getTicks();
+      climber.moveWinch(requestedWinchHeight);
+      climber.moveShoulder(Constants.SHOULDER_CLIMB_HEIGHT);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    // winchUp();
-    // winchMax();
-    // winchDown();
-    // winchClimb();
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    climber.moveWinch(0);
+    climber.stopWinch();;
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return climber.getWinchPosition() >= requestedWinchHeight - 5;
   }
 
-  public void winchUp() {
-    if (winchTicks < Constants.WINCH_LEVEL_BAR_TICK_COUNT_UP) {
-      climber.moveWinch(Constants.WINCH_SPEED_FAST);
-    }
-    else {
-      climber.moveWinch(0.0);
-    }
-  }
-
-  public void winchMax() {
-    if (winchTicks < Constants.WINCH_MAX_HEIGHT_TICK_COUNT && winchTicks > Constants.WINCH_LEVEL_BAR_TICK_COUNT_UP) {
-      climber.moveWinch(Constants.WINCH_SPEED_SLOW);
-    }
-    else {
-      climber.moveWinch(0.0);
-    }
-  }
-
-  public void winchDown() {
-    if (winchTicks > Constants.WINCH_MAX_HEIGHT_TICK_COUNT && winchTicks < Constants.WINCH_LEVEL_BAR_TICK_COUNT_DOWN) {
-      climber.moveWinch(Constants.WINCH_SPEED_SLOW);
-    }
-    else {
-      climber.moveWinch(0.0);
-    }
-  }
-
-  public void winchClimb() {
-    if (winchTicks > Constants.WINCH_LEVEL_BAR_TICK_COUNT_DOWN) {
-      climber.moveWinch(Constants.WINCH_SPEED_CLIMB);
-    }
-  }
 }

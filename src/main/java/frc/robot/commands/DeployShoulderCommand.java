@@ -62,6 +62,6 @@ public class DeployShoulderCommand extends CommandBase {
   @Override
   public boolean isFinished() {
       // This is finished once we set the min heght since the subsystem will take it the rest of the way
-    return climber.atMinHeight();
+    return climber.shoulderAtMinHeight();
   }
 }

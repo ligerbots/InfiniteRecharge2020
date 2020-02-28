@@ -7,6 +7,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.subsystems.Carousel;
 import frc.robot.subsystems.Climber;
@@ -14,10 +15,10 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 // import jdk.vm.ci.meta.Constant;
 import frc.robot.subsystems.DriveTrain;
-import frc.robot.commands.RunWinch;
 import frc.robot.commands.ShootFromKey;
 import frc.robot.commands.ShooterCommand;
 import frc.robot.commands.ShooterTuner;
+import frc.robot.commands.ShoulderCommand;
 import frc.robot.commands.StopAllShooting;
 import frc.robot.commands.TemporaryShooterCommand;
 import frc.robot.commands.TestCarousel;
@@ -60,6 +61,7 @@ public class RobotContainer {
   public final DriveCommand driveCommand = new DriveCommand(robotDrive, throttle, turn);
   
   XboxController xbox = new XboxController(0);
+  Joystick farm = new Joystick(1);
 
   public final Intake intake = new Intake();
   public final Carousel carousel = new Carousel();
@@ -71,8 +73,7 @@ public class RobotContainer {
 
   public final DeployShoulderCommand deployShoulderCommand = new DeployShoulderCommand(climber);
 
-
-  public JoystickButton winchRun;
+  public final ShoulderCommand lowerShoulder = new ShoulderCommand(climber, Constants.SHOULDER_MIN_HEIGHT);
 
   public CarouselCommand carouselCommand = new CarouselCommand (carousel);
   public TestIntake testIntake = new TestIntake(intake);
@@ -126,7 +127,6 @@ public class RobotContainer {
     JoystickButton xboxLine = new JoystickButton(xbox, Constants.XBOX_START);
     JoystickButton bumperRight = new JoystickButton(xbox, Constants.XBOX_RB);
     JoystickButton bumperLeft = new JoystickButton(xbox, Constants.XBOX_LB);
-    //winchRun = new JoystickButton(xbox, Constants.XBOX_START);
     bumperRight.whileHeld(new IntakeCommand(intake, climber, Constants.INTAKE_SPEED));
     bumperLeft.whileHeld(new IntakeCommand(intake, climber, -Constants.INTAKE_SPEED));
     xboxB.whileHeld(new ManualCarousel(carousel, carouselCommand));
@@ -138,7 +138,19 @@ public class RobotContainer {
     JoystickButton xboxStart = new JoystickButton(xbox, Constants.XBOX_START);
     xboxStart.whenPressed(new ShooterTuner(shooter));
     xbox7.whenPressed(new FaceShootingTarget(robotDrive, 3, driveCommand, shooter));
-        //xboxA.whenPressed(new ClimberCommand()); //shootercomand
+    
+    JoystickButton farm1 = new JoystickButton(farm, 1);
+    farm1.whenPressed(new WinchCommand(climber, Constants.WINCH_MAX_HEIGHT_TICK_COUNT));
+
+    JoystickButton farm2 = new JoystickButton(farm, 2);
+    farm1.whenPressed(new WinchCommand(climber, Constants.WINCH_LEVEL_BAR_TICK_COUNT));
+
+    JoystickButton farm3 = new JoystickButton(farm, 3);
+    farm1.whenPressed(new WinchCommand(climber, Constants.WINCH_CLIMB_HEIGHT));
+
+
+    
+
   }
 
 

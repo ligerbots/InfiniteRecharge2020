@@ -109,6 +109,7 @@ public class Robot extends TimedRobot {
     m_robotContainer.climber.winch.setIdleMode(IdleMode.kCoast);
     // Set motors to coast so it's easier to move the robot.
     m_robotContainer.robotDrive.setIdleMode(IdleMode.kCoast);
+    m_robotContainer.climber.coastWinch();
   
   }
 
@@ -149,7 +150,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("TSR", -5500);
     System.out.println("teleopInit");
 
-    // Reset the wnich encoder
+    // Reset the winch encoder
     m_robotContainer.climber.resetWinchEncoder();
     m_robotContainer.climber.winch.setIdleMode(IdleMode.kCoast);
 
@@ -168,7 +169,7 @@ public class Robot extends TimedRobot {
     m_robotContainer.carouselCommand.schedule();
     //m_robotContainer.testFlup.schedule();
     //m_robotContainer.testIntake.schedule();
-    //m_robotContainer.runShoulder.schedule();
+    m_robotContainer.lowerShoulder.schedule();
     //RunWinch aaa = new RunWinch(m_robotContainer.climber, m_robotContainer);
     //aaa.schedule();
   }
