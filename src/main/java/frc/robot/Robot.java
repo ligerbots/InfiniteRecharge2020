@@ -9,10 +9,19 @@ package frc.robot;
 import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commands.DriveCommand;
+import frc.robot.commands.DriveForwardAuto;
+import frc.robot.commands.EightBallAuto;
 import frc.robot.commands.RunWinch;
+import frc.robot.subsystems.Carousel;
+import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Shooter;
+import frc.robot.commands.*;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -25,7 +34,12 @@ import frc.robot.commands.RunWinch;
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
   private RobotContainer m_robotContainer;
-  
+  private DriveTrain driveTrain;
+  private Carousel carousel;
+  private Intake intake;
+  private DriveCommand driveCommand;
+  private Shooter shooter;
+  SendableChooser<Command> chosenAuto = new SendableChooser<>();
 
   /**
    * This function is run when the robot is first started up and should be used
@@ -47,6 +61,10 @@ public class Robot extends TimedRobot {
     
     
     // SmartDashboard.putData(new TestTurret(m_robotContainer.shooter));
+
+   chosenAuto.addDefault("Default Auto", new DriveForwardAuto());
+   chosenAuto.addObject("EightBallAuto", new EightBallAuto(driveTrain,shooter,intake,carousel,driveCommand));
+   SmartDashboard.putData("Chosen Auto", chosenAuto);
   }
 
   /**
@@ -91,7 +109,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    m_autonomousCommand = chosenAuto.getSelected();
     m_robotContainer.carouselCommand.schedule();
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null)

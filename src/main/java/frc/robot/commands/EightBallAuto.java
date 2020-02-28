@@ -31,7 +31,7 @@ public class EightBallAuto extends SequentialCommandGroup {
   /**
    * Add your docs here.
    */
-  public EightBallAuto(DriveTrain robotDrive, Shooter shooter, Carousel carousel, Intake intake, DriveCommand driveCommand) {
+  public EightBallAuto(DriveTrain robotDrive, Shooter shooter, Intake intake, Carousel carousel, DriveCommand driveCommand) {
     driveCommand.cancel();
     intake.run(0.4);
     robotDrive.resetOdometry(new Pose2d());
@@ -111,4 +111,6 @@ public class EightBallAuto extends SequentialCommandGroup {
     addCommands(ramseteCommand1, ramseteCommand2.andThen(() -> robotDrive.tankDriveVolts(0, 0)));//new StartMatchCommand(), new ShooterCommand (shooter, carousel, robotDrive, 3.0));
     
   }
+
+
 }
