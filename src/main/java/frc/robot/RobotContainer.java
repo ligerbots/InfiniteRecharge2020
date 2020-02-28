@@ -7,6 +7,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.subsystems.Carousel;
 import frc.robot.subsystems.Climber;
@@ -58,6 +59,7 @@ public class RobotContainer {
   public final DriveCommand driveCommand = new DriveCommand(robotDrive, throttle, turn);
 
   XboxController xbox = new XboxController(0);
+  Joystick farm = new Joystick(1);
 
   private final Intake intake = new Intake();
   public final Carousel carousel = new Carousel();
@@ -127,13 +129,18 @@ public class RobotContainer {
     xboxB.whileHeld(new ManualCarousel(carousel, carouselCommand));
     xboxA.whenPressed(new ShootFromKey(shooter, carousel, carouselCommand).andThen(new ResetCarousel(carousel, carouselCommand)));
     xboxX.whenPressed(new ShooterCommand(shooter, carousel, robotDrive, 5, carouselCommand, driveCommand).andThen(new ResetCarousel(carousel, carouselCommand)));
-    xboxY.whenPressed(new TurnAndShoot(robotDrive, shooter, carousel, carouselCommand, driveCommand));
-    //xboxX.whenPressed(new ShooterTuner(shooter));
-    //xboxY.whenPressed(new StopAllShooting(shooter));
+    xboxY.whenPressed(new StopAllShooting(shooter));
     JoystickButton xboxStart = new JoystickButton(xbox, Constants.XBOX_START);
     xboxStart.whenPressed(new ShooterTuner(shooter));
     xbox7.whenPressed(new FaceShootingTarget(robotDrive, 3, driveCommand, shooter));
-        //xboxA.whenPressed(new ClimberCommand()); //shootercomand
+
+    JoystickButton farm1 = new JoystickButton(farm, 1);
+    JoystickButton farm2 = new JoystickButton(farm, 2);
+    farm1.whenPressed(new ShooterTuner(shooter));
+    farm2.whenPressed(new GatherData());
+    //xboxA.whenPressed(new ClimberCommand()); //shootercomand
+    //xboxY.whenPressed(new TurnAndShoot(robotDrive, shooter, carousel, carouselCommand, driveCommand));
+
   }
 
 
