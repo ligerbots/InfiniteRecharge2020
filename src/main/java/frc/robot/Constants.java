@@ -70,13 +70,16 @@ public final class Constants {
     public static final double SHOULDER_MIN_HEIGHT = 0.44;
     // If arm gets below 10 degrees above min height, we'll either stop the motor and let if fall in brake mode
     // or we'll just move t down really slowly.
-    public static final double SHOULDER_MIN_VELOCITY_HEIGHT = ((SHOULDER_MIN_HEIGHT * 360.0) + 10.0)/360.0;
+    public static final double SHOULDER_MIN_VELOCITY_BUFFER = 10.0/360.0; // 10 degrees;
+    public static final double SHOULDER_MIN_VELOCITY_HEIGHT = SHOULDER_MIN_HEIGHT + SHOULDER_MIN_VELOCITY_BUFFER;
     public static final double SHOULDER_MAX_HEIGHT = 0.604; 
     public static final double SHOULDER_START_HEIGHT = 0.59; // TODO: measure starting height of the shoulder.
     public static final double SHOULDER_HEIGHT_FOR_SPRNIG_TO_LIFT = 0.25; // TODO: Armmmm height where upper arm won't
     // go out of frame perimeter;
     public static final double SHOULDER_HEIGHT_FOR_FRAME_PERIMETER = 0.56; 
     public static final double SHOULDER_HEIGHT_FOR_MAX_CLIMB = 0.62;
+
+    public static final double ROBOT_PITCH_ANGLE_FOR_CLIMB = 10.0;
 
     public static final int CAROUSEL_FIFTH_ROTATION_TICKS = 12561;
     public static final int WINCH_MOTOR_CAN_ID = 9; // Winch for the climber

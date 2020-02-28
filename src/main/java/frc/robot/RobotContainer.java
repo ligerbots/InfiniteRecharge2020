@@ -67,7 +67,7 @@ public class RobotContainer {
 
 
   private final Shoulder shoulder = new Shoulder();
-  public final Climber climber = new Climber();
+  public final Climber climber = new Climber(robotDrive);
 
   public final DeployShoulderCommand deployShoulderCommand = new DeployShoulderCommand(climber);
 

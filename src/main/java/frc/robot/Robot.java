@@ -53,7 +53,10 @@ public class Robot extends TimedRobot {
     m_robotContainer = new RobotContainer();
 
     m_robotContainer.climber.shoulder.setIdleMode(IdleMode.kCoast);
-   
+ 
+    // Set motors to coast so it's easier to move the robot.
+    driveTrain.setIdleMode(IdleMode.kCoast);
+
     m_robotContainer.shooter.calibratePID(0.00008, 0.000000025, 0, 6.776 * 0.00001);
 
     // Reset Smart Dashboard for shooter test
@@ -97,6 +100,9 @@ public class Robot extends TimedRobot {
   public void disabledInit() {
     m_robotContainer.climber.shoulder.setIdleMode(IdleMode.kCoast);
     m_robotContainer.climber.winch.setIdleMode(IdleMode.kCoast);
+    // Set motors to coast so it's easier to move the robot.
+    driveTrain.setIdleMode(IdleMode.kCoast);
+  
   }
 
   @Override
@@ -109,6 +115,9 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
+    // Set motors to brake for the drive train
+    driveTrain.setIdleMode(IdleMode.kBrake);
+
     m_autonomousCommand = chosenAuto.getSelected();
     m_autonomousCommand = m_robotContainer.deployShoulderCommand;
     m_robotContainer.carouselCommand.schedule();
@@ -126,6 +135,9 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    // Set motors to brake for the drive train
+    driveTrain.setIdleMode(IdleMode.kBrake);
+
     SmartDashboard.putNumber("Turret Angle", 75);
     SmartDashboard.putNumber("Target Hood Angle", 60);
     SmartDashboard.putNumber("TSR", -5500);
