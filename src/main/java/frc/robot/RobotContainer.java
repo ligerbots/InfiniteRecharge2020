@@ -25,7 +25,9 @@ import frc.robot.commands.TestFlup;
 import frc.robot.commands.TestIntake;
 import frc.robot.commands.TurnAndShoot;
 import frc.robot.commands.VisionTargetDistance;
+import frc.robot.commands.WinchCommand;
 import frc.robot.commands.CarouselCommand;
+import frc.robot.commands.DeployShoulderCommand;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.EightBallAuto;
 import frc.robot.commands.FaceShootingTarget;
@@ -56,7 +58,7 @@ public class RobotContainer {
   private final Turn turn = new Turn();
   private final DriveTrain robotDrive = new DriveTrain();
   public final DriveCommand driveCommand = new DriveCommand(robotDrive, throttle, turn);
-
+  
   XboxController xbox = new XboxController(0);
 
   private final Intake intake = new Intake();
@@ -66,6 +68,8 @@ public class RobotContainer {
 
   private final Shoulder shoulder = new Shoulder();
   public final Climber climber = new Climber();
+
+  public final DeployShoulderCommand deployShoulderCommand = new DeployShoulderCommand(climber);
 
 
   public JoystickButton winchRun;

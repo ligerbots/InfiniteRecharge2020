@@ -63,7 +63,7 @@ public class Robot extends TimedRobot {
     // SmartDashboard.putData(new TestTurret(m_robotContainer.shooter));
 
    chosenAuto.addDefault("Default Auto", new DriveForwardAuto());
-   chosenAuto.addObject("EightBallAuto", new EightBallAuto(driveTrain,shooter,intake,carousel,driveCommand));
+  //  chosenAuto.addObject("EightBallAuto", new EightBallAuto(driveTrain,shooter,intake,carousel,driveCommand));
    SmartDashboard.putData("Chosen Auto", chosenAuto);
   }
 
@@ -110,6 +110,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     m_autonomousCommand = chosenAuto.getSelected();
+    m_autonomousCommand = m_robotContainer.deployShoulderCommand;
     m_robotContainer.carouselCommand.schedule();
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null)
