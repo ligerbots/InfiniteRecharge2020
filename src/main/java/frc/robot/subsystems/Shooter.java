@@ -75,10 +75,10 @@ public class Shooter extends SubsystemBase {
                 String values_str[] = line.split(",");
                 double values[] = new double[values_str.length];
                 for(int i = 0; i < values.length; i++) {
-                    values[i] = Double.parseDouble(values_str[i].trim());
+                        values[i] = Double.parseDouble(values_str[i].trim());
+                    }               
                     distanceLookUp.put(values[0], new Double[] {values[1], values[2]});
-                  }               
-            }
+                }
         }
         catch (Exception e) {
             System.err.println("Error trying to read or parse ShooterData.csv: " + e.getMessage()); 
@@ -93,6 +93,7 @@ public class Shooter extends SubsystemBase {
             distanceLookUp.put(new Double(235.2), new Double[] {new Double(-7500), new Double(55)});            
         }
       
+        // this code needs a comment
         turretAngleLookup.put(0.0, 72.0);
         turretAngleLookup.put(1.0, 77.0);
         turretAngleLookup.put(2.0, 82.0);
@@ -103,10 +104,6 @@ public class Shooter extends SubsystemBase {
         turretAngleLookup.put(4.0, 89.0);
         turretAngleLookup.put(5.0, 94.0);
         turretAngleLookup.put(-5.0, 53.0);
-
-
-
-
 
     }
 
@@ -171,21 +168,12 @@ public class Shooter extends SubsystemBase {
         Entry<Double, Double[]> floorEntry = distanceLookUp.floorEntry(distance);
         Entry<Double, Double[]> ceilingEntry = distanceLookUp.higherEntry(distance);
         if (floorEntry != null && ceilingEntry != null) {
-            System.out.format("Distance Floor %4.1f%n", floorEntry.getKey());
-            System.out.format("Distance current %4.1f%n", distance);
-            System.out.format("Distance current %4.1f", ceilingEntry.getKey());
 
             // Charles' calculation
-            double ratio = 1 - (ceilingEntry.getKey() - distance) / (ceilingEntry.getKey() - floorEntry.getKey());
-            System.out.format("Ratio %4.1f", ratio);
+            double ratio = (distance - ceilingEntry.getKey()) / (ceilingEntry.getKey() - floorEntry.getKey());
             double result = floorEntry.getValue()[0] + ratio * (ceilingEntry.getValue()[0] - floorEntry.getValue()[0]);
-            System.out.format("Interpolated shooter speed %4.1f", result);
-
-            // Mark's calculation
-            // double result = (ceilingEntry.getValue()[0] - floorEntry.getValue()[0]) / 
-            //                     (ceilingEntry.getKey() - floorEntry.getKey())
-            //                   * (ceilingEntry.getKey() - distance) / 
-            //                     (ceilingEntry.getKey() - floorEntry.getKey()) + floorEntry.getValue()[0];
+            System.out.format("SHOOTER: Floor %4.1f, Target $4.1f, Ceiling %4.1f; ratio %1.2f, speed %4.1f %n", floorEntry.getKey(),
+                               distance,ceilingEntry.getKey(), ratio,  result);            
             return result;
         }
         else {
@@ -200,12 +188,9 @@ public class Shooter extends SubsystemBase {
 
         if (floorEntry != null && ceilingEntry != null) {
             // Charles calculation
-            double ratio = 1 - (ceilingEntry.getKey() - distance) / (ceilingEntry.getKey() - floorEntry.getKey());
+            double ratio = (distance - ceilingEntry.getKey()) / (ceilingEntry.getKey() - floorEntry.getKey());
             double result = floorEntry.getValue()[1] + ratio * (ceilingEntry.getValue()[1] - floorEntry.getValue()[1]);
-
-            // Mark's calculation
-            // double result = (ceilingEntry.getValue()[1] - floorEntry.getValue()[1]) / (ceilingEntry.getKey() - floorEntry.getKey()) * (ceilingEntry.getKey() - distance) / (ceilingEntry.getKey() - floorEntry.getKey())  + floorEntry.getValue()[1];
-            System.out.format("Interpolated Hood Angle %4.1f%n", result);
+            System.out.format("          Hood Angle %4.1f%n", result);
 
             return result;
         }

@@ -134,12 +134,16 @@ public class RobotContainer {
     xboxStart.whenPressed(new ShooterTuner(shooter));
     xbox7.whenPressed(new FaceShootingTarget(robotDrive, 3, driveCommand, shooter));
 
-    JoystickButton farm1 = new JoystickButton(farm, 1);
-    JoystickButton farm2 = new JoystickButton(farm, 2);
-    farm1.whenPressed(new ShooterTuner(shooter));
-    farm2.whenPressed(new GatherData());
-    //xboxA.whenPressed(new ClimberCommand()); //shootercomand
-    //xboxY.whenPressed(new TurnAndShoot(robotDrive, shooter, carousel, carouselCommand, driveCommand));
+    // This is to avoid excessive console output when the farm controller isn't plugged in
+    // If the farm controller becomes a required part of the control system, remvove this if
+    if (farm!=null) {
+      JoystickButton farm1 = new JoystickButton(farm, 1);
+      JoystickButton farm2 = new JoystickButton(farm, 2);
+      farm1.whenPressed(new ShooterTuner(shooter));
+      farm2.whenPressed(new GatherData());
+      //xboxA.whenPressed(new ClimberCommand()); //shootercomand
+      //xboxY.whenPressed(new TurnAndShoot(robotDrive, shooter, carousel, carouselCommand, driveCommand));
+    }
 
   }
 
