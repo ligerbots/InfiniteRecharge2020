@@ -138,7 +138,6 @@ public class RobotContainer {
     JoystickButton xboxStart = new JoystickButton(xbox, Constants.XBOX_START);
     xboxStart.whenPressed(new ShooterTuner(shooter));
     xbox7.whenPressed(new FaceShootingTarget(robotDrive, 3, driveCommand, shooter));
-<<<<<<< HEAD
     
     JoystickButton farm1 = new JoystickButton(farm, 1);
     farm1.whenPressed(new WinchCommand(climber, Constants.WINCH_MAX_HEIGHT_TICK_COUNT));
@@ -155,15 +154,13 @@ public class RobotContainer {
     JoystickButton farm5 = new JoystickButton (farm, 5);
     farm5.whenPressed(new ClimberCommand2(climber));
     
-=======
 
-    JoystickButton farm1 = new JoystickButton(farm, 1);
-    JoystickButton farm2 = new JoystickButton(farm, 2);
-    farm1.whenPressed(new ShooterTuner(shooter));
-    farm2.whenPressed(new GatherData());
+    JoystickButton farm14 = new JoystickButton(farm, 14);
+    JoystickButton farm16 = new JoystickButton(farm, 16);
+    farm14.whenPressed(new ShooterTuner(shooter));
+    farm16.whenPressed(new GatherData());
     //xboxA.whenPressed(new ClimberCommand()); //shootercomand
-    //xboxY.whenPressed(new TurnAndShoot(robotDrive, shooter, carousel, carouselCommand, driveCommand));
->>>>>>> 4f36e3b... Shooter ... hope
+    //xboxY.whenPressed(new TurnAndShoot(robotDrive, shooter, carousel, carouselCommand, driveCommand))
 
   }
 

@@ -50,17 +50,12 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
 
-<<<<<<< HEAD
     m_robotContainer.climber.shoulder.setIdleMode(IdleMode.kCoast);
  
     // Set motors to coast so it's easier to move the robot.
     m_robotContainer.robotDrive.setIdleMode(IdleMode.kCoast);
 
     m_robotContainer.shooter.calibratePID(0.00008, 0.000000025, 0, 6.776 * 0.00001);
-=======
-    // m_robotContainer.shooter.calibratePID(0.00006, 0.000000025, 0, 6.776 * 0.00001);
-    m_robotContainer.shooter.calibratePID(0.000065, 0.000000015, 0, 6.776 * 0.00001);
->>>>>>> 4f36e3b... Shooter ... hope
 
     // Reset Smart Dashboard for shooter test
     SmartDashboard.putString("Shooting", "Idle");
