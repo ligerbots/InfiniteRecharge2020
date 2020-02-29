@@ -69,6 +69,7 @@ public class ShooterCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    shooter.calibratePID(0.000085, 0.000000033, 0, 6.776 * 0.00001);
     driveCommand.cancel();
     startTime = System.nanoTime();
     SmartDashboard.putString("vision/active_mode/selected", "goalfinder");
@@ -166,7 +167,8 @@ public class ShooterCommand extends CommandBase {
   @Override
   public boolean isFinished() {
     // TODO: this should just check to see if the carousel has rotated 5 CAROUSEL_FIFTH_ROTATION_TICKS intervals
-    return (carousel.getTicks() - initialCarouselTicks) < -5 * Constants.CAROUSEL_FIFTH_ROTATION_TICKS;
+    return (carousel.getTicks() - initialCarouselTicks) < -5 * Constants.CAROUSEL_FIFTH_ROTATION_TICKS || distance == 0.0;
+            /*((double)System.nanoTime() - startTime) / 1_000_000_000.0 > 7.0;*/
     // if (waitTime == 0.0) {
     //   return false;
     // }

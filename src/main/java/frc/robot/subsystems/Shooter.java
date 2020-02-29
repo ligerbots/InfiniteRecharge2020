@@ -153,12 +153,12 @@ public class Shooter extends SubsystemBase {
     }
 
     public void shoot () {
-        if (flup.getOutputCurrent() < Constants.FLUP_STOP_CURRENT) {
+        //if (flup.getOutputCurrent() < Constants.FLUP_STOP_CURRENT) {
             flup.set(-0.5);
-        }
-        else {
-            flup.set(0);
-        }
+        //}
+        //else {
+        //    flup.set(0);
+        //}
     }
 
     public void testSpin () {

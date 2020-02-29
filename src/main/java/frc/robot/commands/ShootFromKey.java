@@ -30,6 +30,7 @@ public class ShootFromKey extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    shooter.calibratePID(0.000085, 0.000000033, 0, 6.776 * 0.00001);
     startTicks = carousel.getTicks();
     carouselCommand.cancel();
     shooter.setHood(155);
