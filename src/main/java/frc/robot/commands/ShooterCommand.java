@@ -79,13 +79,14 @@ public class ShooterCommand extends CommandBase {
     initialCarouselTicks = carousel.getTicks();
     visionInfo = SmartDashboard.getNumberArray("vision/target_info", empty); 
 
-    angleError = visionInfo[4];
+    angleError = visionInfo[4] * 180 / 3.1416 - (Math.atan(7.5 / distance));
     distance = visionInfo[3];
 
     shooter.prepareShooter(distance);
     currentControlMode = ControlMethod.SPIN_UP;
     startedTimerFlag = false;
     //shooter.shoot();
+    shooter.setTurretAdjusted(-angleError);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -102,7 +103,7 @@ public class ShooterCommand extends CommandBase {
 
     angleError = visionInfo[4] * 180 / 3.1416;
 
-    System.out.println("Target Speed: " + shooter.calculateShooterSpeed(distance) + "   Current Speed: " + shooter.getSpeed() + " ");
+    //System.out.println("Target Speed: " + shooter.calculateShooterSpeed(distance) + "   Current Speed: " + shooter.getSpeed() + " ");
 
     if (currentControlMode == ControlMethod.SPIN_UP){ 
       if (shooter.speedOnTarget(-shooter.calculateShooterSpeed(distance), 15)) {
@@ -127,23 +128,10 @@ public class ShooterCommand extends CommandBase {
 
     if (visionInfo[0] != 0) { // figure out if we see a vision target
   
-        if (Math.abs(angleError) > 5) {
-          robotDrive.allDrive(0, robotDrive.turnSpeedCalc(angleError), false);
-        }
-        else {
-          robotDrive.allDrive(0, 0, false);
-          //shooter.setTurret(angleError *  Math.signum(angleError));
-        }
-
         speedOnTarget = shooter.speedOnTarget(-shooter.calculateShooterSpeed(distance), 15) && currentControlMode == ControlMethod.HOLD; //TODO: May need to adjust acceptable error
         hoodOnTarget = (double)(System.nanoTime() - startTime) / 1_000_000_000 > 0.75;//shooter.hoodOnTarget(shooter.calculateShooterHood(distance));
-        angleOnTarget = Math.abs(angleError) <= 4.5; // They should be opposites so I added them
 
-        if (angleOnTarget) {
-          shooter.setTurretAdjusted(-angleError);
-        }
-
-        if (speedOnTarget && hoodOnTarget && angleOnTarget)
+        if (speedOnTarget && hoodOnTarget)
             rapidFire();
     }
 
@@ -174,7 +162,7 @@ public class ShooterCommand extends CommandBase {
   @Override
   public boolean isFinished() {
     // TODO: this should just check to see if the carousel has rotated 5 CAROUSEL_FIFTH_ROTATION_TICKS intervals
-    return (carousel.getTicks() -initialCarouselTicks) > 5 * Constants.CAROUSEL_FIFTH_ROTATION_TICKS;
+    return (carousel.getTicks() - initialCarouselTicks) < -5 * Constants.CAROUSEL_FIFTH_ROTATION_TICKS;
     // if (waitTime == 0.0) {
     //   return false;
     // }

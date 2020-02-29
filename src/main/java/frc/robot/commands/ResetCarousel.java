@@ -20,12 +20,14 @@ public class ResetCarousel extends CommandBase {
 
   Carousel carousel;
   final int fifthRotationTicks = 12561;
+  boolean reschedule;
 
   CarouselCommand carouselCommand;
 
 
-  public ResetCarousel(Carousel carousel, CarouselCommand carouselCommand) {
+  public ResetCarousel(Carousel carousel, CarouselCommand carouselCommand, boolean reschedule) {
     this.carousel = carousel;
+    this.reschedule = reschedule;
     this.carouselCommand = carouselCommand;
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -50,7 +52,9 @@ public class ResetCarousel extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     carousel.spin(0);
-    carouselCommand.schedule();
+    if (reschedule) {
+      carouselCommand.schedule();
+    }
   }
 
   // Returns true when the command should end.

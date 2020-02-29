@@ -37,10 +37,11 @@ public class ClimberCommand2 extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    System.out.println(currentPhase + "    " + climber.getWinchPosition());
     switch (currentPhase) {
       case LOWER_WINCH:
-          climber.moveWinch(Constants.WINCH_CLIMB_HEIGHT - 300);
-          if (Math.abs(climber.getWinchPosition() - (Constants.WINCH_CLIMB_HEIGHT - 300)) < 10) {
+          climber.moveWinch(Constants.WINCH_CLIMB_HEIGHT - 200);
+          if (Math.abs(climber.getWinchPosition() - (Constants.WINCH_CLIMB_HEIGHT - 200)) < 10) {
             currentPhase = ClimbingPhase.AUTO_LEVEL;
           }
         case AUTO_LEVEL:

@@ -103,6 +103,11 @@ public class Shooter extends SubsystemBase {
         turretAngleLookup.put(4.0, 89.0);
         turretAngleLookup.put(5.0, 94.0);
         turretAngleLookup.put(-5.0, 53.0);
+        turretAngleLookup.put(-6.0, 49.0);
+        turretAngleLookup.put(-7.0, 45.0);
+        turretAngleLookup.put(6.0, 99.0);
+        turretAngleLookup.put(7.0, 103.0);
+
 
 
 
@@ -148,7 +153,6 @@ public class Shooter extends SubsystemBase {
     }
 
     public void shoot () {
-        System.out.println("Flup current: " + flup.getOutputCurrent());
         if (flup.getOutputCurrent() < Constants.FLUP_STOP_CURRENT) {
             flup.set(-0.5);
         }
@@ -171,15 +175,10 @@ public class Shooter extends SubsystemBase {
         Entry<Double, Double[]> floorEntry = distanceLookUp.floorEntry(distance);
         Entry<Double, Double[]> ceilingEntry = distanceLookUp.higherEntry(distance);
         if (floorEntry != null && ceilingEntry != null) {
-            System.out.format("Distance Floor %4.1f%n", floorEntry.getKey());
-            System.out.format("Distance current %4.1f%n", distance);
-            System.out.format("Distance current %4.1f", ceilingEntry.getKey());
 
             // Charles' calculation
             double ratio = 1 - (ceilingEntry.getKey() - distance) / (ceilingEntry.getKey() - floorEntry.getKey());
-            System.out.format("Ratio %4.1f", ratio);
             double result = floorEntry.getValue()[0] + ratio * (ceilingEntry.getValue()[0] - floorEntry.getValue()[0]);
-            System.out.format("Interpolated shooter speed %4.1f", result);
 
             // Mark's calculation
             // double result = (ceilingEntry.getValue()[0] - floorEntry.getValue()[0]) / 
@@ -205,7 +204,6 @@ public class Shooter extends SubsystemBase {
 
             // Mark's calculation
             // double result = (ceilingEntry.getValue()[1] - floorEntry.getValue()[1]) / (ceilingEntry.getKey() - floorEntry.getKey()) * (ceilingEntry.getKey() - distance) / (ceilingEntry.getKey() - floorEntry.getKey())  + floorEntry.getValue()[1];
-            System.out.format("Interpolated Hood Angle %4.1f%n", result);
 
             return result;
         }
@@ -252,8 +250,17 @@ public class Shooter extends SubsystemBase {
     }
 
     public void setTurretAdjusted(double adjustedAngle) {
-        Entry<Double, Double> floorEntry = turretAngleLookup.floorEntry(adjustedAngle);
-        Entry<Double, Double> ceilingEntry = turretAngleLookup.higherEntry(adjustedAngle);
+        if (adjustedAngle > 5) {
+            adjustedAngle = 5;
+        }
+        if (adjustedAngle < -5) {
+            adjustedAngle = -5;
+        }
+        Entry<Double, Double> floorEntry = adjustedAngle < 0 ? turretAngleLookup.higherEntry(adjustedAngle) :
+                                                               turretAngleLookup.floorEntry(adjustedAngle);
+        Entry<Double, Double> ceilingEntry = adjustedAngle < 0 ? turretAngleLookup.floorEntry(adjustedAngle) : 
+                                                                 turretAngleLookup.higherEntry(adjustedAngle);
+                                                        
         if (floorEntry != null && ceilingEntry != null) {
             // Charles calculation
             double ratio = 1 - (ceilingEntry.getKey() - adjustedAngle) / (ceilingEntry.getKey() - floorEntry.getKey());
@@ -261,11 +268,12 @@ public class Shooter extends SubsystemBase {
 
             // Mark's calculation
             // double result = (ceilingEntry.getValue()[1] - floorEntry.getValue()[1]) / (ceilingEntry.getKey() - floorEntry.getKey()) * (ceilingEntry.getKey() - distance) / (ceilingEntry.getKey() - floorEntry.getKey())  + floorEntry.getValue()[1];
-            System.out.format("Interpolated Hood Angle %4.1f%n", result);
 
             turretServo.setAngle(result);
+            System.out.println("Turret Adjustment should be working: " + result + "    " + adjustedAngle);
         }
         else {
+            System.out.println("Turret Adjustment not successful      " + adjustedAngle);
             turretServo.setAngle(72);
         }
     }

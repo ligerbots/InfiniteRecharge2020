@@ -132,9 +132,9 @@ public class RobotContainer {
     bumperRight.whileHeld(new IntakeCommand(intake, climber, Constants.INTAKE_SPEED));
     bumperLeft.whileHeld(new IntakeCommand(intake, climber, -Constants.INTAKE_SPEED));
     xboxB.whileHeld(new ManualCarousel(carousel, carouselCommand));
-    xboxA.whenPressed(new ShootFromKey(shooter, carousel, carouselCommand).andThen(new ResetCarousel(carousel, carouselCommand)));
-    xboxX.whenPressed(new ShooterCommand(shooter, carousel, robotDrive, 5, carouselCommand, driveCommand).andThen(new ResetCarousel(carousel, carouselCommand)));
-    xboxY.whenPressed(new StopAllShooting(shooter));
+    xboxA.whenPressed(new ResetCarousel(carousel, carouselCommand, false).andThen(new ShootFromKey(shooter, carousel, carouselCommand).andThen(new ResetCarousel(carousel, carouselCommand, true))));
+    xboxX.whenPressed(new ShooterCommand(shooter, carousel, robotDrive, 5, carouselCommand, driveCommand).andThen(new ResetCarousel(carousel, carouselCommand, true)));
+    //xboxY.whenPressed(new StopAllShooting(shooter));
     JoystickButton xboxStart = new JoystickButton(xbox, Constants.XBOX_START);
     xboxStart.whenPressed(new ShooterTuner(shooter));
     xbox7.whenPressed(new FaceShootingTarget(robotDrive, 3, driveCommand, shooter));
@@ -160,7 +160,8 @@ public class RobotContainer {
     farm14.whenPressed(new ShooterTuner(shooter));
     farm16.whenPressed(new GatherData());
     //xboxA.whenPressed(new ClimberCommand()); //shootercomand
-    //xboxY.whenPressed(new TurnAndShoot(robotDrive, shooter, carousel, carouselCommand, driveCommand))
+    xboxY.whenPressed(new TurnAndShoot(robotDrive, shooter, carousel, carouselCommand, driveCommand));
+    shooter.setLEDRing(true);
 
   }
 

@@ -13,7 +13,9 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
+import edu.wpi.first.wpilibj.PIDBase.Tolerance;
 import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
@@ -35,6 +37,10 @@ public class DriveTrain extends SubsystemBase {
     private final SpeedControllerGroup leftMotors = new SpeedControllerGroup(leftLeader, leftFollower);
 
     private final SpeedControllerGroup rightMotors = new SpeedControllerGroup(rightLeader, rightFollower);
+
+    public PIDController turnSpeedController;
+
+    public double turnOutput;
 
     DifferentialDrive robotDrive;
     DifferentialDriveOdometry odometry;
@@ -75,6 +81,11 @@ public class DriveTrain extends SubsystemBase {
         rightEncoder.setDistancePerPulse(Constants.DISTANCE_PER_PULSE);
 
         odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(0));
+
+        turnSpeedController = new PIDController(0.015, 0.0001, 0.0, 0, navX, output -> this.turnOutput = output);
+
+        SmartDashboard.putString("vision/active_mode/selected", "goalfinder");
+
     }
 
     public Pose2d getPose () {
@@ -85,7 +96,7 @@ public class DriveTrain extends SubsystemBase {
         leftMotors.setVoltage(-leftVolts);
         rightMotors.setVoltage(rightVolts);// make sure right is negative becuase sides are opposite
         robotDrive.feed();
-      }
+    }
     
     public double getAverageEncoderDistance() {
         return (leftEncoder.getDistance() + rightEncoder.getDistance()) / 2.0;
@@ -119,6 +130,34 @@ public class DriveTrain extends SubsystemBase {
         odometry.resetPosition(pose, Rotation2d.fromDegrees(getHeading()));
     }
 
+    public void enableTurningControl(double angle, double tolerance) {
+        double angleOffset = angle;
+        double startAngle = getHeading();
+        double targetAngle = startAngle + angle;
+    
+        // We need to keep all angles between -180 and 180. Account for that here
+        // wrapCorrection will be used below in turnError to undo what we do here
+        double originalTargetAngle = targetAngle;
+        if (targetAngle > 180.0) {
+            targetAngle -= 360.0;
+        }
+        else if (targetAngle < -180.0) {
+            targetAngle += 360.0;
+        }
+        
+        turnSpeedController.setSetpoint(targetAngle);
+        turnSpeedController.enable();
+        turnSpeedController.setInputRange(-180.0, 180.0);
+        turnSpeedController.setAbsoluteTolerance(tolerance);
+        turnSpeedController.setOutputRange(-1.0, 1.0);
+        turnSpeedController.setContinuous(true);
+
+
+        System.out.printf(
+            "currentAngle: %5.2f, originalTargetAngle: %5.2f, targetAngle: %5.2f, ",
+            startAngle, originalTargetAngle, targetAngle);
+  }
+
     public DifferentialDriveWheelSpeeds getWheelSpeeds () {
         return new DifferentialDriveWheelSpeeds(leftEncoder.getRate(), rightEncoder.getRate());
     }
@@ -128,6 +167,9 @@ public class DriveTrain extends SubsystemBase {
         odometry.update(Rotation2d.fromDegrees(getHeading()), leftEncoder.getDistance(), rightEncoder.getDistance());
         SmartDashboard.putNumber("Heading", getHeading());
         SmartDashboard.putString("Pose", getPose().toString());
+        SmartDashboard.putNumber("Vision Angle", SmartDashboard.getNumberArray("vision/target_info", new Double[]{0.0,0.0})[4] * 180.0 / 3.1416);
+        SmartDashboard.putNumber("Arc tan adjustment", Math.atan(7.5 / SmartDashboard.getNumberArray("vision/target_info", new Double[]{0.0,0.0})[3]));
+
         // This method will be called once per scheduler run
     }
 
@@ -150,7 +192,21 @@ public class DriveTrain extends SubsystemBase {
     }
 
     public double turnSpeedCalc(double angleError) {
-        return 0.021 * angleError;
+        if (Math.abs(angleError) > 60) {
+            return 0.8 * Math.signum(angleError);
+        }
+        else if (Math.abs(angleError) > 30) {
+            return 0.4 * Math.signum(angleError);
+        }
+        else if (Math.abs(angleError) > 10) {
+            return 0.15 * Math.signum(angleError);
+        }
+        else if (Math.abs(angleError) > 5) {
+            return 0.07 * Math.signum(angleError);
+        }
+        else {
+            return 0.07 * Math.signum(angleError);
+        }
     }
 
     public double getPitch() {
