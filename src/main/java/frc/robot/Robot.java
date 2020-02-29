@@ -55,7 +55,7 @@ public class Robot extends TimedRobot {
     // Set motors to coast so it's easier to move the robot.
     m_robotContainer.robotDrive.setIdleMode(IdleMode.kCoast);
 
-    m_robotContainer.shooter.calibratePID(0.00008, 0.000000025, 0, 6.776 * 0.00001);
+    m_robotContainer.shooter.calibratePID(0.000085, 0.000000028, 0, 6.776 * 0.00001);
 
     // Reset Smart Dashboard for shooter test
     SmartDashboard.putString("Shooting", "Idle");
@@ -63,14 +63,25 @@ public class Robot extends TimedRobot {
     
     // SmartDashboard.putData(new TestTurret(m_robotContainer.shooter));
 
-    chosenAuto.addDefault("Default Auto", new DriveForwardAuto());
+    chosenAuto.addDefault("Default Auto", new DriveForwardAuto(m_robotContainer.robotDrive, m_robotContainer.carouselCommand, m_robotContainer.driveCommand));
     chosenAuto.addObject("EightBallAuto", new EightBallAuto(
       m_robotContainer.robotDrive,
       m_robotContainer.shooter,
       m_robotContainer.intake,
       m_robotContainer.climber,
       m_robotContainer.carousel,
-      m_robotContainer.driveCommand));
+      m_robotContainer.driveCommand,
+      m_robotContainer.carouselCommand));
+
+    chosenAuto.addObject("ShootAndDrive", new ShootAndDriveAuto(
+        m_robotContainer.robotDrive,
+        m_robotContainer.shooter,
+        m_robotContainer.intake,
+        m_robotContainer.climber,
+        m_robotContainer.carousel,
+        m_robotContainer.driveCommand,
+        m_robotContainer.carouselCommand));
+  
 
    SmartDashboard.putData("Chosen Auto", chosenAuto);
   }
@@ -125,7 +136,7 @@ public class Robot extends TimedRobot {
     m_robotContainer.robotDrive.setIdleMode(IdleMode.kBrake);
 
     m_autonomousCommand = chosenAuto.getSelected();
-    m_robotContainer.carouselCommand.schedule();
+    //m_robotContainer.carouselCommand.schedule();
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null)
       m_autonomousCommand.schedule();

@@ -167,7 +167,7 @@ public class DriveTrain extends SubsystemBase {
         odometry.update(Rotation2d.fromDegrees(getHeading()), leftEncoder.getDistance(), rightEncoder.getDistance());
         SmartDashboard.putNumber("Heading", getHeading());
         SmartDashboard.putString("Pose", getPose().toString());
-        SmartDashboard.putNumber("Vision Angle", SmartDashboard.getNumberArray("vision/target_info", new Double[]{0.0,0.0})[4] * 180.0 / 3.1416);
+        // SmartDashboard.putNumber("Vision Angle", SmartDashboard.getNumberArray("vision/target_info", new Double[]{0.0,0.0})[4] * 180.0 / 3.1416);
         SmartDashboard.putNumber("Arc tan adjustment", Math.atan(7.5 / SmartDashboard.getNumberArray("vision/target_info", new Double[]{0.0,0.0})[3]));
 
         // This method will be called once per scheduler run

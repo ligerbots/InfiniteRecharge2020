@@ -48,14 +48,16 @@ public class ShooterCommand extends CommandBase {
   }
 
   ControlMethod currentControlMode;
+  boolean rescheduleDriveCommand;
 
-  public ShooterCommand(Shooter shooter, Carousel carousel, DriveTrain robotDrive, double waitTime, CarouselCommand carouselCommand, DriveCommand driveCommand) {
+  public ShooterCommand(Shooter shooter, Carousel carousel, DriveTrain robotDrive, double waitTime, CarouselCommand carouselCommand, DriveCommand driveCommand, boolean rescheduleDriveCommand) {
     this.shooter = shooter;
     this.carousel = carousel;
     this.robotDrive = robotDrive;
     this.waitTime = waitTime;
     this.carouselCommand = carouselCommand;
     this.driveCommand = driveCommand;
+    this.rescheduleDriveCommand = rescheduleDriveCommand;
     startShooting = false;
   }
 
@@ -128,7 +130,7 @@ public class ShooterCommand extends CommandBase {
 
     if (visionInfo[0] != 0) { // figure out if we see a vision target
   
-        speedOnTarget = shooter.speedOnTarget(-shooter.calculateShooterSpeed(distance), 15) && currentControlMode == ControlMethod.HOLD; //TODO: May need to adjust acceptable error
+        speedOnTarget = shooter.speedOnTarget(-shooter.calculateShooterSpeed(distance), 5) && currentControlMode == ControlMethod.HOLD; //TODO: May need to adjust acceptable error
         hoodOnTarget = (double)(System.nanoTime() - startTime) / 1_000_000_000 > 0.75;//shooter.hoodOnTarget(shooter.calculateShooterHood(distance));
 
         if (speedOnTarget && hoodOnTarget)
@@ -148,7 +150,9 @@ public class ShooterCommand extends CommandBase {
     shooter.setLEDRing(false);
     carousel.setBallCount(0);
     carouselCommand.schedule();
-    driveCommand.schedule();
+    if (rescheduleDriveCommand) {
+      driveCommand.schedule();
+    }
   }
 
   /*public double estimateKF (double rpm, double voltage) {

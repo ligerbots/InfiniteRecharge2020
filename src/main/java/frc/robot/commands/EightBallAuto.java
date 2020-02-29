@@ -32,10 +32,13 @@ public class EightBallAuto extends SequentialCommandGroup {
   /**
    * Add your docs here.
    */
-  public EightBallAuto(DriveTrain robotDrive, Shooter shooter, Intake intake, Climber climber, Carousel carousel, DriveCommand driveCommand) {
+  public EightBallAuto(DriveTrain robotDrive, Shooter shooter, Intake intake, Climber climber, Carousel carousel, DriveCommand driveCommand, CarouselCommand carouselCommand) {
     driveCommand.cancel();
-    // intake.run(0.4);
+    //intake.run(0.4);
     IntakeCommand intakeCommand = new IntakeCommand(intake, climber, Constants.INTAKE_SPEED);
+    TurnAndShoot shoot1 = new TurnAndShoot(robotDrive, shooter, carousel, carouselCommand, driveCommand, false);
+    TurnAndShoot shoot2 = new TurnAndShoot(robotDrive, shooter, carousel, carouselCommand, driveCommand, false);
+    DeployShoulderCommand deployShoulder = new DeployShoulderCommand(climber);
     robotDrive.resetOdometry(new Pose2d());
     var autoVoltageConstraint =
         new DifferentialDriveVoltageConstraint(
@@ -110,7 +113,7 @@ public class EightBallAuto extends SequentialCommandGroup {
     );
 
 
-    addCommands(intakeCommand.alongWith(ramseteCommand1), ramseteCommand2.andThen(() -> robotDrive.tankDriveVolts(0, 0)));//new StartMatchCommand(), new ShooterCommand (shooter, carousel, robotDrive, 3.0));
+    addCommands(deployShoulder.alongWith(shoot1), intakeCommand.alongWith(ramseteCommand1), ramseteCommand2.andThen(() -> robotDrive.tankDriveVolts(0, 0)), shoot2);//new StartMatchCommand(), new ShooterCommand (shooter, carousel, robotDrive, 3.0));
     
   }
 
