@@ -199,10 +199,10 @@ public class DriveTrain extends SubsystemBase {
             return 0.4 * Math.signum(angleError);
         }
         else if (Math.abs(angleError) > 10) {
-            return 0.1 * Math.signum(angleError);
+            return 0.13 * Math.signum(angleError);
         }
         else if (Math.abs(angleError) > 5) {
-            return 0.065 * Math.signum(angleError);
+            return 0.07 * Math.signum(angleError);
         }
         else {
             return 0.065 * Math.signum(angleError);

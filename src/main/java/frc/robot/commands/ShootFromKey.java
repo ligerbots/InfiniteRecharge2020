@@ -35,6 +35,7 @@ public class ShootFromKey extends CommandBase {
     carouselCommand.cancel();
     shooter.setHood(155);
     shooter.setShooterRPM(-4000);
+    shooter.setTurretAdjusted(0.1);
     shooter.shoot();
   }
 

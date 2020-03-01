@@ -129,14 +129,12 @@ public class ShooterCommand extends CommandBase {
       shooter.calibratePID(0, 0, 0, 1 / (5700 * 2.6666));
     }
 
-    if (visionInfo[0] != 0) { // figure out if we see a vision target
   
-        speedOnTarget = shooter.speedOnTarget(-shooter.calculateShooterSpeed(distance), 5) && currentControlMode == ControlMethod.HOLD; //TODO: May need to adjust acceptable error
-        hoodOnTarget = (double)(System.nanoTime() - startTime) / 1_000_000_000 > 0.75;//shooter.hoodOnTarget(shooter.calculateShooterHood(distance));
+    speedOnTarget = (shooter.speedOnTarget(-shooter.calculateShooterSpeed(distance), 5) && currentControlMode == ControlMethod.HOLD) || (double)(System.nanoTime() - startTime) / 1_000_000_000 > 5.0; //TODO: May need to adjust acceptable error
+    hoodOnTarget = (double)(System.nanoTime() - startTime) / 1_000_000_000 > 0.75;//shooter.hoodOnTarget(shooter.calculateShooterHood(distance));
 
-        if (speedOnTarget && hoodOnTarget)
-            rapidFire();
-    }
+    if (speedOnTarget && hoodOnTarget)
+        rapidFire();
 
   }
 
@@ -167,7 +165,7 @@ public class ShooterCommand extends CommandBase {
   @Override
   public boolean isFinished() {
     // TODO: this should just check to see if the carousel has rotated 5 CAROUSEL_FIFTH_ROTATION_TICKS intervals
-    return (carousel.getTicks() - initialCarouselTicks) < -5 * Constants.CAROUSEL_FIFTH_ROTATION_TICKS || distance == 0.0;
+    return (carousel.getTicks() - initialCarouselTicks) < -5 * Constants.CAROUSEL_FIFTH_ROTATION_TICKS || (distance == 0.0 && (double)(System.nanoTime() - startTime) / 1_000_000_000.0 > 1.0);
             /*((double)System.nanoTime() - startTime) / 1_000_000_000.0 > 7.0;*/
     // if (waitTime == 0.0) {
     //   return false;

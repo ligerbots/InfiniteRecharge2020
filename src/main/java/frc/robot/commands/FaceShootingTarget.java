@@ -52,7 +52,10 @@ public class FaceShootingTarget extends CommandBase {
     shooter.setLEDRing(true);
     SmartDashboard.putString("vision/active_mode/selected", "goalfinder");
     startingAngle = robotDrive.getHeading();
-    initialAngleOffset = SmartDashboard.getNumberArray("vision/target_info", new double[]{0,0,0,0,0,0,0})[4] * 180 / 3.1416;
+    double[] visionData = SmartDashboard.getNumberArray("vision/target_info", new double[]{0,0,0,0,0,0,0});
+    double distance = visionData[3];   
+    initialAngleOffset = visionData[4] * 180 / 3.1416;
+    if (distance < 140.0 && initialAngleOffset > 0.0) initialAngleOffset = initialAngleOffset + 3.0;
     startTime = System.nanoTime();
   }
 
