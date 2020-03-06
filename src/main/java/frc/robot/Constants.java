@@ -37,14 +37,14 @@ public final class Constants {
     //Talon SRX for the Carousel
     public static final int CAROUSEL_CAN_ID = 12; // CAN ID for the spinner for carousel
     public static final double CAROUSEL_SHOOTER_SPEED = 0.8; // This is just percent output
-    public static final double CAROUSEL_INTAKE_SPEED = 0.5; // This is just percent output
+    public static final double CAROUSEL_INTAKE_SPEED = 0.56; // This is just percent output
 
     // Talon SRX for the grabber (Carousel)
     public static final int GRABBER_TALON_ID = 1; //TALON SRX ID for grabber
 
     // SPARKMAX for the intake motor (Intake)
     public static final int INTAKE_MOTOR_CAN_ID = 10; //CAN ID for intake motor
-    public static final double INTAKE_SPEED = 0.5;
+    public static final double INTAKE_SPEED = 0.4;
 
     // Intake Color Sensor
 
@@ -58,7 +58,7 @@ public final class Constants {
     public static final int SHOOTER_SERVO_PWM_ID = 0; // Servo to controll hood angle 
     public static final int SHOOTER_TURRET_SERVO_ID = 1; // TODO: Fix this
 
-    public static final double FLUP_STOP_CURRENT = 10; //TODO: FIX THIS VALUE
+    public static final double FLUP_STOP_CURRENT = 12; //TODO: FIX THIS VALUE
 
     public static final double TURRET_ANGLE_COEFFICIENT = 180; // TODO: Fix this
 
@@ -86,13 +86,13 @@ public final class Constants {
     public static final double SHOULDER_SPEED_HOLD = 0.1;
     public static final double SHOULDER_RATE_DOWN = 40.0/360.0;
     // NOTE: This has to be negative to keep the robot level during climb
-    public static final double SHOULDER_SPEED_LEVEL = -7;
+    public static final double SHOULDER_SPEED_LEVEL = -5.5;
 
-    public static final double ROBOT_PITCH_ANGLE_FOR_CLIMB = 15.0;
+    public static final double ROBOT_PITCH_ANGLE_FOR_CLIMB = 5.0;
 
     public static final int CAROUSEL_FIFTH_ROTATION_TICKS = 12561;
     public static final int WINCH_MOTOR_CAN_ID = 9; // Winch for the climber
-    public static final double WINCH_SPEED_FAST = 6.0; // winch speed for going fast
+    public static final double WINCH_SPEED_FAST = 8.0; // winch speed for going fast
     public static final double WINCH_SPEED_SLOW = 0.5; // winch speed for going slow
     public static final double WINCH_SPEED_CLIMB = 0.8; //winch speed for actually climbing
 
@@ -126,7 +126,7 @@ public final class Constants {
     public static final double ksVolts = 0.182; 
     public static final double kvVoltSecondsPerMeter = 2.64; 
     public static final double kaVoltSecondsSquaredPerMeter = 0.324; 
-    public static final double kPDriveVel = 8; 
+    public static final double kPDriveVel = 6; 
 
     //DIFFERENTIAL DRIVE KINEMATICS
     public static final double kTrackwidth = 0.6604; // in meters

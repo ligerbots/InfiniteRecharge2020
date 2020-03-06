@@ -53,6 +53,7 @@ public class Climber extends SubsystemBase {
     @Override
     public void periodic() {
 
+
         // This periodic() method should be used to move the shoulder and the winch to the
         // requested setting.
 
@@ -67,6 +68,8 @@ public class Climber extends SubsystemBase {
         // Let's do the shoulder first
         // This should keep the shoulder at the requested height or let it down slowly
         currentShoulderAngle = shoulderEncoder.get();
+
+        SmartDashboard.putNumber("Shoulder Ticks", currentShoulderAngle);
 
         if (!autoLevel) {
             if (!shoulderMovingDown) {

@@ -35,10 +35,10 @@ public class ShooterTuner extends CommandBase {
   public void execute() {
     SmartDashboard.putNumber("Distance", SmartDashboard.getNumberArray("vision/target_info", new double[]{0,0,0,0,0,0,0})[3]);
     System.out.println("Shooter Tuner going!");
-    //shooter.shoot();
+    shooter.shoot();
     shooter.setHood(SmartDashboard.getNumber("Target Hood Angle", 60));
-    //shooter.setShooterRPM(SmartDashboard.getNumber("TSR", -1000));
-    shooter.setTurret(SmartDashboard.getNumber("Turret Angle", 60));
+    shooter.setShooterRPM(SmartDashboard.getNumber("TSR", -1000));
+    shooter.setTurret(SmartDashboard.getNumber("Turret Angle", 72));
   }
 
   // Called once the command ends or is interrupted.

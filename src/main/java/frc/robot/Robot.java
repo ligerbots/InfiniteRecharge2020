@@ -39,6 +39,10 @@ public class Robot extends TimedRobot {
   // private Climber climber;
   SendableChooser<Command> chosenAuto = new SendableChooser<>();
 
+  public static int RPMAdjustment;
+  public static int HoodAdjustment;
+
+
   /**
    * This function is run when the robot is first started up and should be used
    * for any initialization code.
@@ -55,24 +59,37 @@ public class Robot extends TimedRobot {
     // Set motors to coast so it's easier to move the robot.
     m_robotContainer.robotDrive.setIdleMode(IdleMode.kCoast);
 
-    m_robotContainer.shooter.calibratePID(0.00008, 0.000000025, 0, 6.776 * 0.00001);
+    m_robotContainer.shooter.calibratePID(0.000085, 0.000000033, 0, 6.776 * 0.00001);
 
     // Reset Smart Dashboard for shooter test
     SmartDashboard.putString("Shooting", "Idle");
+
+    RPMAdjustment = 0;
+    HoodAdjustment = 0;
+
     
     
     // SmartDashboard.putData(new TestTurret(m_robotContainer.shooter));
 
-    chosenAuto.addDefault("Default Auto", new DriveForwardAuto());
+    chosenAuto.addDefault("Default Auto", new DriveForwardAuto(m_robotContainer.robotDrive, m_robotContainer.carouselCommand, m_robotContainer.driveCommand));
     chosenAuto.addObject("EightBallAuto", new EightBallAuto(
       m_robotContainer.robotDrive,
       m_robotContainer.shooter,
       m_robotContainer.intake,
       m_robotContainer.climber,
       m_robotContainer.carousel,
-      m_robotContainer.driveCommand));
-    chosenAuto.addObject("DeployShoulder", new DeployShoulderCommand(
-      m_robotContainer.climber));
+      m_robotContainer.driveCommand,
+      m_robotContainer.carouselCommand));
+
+    chosenAuto.addObject("ShootAndDrive", new ShootAndDriveAuto(
+        m_robotContainer.robotDrive,
+        m_robotContainer.shooter,
+        m_robotContainer.intake,
+        m_robotContainer.climber,
+        m_robotContainer.carousel,
+        m_robotContainer.driveCommand,
+        m_robotContainer.carouselCommand));
+  
 
    SmartDashboard.putData("Chosen Auto", chosenAuto);
   }
@@ -123,11 +140,12 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
+    m_robotContainer.carousel.resetEncoder();
     // Set motors to brake for the drive train
     m_robotContainer.robotDrive.setIdleMode(IdleMode.kBrake);
 
     m_autonomousCommand = chosenAuto.getSelected();
-    m_robotContainer.carouselCommand.schedule();
+    //m_robotContainer.carouselCommand.schedule();
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null)
       m_autonomousCommand.schedule();
@@ -162,14 +180,12 @@ public class Robot extends TimedRobot {
     //SmartDashboard.putData(m_robotContainer.testFlup);
     if (m_autonomousCommand != null)
       m_autonomousCommand.cancel();
-    m_robotContainer.carousel.resetEncoder();
     m_robotContainer.driveCommand.schedule();
     //m_robotContainer.testFlup.schedule();
     //m_robotContainer.shooter.testSpin();
     m_robotContainer.carouselCommand.schedule();
     //m_robotContainer.testFlup.schedule();
     //m_robotContainer.testIntake.schedule();
-    m_robotContainer.lowerShoulder.schedule();
     //RunWinch aaa = new RunWinch(m_robotContainer.climber, m_robotContainer);
     //aaa.schedule();
   }
