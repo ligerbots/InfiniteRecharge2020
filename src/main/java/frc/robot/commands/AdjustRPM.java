@@ -7,38 +7,29 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Shooter;
+import frc.robot.Robot;
 
-public class ShooterTuner extends CommandBase {
+public class AdjustRPM extends CommandBase {
   /**
-   * Creates a new ShooterTuner.
+   * Creates a new AdjustRPM.
    */
 
-  Shooter shooter;
-  public ShooterTuner(Shooter shooter) {
-    this.shooter = shooter;
+  boolean increase;
+  public AdjustRPM(boolean increase) {
+    this.increase = increase;
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    //shooter.calibratePID(0.00013, 0.00000003, 0, 6.776 * 0.00001);
-    shooter.setLEDRing(true);
-    SmartDashboard.putString("vision/active_mode/selected", "goalfinder");
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    SmartDashboard.putNumber("Distance", SmartDashboard.getNumberArray("vision/target_info", new double[]{0,0,0,0,0,0,0})[3]);
-    System.out.println("Shooter Tuner going!");
-    shooter.shoot();
-    shooter.setHood(SmartDashboard.getNumber("Target Hood Angle", 60));
-    shooter.setShooterRPM(SmartDashboard.getNumber("TSR", -1000));
-    shooter.setTurret(SmartDashboard.getNumber("Turret Angle", 72));
+    Robot.RPMAdjustment += increase ? -100 : 100;
   }
 
   // Called once the command ends or is interrupted.

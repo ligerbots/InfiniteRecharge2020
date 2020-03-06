@@ -54,8 +54,7 @@ public class FaceShootingTarget extends CommandBase {
     startingAngle = robotDrive.getHeading();
     double[] visionData = SmartDashboard.getNumberArray("vision/target_info", new double[]{0,0,0,0,0,0,0});
     double distance = visionData[3];   
-    initialAngleOffset = visionData[4] * 180 / 3.1416;
-    if (distance < 140.0 && initialAngleOffset > 0.0) initialAngleOffset = initialAngleOffset + 3.0;
+    initialAngleOffset = visionData[4] * 180 / 3.1416 + 4.5;
     startTime = System.nanoTime();
   }
 
@@ -67,10 +66,9 @@ public class FaceShootingTarget extends CommandBase {
     SmartDashboard.putNumber("initialAngleOffset", initialAngleOffset);
 
     if (targetAcquired) {
-
       currentHeading = robotDrive.getHeading();
       check = Math.abs(currentHeading - (startingAngle - initialAngleOffset)) < acceptableError && oldCheck;
-      System.out.println(initialAngleOffset);
+      System.out.format("FaceShootingTarget: %3.2f%n", initialAngleOffset);
       robotDrive.allDrive(0, robotDrive.turnSpeedCalc(robotDrive.getHeading() - (startingAngle - initialAngleOffset)), false);
 
       oldCheck = Math.abs(currentHeading - (startingAngle - initialAngleOffset)) < acceptableError && oldOldCheck;
@@ -78,7 +76,7 @@ public class FaceShootingTarget extends CommandBase {
       oldOldCheck = Math.abs(currentHeading - (startingAngle - initialAngleOffset)) < acceptableError;
     }
     else {
-      initialAngleOffset = SmartDashboard.getNumberArray("vision/target_info", new double[]{0,0,0,0,0,0,0})[4] * 180 / 3.1416;
+      initialAngleOffset = SmartDashboard.getNumberArray("vision/target_info", new double[]{0,0,0,0,0,0,0})[4] * 180 / 3.1416 + 3;
       targetAcquired = initialAngleOffset != 0.0;
     }
   }

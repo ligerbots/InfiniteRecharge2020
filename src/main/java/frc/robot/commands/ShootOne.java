@@ -15,7 +15,7 @@ import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Shooter;
 import frc.robot.CircularBuffer;
 
-public class ShooterCommand extends CommandBase {
+public class ShootOne extends CommandBase {
   /**
    * Creates a new ShooterCommand.
    */
@@ -51,7 +51,7 @@ public class ShooterCommand extends CommandBase {
   ControlMethod currentControlMode;
   boolean rescheduleDriveCommand;
 
-  public ShooterCommand(Shooter shooter, Carousel carousel, DriveTrain robotDrive, double waitTime, CarouselCommand carouselCommand, DriveCommand driveCommand, boolean rescheduleDriveCommand) {
+  public ShootOne(Shooter shooter, Carousel carousel, DriveTrain robotDrive, double waitTime, CarouselCommand carouselCommand, DriveCommand driveCommand, boolean rescheduleDriveCommand) {
     this.shooter = shooter;
     this.carousel = carousel;
     this.robotDrive = robotDrive;
@@ -141,7 +141,7 @@ public class ShooterCommand extends CommandBase {
     }
 
   
-    speedOnTarget = (shooter.speedOnTarget(-shooter.calculateShooterSpeed(distance), 8) && currentControlMode == ControlMethod.HOLD) || (double)(System.nanoTime() - startTime) / 1_000_000_000 > 3.5; //TODO: May need to adjust acceptable error
+    speedOnTarget = (shooter.speedOnTarget(-shooter.calculateShooterSpeed(distance), 8) && currentControlMode == ControlMethod.HOLD) || (double)(System.nanoTime() - startTime) / 1_000_000_000 > 2.5; //TODO: May need to adjust acceptable error
     hoodOnTarget = (double)(System.nanoTime() - startTime) / 1_000_000_000 > 0.75;//shooter.hoodOnTarget(shooter.calculateShooterHood(distance));
 
     if (speedOnTarget && hoodOnTarget)
@@ -176,7 +176,7 @@ public class ShooterCommand extends CommandBase {
   @Override
   public boolean isFinished() {
     // TODO: this should just check to see if the carousel has rotated 5 CAROUSEL_FIFTH_ROTATION_TICKS intervals
-    return (carousel.getTicks() - initialCarouselTicks) < -5 * Constants.CAROUSEL_FIFTH_ROTATION_TICKS || (distance == 0.0 && (double)(System.nanoTime() - startTime) / 1_000_000_000.0 > 2.0);
+    return (carousel.getTicks() - initialCarouselTicks) < -1 * Constants.CAROUSEL_FIFTH_ROTATION_TICKS || (distance == 0.0 && (double)(System.nanoTime() - startTime) / 1_000_000_000.0 > 2.0);
             /*((double)System.nanoTime() - startTime) / 1_000_000_000.0 > 7.0;*/
     // if (waitTime == 0.0) {
     //   return false;

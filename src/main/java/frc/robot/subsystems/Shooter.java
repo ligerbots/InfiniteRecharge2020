@@ -31,6 +31,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Constants;
+import frc.robot.Robot;
 public class Shooter extends SubsystemBase {
 
     CANSparkMax motor1, motor2, motor3;
@@ -119,6 +120,9 @@ public class Shooter extends SubsystemBase {
     public void periodic() {
         SmartDashboard.putNumber("Shooter RPM", getSpeed());
         SmartDashboard.putNumber("Shooter motor current", motor2.getOutputCurrent());
+        SmartDashboard.putNumber("Hood Adjustment", Robot.HoodAdjustment);
+        SmartDashboard.putNumber("RPM Adjustment", Robot.RPMAdjustment);
+
     }
 
     public double getVoltage() {
@@ -180,15 +184,12 @@ public class Shooter extends SubsystemBase {
             double ratio = 1 - (ceilingEntry.getKey() - distance) / (ceilingEntry.getKey() - floorEntry.getKey());
             double result = floorEntry.getValue()[0] + ratio * (ceilingEntry.getValue()[0] - floorEntry.getValue()[0]);
 
-            // Mark's calculation
-            // double result = (ceilingEntry.getValue()[0] - floorEntry.getValue()[0]) / 
-            //                     (ceilingEntry.getKey() - floorEntry.getKey())
-            //                   * (ceilingEntry.getKey() - distance) / 
-            //                     (ceilingEntry.getKey() - floorEntry.getKey()) + floorEntry.getValue()[0];
-            return result;
+            System.out.format("Shooter: ratio %3.2f, floor %4.1f, dist %4.1f, ceiling %4.1f, RPM %4.1f",
+                              ratio, floorEntry.getKey(), distance,  ceilingEntry.getKey(), result);
+            return result + Robot.RPMAdjustment;
         }
         else {
-            System.out.println("floorEntry or celingEntry was null");
+            System.out.println("Shooter: floorEntry or celingEntry was null");
             return -1000;
         }
     }
@@ -201,11 +202,12 @@ public class Shooter extends SubsystemBase {
             // Charles calculation
             double ratio = 1 - (ceilingEntry.getKey() - distance) / (ceilingEntry.getKey() - floorEntry.getKey());
             double result = floorEntry.getValue()[1] + ratio * (ceilingEntry.getValue()[1] - floorEntry.getValue()[1]);
+            System.out.format(" hood %3.0f%n", result);
 
             // Mark's calculation
             // double result = (ceilingEntry.getValue()[1] - floorEntry.getValue()[1]) / (ceilingEntry.getKey() - floorEntry.getKey()) * (ceilingEntry.getKey() - distance) / (ceilingEntry.getKey() - floorEntry.getKey())  + floorEntry.getValue()[1];
 
-            return result;
+            return result + Robot.HoodAdjustment;
         }
         else {
             return 60;

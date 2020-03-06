@@ -39,6 +39,10 @@ public class Robot extends TimedRobot {
   // private Climber climber;
   SendableChooser<Command> chosenAuto = new SendableChooser<>();
 
+  public static int RPMAdjustment;
+  public static int HoodAdjustment;
+
+
   /**
    * This function is run when the robot is first started up and should be used
    * for any initialization code.
@@ -59,6 +63,10 @@ public class Robot extends TimedRobot {
 
     // Reset Smart Dashboard for shooter test
     SmartDashboard.putString("Shooting", "Idle");
+
+    RPMAdjustment = 0;
+    HoodAdjustment = 0;
+
     
     
     // SmartDashboard.putData(new TestTurret(m_robotContainer.shooter));

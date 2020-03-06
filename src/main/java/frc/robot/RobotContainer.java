@@ -16,6 +16,7 @@ import frc.robot.subsystems.Shooter;
 // import jdk.vm.ci.meta.Constant;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.commands.ShootFromKey;
+import frc.robot.commands.ShootOne;
 import frc.robot.commands.ShooterCommand;
 import frc.robot.commands.ShooterTuner;
 import frc.robot.commands.ShoulderCommand;
@@ -27,6 +28,8 @@ import frc.robot.commands.TestIntake;
 import frc.robot.commands.TurnAndShoot;
 import frc.robot.commands.VisionTargetDistance;
 import frc.robot.commands.WinchCommand;
+import frc.robot.commands.AdjustHood;
+import frc.robot.commands.AdjustRPM;
 import frc.robot.commands.CarouselCommand;
 import frc.robot.commands.ClimberCommand1;
 import frc.robot.commands.ClimberCommand2; 
@@ -133,20 +136,23 @@ public class RobotContainer {
     bumperLeft.whileHeld(new IntakeCommand(intake, climber, -Constants.INTAKE_SPEED));
     xboxB.whileHeld(new ManualCarousel(carousel, carouselCommand));
     xboxA.whenPressed(new ResetCarousel(carousel, carouselCommand, false).andThen(new ShootFromKey(shooter, carousel, carouselCommand).andThen(new ResetCarousel(carousel, carouselCommand, true))));
-    xboxX.whenPressed(new ShooterCommand(shooter, carousel, robotDrive, 5, carouselCommand, driveCommand, true).andThen(new ResetCarousel(carousel, carouselCommand, true)));
-    //xboxY.whenPressed(new StopAllShooting(shooter));
+    xboxX.whenPressed(new ResetCarousel(carousel, carouselCommand, false).andThen(new ShootOne(shooter, carousel, robotDrive, 5, carouselCommand, driveCommand, true)).andThen(new ResetCarousel(carousel, carouselCommand, true)));
+    // xboxY.whenPressed(new StopAllShooting(shooter));
     JoystickButton xboxStart = new JoystickButton(xbox, Constants.XBOX_START);
     xboxStart.whenPressed(new ShooterTuner(shooter));
     xbox7.whenPressed(new FaceShootingTarget(robotDrive, 3, driveCommand, shooter));
     
     JoystickButton farm1 = new JoystickButton(farm, 1);
-    farm1.whenPressed(new WinchCommand(climber, Constants.WINCH_MAX_HEIGHT_TICK_COUNT));
+    farm1.whenPressed(new AdjustRPM(true));
+
+    JoystickButton farm6 = new JoystickButton(farm, 6);
+    farm6.whenPressed(new AdjustRPM(false));
 
     JoystickButton farm2 = new JoystickButton(farm, 2);
-    farm1.whenPressed(new WinchCommand(climber, Constants.WINCH_LEVEL_BAR_TICK_COUNT));
+    farm2.whenPressed(new AdjustHood(true));
 
-    JoystickButton farm3 = new JoystickButton(farm, 3);
-    farm1.whenPressed(new WinchCommand(climber, Constants.WINCH_CLIMB_HEIGHT));
+    JoystickButton farm7 = new JoystickButton(farm, 7);
+    farm7.whenPressed(new AdjustHood(false));
 
     JoystickButton farm4 = new JoystickButton(farm, 4);
     farm4.whenPressed(new ClimberCommand1(climber));
