@@ -123,6 +123,7 @@ public class Shooter extends SubsystemBase {
         SmartDashboard.putNumber("Hood Adjustment", Robot.HoodAdjustment);
         SmartDashboard.putNumber("RPM Adjustment", Robot.RPMAdjustment);
 
+        SmartDashboard.putNumber("Output Voltage", motor2.getAppliedOutput());
     }
 
     public double getVoltage() {
@@ -172,7 +173,7 @@ public class Shooter extends SubsystemBase {
 
     public void setShooterRPM (double rpm) {
         System.out.println("Shooter RPM SET!!!!!");
-        pidController.setReference(rpm, ControlType.kVelocity);
+        pidController.setReference(-2000, ControlType.kVelocity, 0, -0.8);
     }
 
     public double calculateShooterSpeed (final double distance) {
@@ -234,6 +235,7 @@ public class Shooter extends SubsystemBase {
         pidController.setI(i);
         pidController.setD(d);
         pidController.setFF(f);
+        //pidController.setIZone(1000);
     }
 
     public void stopAll () {
