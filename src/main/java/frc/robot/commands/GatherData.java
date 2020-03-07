@@ -44,10 +44,10 @@ public class GatherData extends CommandBase {
         System.out.println("Found the shooter data file");
       }
       fileWriter = new FileWriter(dataFile, true);
-      fileWriter.write(new Double(SmartDashboard.getNumber("Distance", 0)).toString() + ", " + 
-        new Double(SmartDashboard.getNumber("TSR", 0)).toString() + ", " +
-        new Double(SmartDashboard.getNumber("Target Hood Angle", 0)).toString() + 
-        System.getProperty("line.separator"));
+      fileWriter.write(String.format("%5.2f,%5f,%3f%n",
+            SmartDashboard.getNumber("Distance", 0),
+            SmartDashboard.getNumber("TSR", 0),
+            SmartDashboard.getNumber("Target Hood Angle", 0)));
     } catch(IOException e) {
       System.out.println("Error with finding the shooter file");
       e.printStackTrace();

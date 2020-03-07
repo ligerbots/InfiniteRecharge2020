@@ -41,6 +41,7 @@ public class Robot extends TimedRobot {
 
   public static int RPMAdjustment;
   public static int HoodAdjustment;
+  public static double angleErrorAfterTurn = 0;
 
 
   /**

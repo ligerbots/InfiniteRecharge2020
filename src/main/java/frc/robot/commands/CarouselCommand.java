@@ -63,7 +63,7 @@ public class CarouselCommand extends CommandBase {
     currentTicks = -carousel.getTicks();
     currentCheckpoint = currentTicks / fifthRotationTicks;
 
-    if (carousel.getCurrent() > 8) { // First check is to see if the current is spiking
+    if (carousel.getCurrent() > 11.5) { // First check is to see if the current is spiking
       lastBackTime = System.nanoTime(); // start timer for going backwards
       backwards = true; // now we goin backwards
     }
