@@ -18,11 +18,11 @@ public class FieldMap {
     public static final double rL2 = robotLength/2.0;
     
     // centerline is the robot starting position
-    public static final double centerPoint = 92.341; // of target
-    public static final double startLine = 509.145 + robotLength/2 - 1; //center the robot on the startpoint (Backedge of robot will line up with line)
+    public static final double centerPointY = 92.341; // of target
+    public static final double startLineX = 509.145 + robotLength/2 - 1; //center the robot on the startpoint (Backedge of robot will line up with line)
     public static final double friendlyTrenchY = 25.414; // center line through long axis of trench
-    public static final double enemyTrenchBall1 = 302.016;       // Ball in enemy trench close to our goal
-    public static final double enemyTrenchBall2 = 283.516;       // Other Ball in enemy trench close to our goal
+    public static final double enemyTrenchBall1Y = 302.016;       // Ball in enemy trench close to our goal
+    public static final double enemyTrenchBall2Y = 283.516;       // Other Ball in enemy trench close to our goal
     
 
     public static ArrayList<Translation2d> ballPositions = new ArrayList<Translation2d>();
@@ -40,11 +40,11 @@ public class FieldMap {
 
         // start positions are in terms of the robot center (x,y)
 
-        startPositions[1] = new Pose2d(startLine, centerPoint,  new Rotation2d(0.0));        // directly centered
-        startPositions[2] = new Pose2d(startLine, centerPoint - 35, new Rotation2d(0.0));   // offcenter by 35 inches
-        startPositions[3] = new Pose2d(startLine, centerPoint + 35, new Rotation2d(0.0));   // offcenter by -35 inches
-        startPositions[4] = new Pose2d(startLine, friendlyTrenchY,  new Rotation2d(0.0));            // facing trench
-        startPositions[5] = new Pose2d(startLine, 220.341, new Rotation2d(0.0)); // centered in front of enemy feeder station
+        startPositions[1] = new Pose2d(startLineX, centerPointY,  new Rotation2d(0.0));        // directly centered
+        startPositions[2] = new Pose2d(startLineX, centerPointY - 35, new Rotation2d(0.0));   // offcenter by 35 inches
+        startPositions[3] = new Pose2d(startLineX, centerPointY + 35, new Rotation2d(0.0));   // offcenter by -35 inches
+        startPositions[4] = new Pose2d(startLineX, friendlyTrenchY,  new Rotation2d(0.0));            // facing trench
+        startPositions[5] = new Pose2d(startLineX, 220.341, new Rotation2d(0.0)); // centered in front of enemy feeder station
         //locations of balls
 
         ballPositions.add(ballPosition[1]);
