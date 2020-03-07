@@ -53,11 +53,11 @@ public class FiveBallCenterAuto extends SequentialCommandGroup {
       // Start at the origin facing the +X direction
       new Pose2d(0, 0, new Rotation2d(0)),
       List.of(
-         new Translation2d(388.637 * Constants.inchToMetersConversionFactor, 173.480 * Constants.inchToMetersConversionFactor),
-         new Translation2d(394.975 * Constants.inchToMetersConversionFactor, 158.178 * Constants.inchToMetersConversionFactor),                            
-         new Translation2d(401.313 * Constants.inchToMetersConversionFactor, 142.877 * Constants.inchToMetersConversionFactor),
-         new Translation2d(394.200 * Constants.inchToMetersConversionFactor, 118.470 * Constants.inchToMetersConversionFactor),
-         new Translation2d(378.899 * Constants.inchToMetersConversionFactor, 112.131 * Constants.inchToMetersConversionFactor) 
+         new Translation2d(388.637 * Constants.inchToMetersConversionFactor, 173.480 * Constants.inchToMetersConversionFactor), // ball 7
+         new Translation2d(394.975 * Constants.inchToMetersConversionFactor, 158.178 * Constants.inchToMetersConversionFactor), // ball 6                           
+         new Translation2d(401.313 * Constants.inchToMetersConversionFactor, 142.877 * Constants.inchToMetersConversionFactor), // ball 5
+         new Translation2d(394.200 * Constants.inchToMetersConversionFactor, 118.470 * Constants.inchToMetersConversionFactor), // ball 4
+         new Translation2d(378.899 * Constants.inchToMetersConversionFactor, 112.131 * Constants.inchToMetersConversionFactor) // ball 3
       ),
       new Pose2d(122.1 * Constants.inchToMetersConversionFactor, 0, new Rotation2d(0)),
       config
