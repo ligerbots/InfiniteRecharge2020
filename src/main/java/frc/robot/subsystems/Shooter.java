@@ -173,7 +173,7 @@ public class Shooter extends SubsystemBase {
 
     public void setShooterRPM (double rpm) {
         System.out.println("Shooter RPM SET!!!!!");
-        pidController.setReference(-2000, ControlType.kVelocity, 0, -0.8);
+        pidController.setReference(rpm, ControlType.kVelocity, 0, -0.8);
     }
 
     public double calculateShooterSpeed (final double distance) {
@@ -231,11 +231,12 @@ public class Shooter extends SubsystemBase {
     }
 
     public void calibratePID (final double p, final double i, final double d, final double f) {
+        pidController.setIAccum(0);
         pidController.setP(p);
         pidController.setI(i);
         pidController.setD(d);
         pidController.setFF(f);
-        //pidController.setIZone(1000);
+        pidController.setIZone(1000);
     }
 
     public void stopAll () {
