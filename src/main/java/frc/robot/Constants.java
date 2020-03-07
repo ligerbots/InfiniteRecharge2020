@@ -140,4 +140,7 @@ public final class Constants {
     public static final double kRamseteB = 2; // generic ramsete values
     public static final double kRamseteZeta = 0.7; // generic ramsete values
 
+    public static final double inchToMetersConversionFactor = 0.0254;
+
+
 }
