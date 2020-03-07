@@ -46,15 +46,12 @@ public class FiveBallCenterAuto extends SequentialCommandGroup {
             10);
     final TrajectoryConfig config =
       new TrajectoryConfig(Constants.kMaxSpeed,
-                            Constants.kMaxAcceleration)
-          // Add kinematics to ensure max speed is actually obeyed
-          .setKinematics(Constants.kDriveKinematics)
-          // Apply the voltage constraint
-          .addConstraint(autoVoltageConstraint);
+          Constants.kMaxAcceleration)
+          .setKinematics(Constants.kDriveKinematics)// Add kinematics to ensure max speed is actually obeyed
+          .addConstraint(autoVoltageConstraint);// Apply the voltage constraint
     final Trajectory fiveBallTrajectory = TrajectoryGenerator.generateTrajectory(
       // Start at the origin facing the +X direction
       new Pose2d(0, 0, new Rotation2d(0)),
-      // Pass through these two interior waypoints, making an 's' curve path
       List.of(
          new Translation2d(388.637 * Constants.inchToMetersConversionFactor, 173.480 * Constants.inchToMetersConversionFactor),
          new Translation2d(394.975 * Constants.inchToMetersConversionFactor, 158.178 * Constants.inchToMetersConversionFactor),                            
@@ -62,9 +59,7 @@ public class FiveBallCenterAuto extends SequentialCommandGroup {
          new Translation2d(394.200 * Constants.inchToMetersConversionFactor, 118.470 * Constants.inchToMetersConversionFactor),
          new Translation2d(378.899 * Constants.inchToMetersConversionFactor, 112.131 * Constants.inchToMetersConversionFactor) 
       ),
-      // End 3 meters straight ahead of where we started, facing forward
       new Pose2d(122.1 * Constants.inchToMetersConversionFactor, 0, new Rotation2d(0)),
-      // Pass config
       config
       );
 
