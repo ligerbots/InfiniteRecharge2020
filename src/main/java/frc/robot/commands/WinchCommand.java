@@ -35,7 +35,7 @@ public class WinchCommand extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    climber.stopWinch();;
+    climber.stopWinch();
   }
 
   // Returns true when the command should end.
