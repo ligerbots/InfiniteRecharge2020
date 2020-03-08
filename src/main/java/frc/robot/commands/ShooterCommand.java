@@ -96,7 +96,7 @@ public class ShooterCommand extends CommandBase {
     startedTimerFlag = false;
     //shooter.shoot();
     System.out.println("Initial Angle Offset: " + Robot.angleErrorAfterTurn);
-    shooter.setTurretAdjusted(-Robot.angleErrorAfterTurn);
+    shooter.setTurretAdjusted(0/*-Robot.angleErrorAfterTurn*/);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

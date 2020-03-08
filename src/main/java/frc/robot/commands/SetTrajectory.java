@@ -47,7 +47,7 @@ public class SetTrajectory extends CommandBase {
         List.of(
             new Translation2d(-1.2, -0.63)
         ),
-        new Pose2d(-4.5, -0.63, Rotation2d.fromDegrees(0)),
+        new Pose2d(-6.5, -0.63, Rotation2d.fromDegrees(-10)),
         trajectoryConfig
     ); 
 

@@ -37,7 +37,7 @@ public final class Constants {
     //Talon SRX for the Carousel
     public static final int CAROUSEL_CAN_ID = 12; // CAN ID for the spinner for carousel
     public static final double CAROUSEL_SHOOTER_SPEED = 0.8; // This is just percent output
-    public static final double CAROUSEL_INTAKE_SPEED = 0.8; // This is just percent output
+    public static final double CAROUSEL_INTAKE_SPEED = 0.7; // This is just percent output
 
     // Talon SRX for the grabber (Carousel)
     public static final int GRABBER_TALON_ID = 1; //TALON SRX ID for grabber
@@ -134,8 +134,8 @@ public final class Constants {
     public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(kTrackwidth);
 
     //MAX TRAJECTORY VELOCITY AND ACCELERATION
-    public static final double kMaxSpeed = 1.22; // TODO: ASSIGN A REAL VALUE meters per second
-    public static final double kMaxAcceleration = 1; // TODO: ASSIGN A REAL VALUE meters per second per second
+    public static final double kMaxSpeed = 1.75; // TODO: ASSIGN A REAL VALUE meters per second
+    public static final double kMaxAcceleration = 1.5; // TODO: ASSIGN A REAL VALUE meters per second per second
 
     //RAMSETE PARAMETERS
     public static final double kRamseteB = 2; // generic ramsete values

@@ -34,7 +34,7 @@ public class EightBallAuto extends SequentialCommandGroup {
    */
   public EightBallAuto(DriveTrain robotDrive, Shooter shooter, Intake intake, Climber climber, Carousel carousel, DriveCommand driveCommand, CarouselCommand carouselCommand) {
     driveCommand.cancel();
-    //intake.run(0.4);
+    intake.run(0.4);
     IntakeCommand intakeCommand = new IntakeCommand(intake, climber, 0.5);
     TurnAndShoot shoot1 = new TurnAndShoot(robotDrive, shooter, carousel, carouselCommand, driveCommand, false);
     TurnAndShoot shoot2 = new TurnAndShoot(robotDrive, shooter, carousel, carouselCommand, driveCommand, false);
@@ -73,11 +73,11 @@ public class EightBallAuto extends SequentialCommandGroup {
 
     Trajectory comeBackTrajectory = TrajectoryGenerator.generateTrajectory(
         // Start at the origin facing the +X direction
-        new Pose2d(-4.5, -0.63, new Rotation2d(0)), 
+        new Pose2d(-6.5, -0.63, new Rotation2d(-10)), 
         List.of(
-            new Translation2d(-1.2, -0.63)
+            //new Translation2d(-1.2, -0.63)
         ),
-        new Pose2d(0, 0, Rotation2d.fromDegrees(20)),
+        new Pose2d(-4.2, -0.63, Rotation2d.fromDegrees(10)),
         configForward
     ); 
 
@@ -113,7 +113,7 @@ public class EightBallAuto extends SequentialCommandGroup {
     );
 
 
-    addCommands(deployShoulder.alongWith(shoot1), intakeCommand.alongWith(new SetTrajectory(robotDrive, configBackward).andThen(() -> robotDrive.tankDriveVolts(0, 0)))/*, ramseteCommand2.andThen(() -> robotDrive.tankDriveVolts(0, 0))*/, shoot2, new ResetCarousel(carousel, carouselCommand, true));// new StartMatchCommand(), new
+    addCommands(deployShoulder.alongWith(shoot1), new SetTrajectory(robotDrive, configBackward).andThen(() -> robotDrive.tankDriveVolts(0, 0)), ramseteCommand2.andThen(() -> robotDrive.tankDriveVolts(0, 0)), new ResetCarousel(carousel, carouselCommand, false), new TurnAndShoot(robotDrive, shooter, carousel, carouselCommand, driveCommand, false), new ResetCarousel(carousel, carouselCommand, true));// new StartMatchCommand(), new
                                                                                  // ShooterCommand (shooter, carousel,
                                                                                  // robotDrive, 3.0));
     
