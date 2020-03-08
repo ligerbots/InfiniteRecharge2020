@@ -10,13 +10,12 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
-import frc.robot.Robot;
 import frc.robot.subsystems.Carousel;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Shooter;
 import frc.robot.CircularBuffer;
 
-public class ShooterCommand extends CommandBase {
+public class ShootOne extends CommandBase {
   /**
    * Creates a new ShooterCommand.
    */
@@ -29,7 +28,6 @@ public class ShooterCommand extends CommandBase {
   Shooter shooter;
   Carousel carousel;
   DriveTrain robotDrive;
-  double shooterTargetSpeed;
 
   boolean startShooting;
 
@@ -53,7 +51,7 @@ public class ShooterCommand extends CommandBase {
   ControlMethod currentControlMode;
   boolean rescheduleDriveCommand;
 
-  public ShooterCommand(Shooter shooter, Carousel carousel, DriveTrain robotDrive, double waitTime, CarouselCommand carouselCommand, DriveCommand driveCommand, boolean rescheduleDriveCommand) {
+  public ShootOne(Shooter shooter, Carousel carousel, DriveTrain robotDrive, double waitTime, CarouselCommand carouselCommand, DriveCommand driveCommand, boolean rescheduleDriveCommand) {
     this.shooter = shooter;
     this.carousel = carousel;
     this.robotDrive = robotDrive;
@@ -65,7 +63,7 @@ public class ShooterCommand extends CommandBase {
   }
 
   public void rapidFire() {
-    carousel.spin(0.8);
+    carousel.spin(0.5);
     shooter.shoot();
   }
 
@@ -73,8 +71,7 @@ public class ShooterCommand extends CommandBase {
   @Override
   public void initialize() {
     foundTarget = false;
-    shooterTargetSpeed = 0.0;
-    shooter.calibratePID(0.000145, 1e-8, 0, 6.6774 * 0.00001);
+    shooter.calibratePID(0.000085, 0.000000035, 0, 6.776 * 0.00001);
     driveCommand.cancel();
     startTime = System.nanoTime();
     SmartDashboard.putString("vision/active_mode/selected", "goalfinder");
@@ -83,20 +80,18 @@ public class ShooterCommand extends CommandBase {
     carouselCommand.cancel();
     currentControlMode = ControlMethod.SPIN_UP;
 
-    System.out.println("Initial NavX Heading: " + robotDrive.getHeading());
     // stor current carouselTick value
     initialCarouselTicks = carousel.getTicks();
     visionInfo = SmartDashboard.getNumberArray("vision/target_info", empty); 
 
-    angleError = visionInfo[4] * 180 / 3.1416;
+    angleError = visionInfo[4] * 180 / 3.1416 - (Math.atan(7.5 / distance));
     distance = visionInfo[3];
 
-    //shooter.prepareShooter(distance);
+    shooter.prepareShooter(distance);
     currentControlMode = ControlMethod.SPIN_UP;
     startedTimerFlag = false;
     //shooter.shoot();
-    System.out.println("Initial Angle Offset: " + Robot.angleErrorAfterTurn);
-    shooter.setTurretAdjusted(0/*-Robot.angleErrorAfterTurn*/);
+    shooter.setTurretAdjusted(-angleError);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -111,13 +106,13 @@ public class ShooterCommand extends CommandBase {
   public void execute() {
     visionInfo = SmartDashboard.getNumberArray("vision/target_info", empty); // TODO: need actual vision info
 
+
+    if (distance != 0.0) {
+      foundTarget = true;
+    }
+
     if (!foundTarget) {
       distance = visionInfo[3];
-      if (distance != 0.0) {
-        foundTarget = true;
-        shooterTargetSpeed = -shooter.calculateShooterSpeed(distance);  
-        shooter.prepareShooter(distance);   
-      }   
     }
 
     angleError = visionInfo[4] * 180 / 3.1416;
@@ -125,8 +120,7 @@ public class ShooterCommand extends CommandBase {
     //System.out.println("Target Speed: " + shooter.calculateShooterSpeed(distance) + "   Current Speed: " + shooter.getSpeed() + " ");
 
     if (currentControlMode == ControlMethod.SPIN_UP){ 
-
-      if (shooter.speedOnTarget(shooterTargetSpeed, 15)) {
+      if (shooter.speedOnTarget(-shooter.calculateShooterSpeed(distance), 15)) {
         if (startedTimerFlag) {
           if (System.nanoTime() - stableRPMTime > 0.2 * 1_000_000_000) {
             currentControlMode = ControlMethod.HOLD;
@@ -147,7 +141,7 @@ public class ShooterCommand extends CommandBase {
     }
 
   
-    speedOnTarget = (shooter.speedOnTarget(shooterTargetSpeed, 8) && currentControlMode == ControlMethod.HOLD) || (double)(System.nanoTime() - startTime) / 1_000_000_000 > 3.5; //TODO: May need to adjust acceptable error
+    speedOnTarget = (shooter.speedOnTarget(-shooter.calculateShooterSpeed(distance), 8) && currentControlMode == ControlMethod.HOLD) || (double)(System.nanoTime() - startTime) / 1_000_000_000 > 2.5; //TODO: May need to adjust acceptable error
     hoodOnTarget = (double)(System.nanoTime() - startTime) / 1_000_000_000 > 0.75;//shooter.hoodOnTarget(shooter.calculateShooterHood(distance));
 
     if (speedOnTarget && hoodOnTarget)
@@ -182,7 +176,7 @@ public class ShooterCommand extends CommandBase {
   @Override
   public boolean isFinished() {
     // TODO: this should just check to see if the carousel has rotated 5 CAROUSEL_FIFTH_ROTATION_TICKS intervals
-    return (carousel.getTicks() - initialCarouselTicks) < -5 * Constants.CAROUSEL_FIFTH_ROTATION_TICKS || (distance == 0.0 && (double)(System.nanoTime() - startTime) / 1_000_000_000.0 > 2.0);
+    return (carousel.getTicks() - initialCarouselTicks) < -1 * Constants.CAROUSEL_FIFTH_ROTATION_TICKS || (distance == 0.0 && (double)(System.nanoTime() - startTime) / 1_000_000_000.0 > 2.0);
             /*((double)System.nanoTime() - startTime) / 1_000_000_000.0 > 7.0;*/
     // if (waitTime == 0.0) {
     //   return false;

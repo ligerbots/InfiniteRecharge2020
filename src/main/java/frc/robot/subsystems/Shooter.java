@@ -31,6 +31,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Constants;
+import frc.robot.Robot;
 public class Shooter extends SubsystemBase {
 
     CANSparkMax motor1, motor2, motor3;
@@ -72,7 +73,9 @@ public class Shooter extends SubsystemBase {
         try (BufferedReader br = new BufferedReader(new FileReader("/home/lvuser/ShooterData.csv"))) {
             String line;
             while ((line = br.readLine()) != null) {
+                if (line.trim().length() == 0) continue;
                 String values_str[] = line.split(",");
+
                 double values[] = new double[values_str.length];
                 for(int i = 0; i < values.length; i++) {
                     values[i] = Double.parseDouble(values_str[i].trim());
@@ -84,25 +87,27 @@ public class Shooter extends SubsystemBase {
             System.err.println("Error trying to read or parse ShooterData.csv: " + e.getMessage()); 
             System.err.println("Using original hard-coded table instead");
 
-            distanceLookUp.put(new Double(112.6), new Double[] {new Double(-5500), new Double(90)});
-            distanceLookUp.put(new Double(137.1), new Double[] {new Double(-5500), new Double(80)});
-            distanceLookUp.put(new Double(168.9), new Double[] {new Double(-6000), new Double(70)});
-            distanceLookUp.put(new Double(227.0), new Double[] {new Double(-7000), new Double(65)});
-            distanceLookUp.put(new Double(318.1), new Double[] {new Double(-8000), new Double(60)});
-            distanceLookUp.put(new Double(253.4), new Double[] {new Double(-7500), new Double(60)});
-            distanceLookUp.put(new Double(235.2), new Double[] {new Double(-7500), new Double(55)});            
+            distanceLookUp.put(new Double(112.6), new Double[] {new Double(5500), new Double(90)});
+            distanceLookUp.put(new Double(137.1), new Double[] {new Double(5500), new Double(80)});
+            distanceLookUp.put(new Double(168.9), new Double[] {new Double(6000), new Double(70)});
+            distanceLookUp.put(new Double(227.0), new Double[] {new Double(7000), new Double(65)});
+            distanceLookUp.put(new Double(318.1), new Double[] {new Double(8000), new Double(60)});
+            distanceLookUp.put(new Double(253.4), new Double[] {new Double(7500), new Double(60)});
+            distanceLookUp.put(new Double(235.2), new Double[] {new Double(7500), new Double(55)});            
         }
       
-        turretAngleLookup.put(0.0, 72.0);
-        turretAngleLookup.put(1.0, 77.0);
-        turretAngleLookup.put(2.0, 82.0);
-        turretAngleLookup.put(3.0, 85.0);
-        turretAngleLookup.put(-4.0, 59.0);
-        turretAngleLookup.put(-2.0, 66.0);
-        turretAngleLookup.put(-3.0, 62.5);
-        turretAngleLookup.put(4.0, 89.0);
-        turretAngleLookup.put(5.0, 94.0);
-        turretAngleLookup.put(-5.0, 53.0);
+        turretAngleLookup.put(0.0, 79.5);
+        turretAngleLookup.put(1.0, 85.0);
+        turretAngleLookup.put(2.0, 89.0);
+        turretAngleLookup.put(3.0, 93.0);
+        turretAngleLookup.put(4.0, 97.0);
+        turretAngleLookup.put(5.0, 101.0);
+        turretAngleLookup.put(-5.0, 57.5);
+        turretAngleLookup.put(-4.0, 61.0);
+        turretAngleLookup.put(-3.0, 64.0);
+        turretAngleLookup.put(-2.0, 68.0);
+        turretAngleLookup.put(-1.0, 71.5);
+
 
 
 
@@ -114,6 +119,10 @@ public class Shooter extends SubsystemBase {
     public void periodic() {
         SmartDashboard.putNumber("Shooter RPM", getSpeed());
         SmartDashboard.putNumber("Shooter motor current", motor2.getOutputCurrent());
+        SmartDashboard.putNumber("Hood Adjustment", Robot.HoodAdjustment);
+        SmartDashboard.putNumber("RPM Adjustment", Robot.RPMAdjustment);
+
+        SmartDashboard.putNumber("Output Voltage", motor2.getAppliedOutput());
     }
 
     public double getVoltage() {
@@ -143,14 +152,17 @@ public class Shooter extends SubsystemBase {
         // and hoodServo value based on the input distance.
     }
 
+    public void setShooterVoltage (double voltage) {
+        pidController.setReference(voltage, ControlType.kVoltage);
+    }
+
     public void shoot () {
-        System.out.println("Flup current: " + flup.getOutputCurrent());
-        if (flup.getOutputCurrent() < Constants.FLUP_STOP_CURRENT) {
+        //if (flup.getOutputCurrent() < Constants.FLUP_STOP_CURRENT) {
             flup.set(-0.5);
-        }
-        else {
-            flup.set(0);
-        }
+        //}
+        //else {
+        //    flup.set(0);
+        //}
     }
 
     public void testSpin () {
@@ -160,31 +172,24 @@ public class Shooter extends SubsystemBase {
 
     public void setShooterRPM (double rpm) {
         System.out.println("Shooter RPM SET!!!!!");
-        pidController.setReference(rpm, ControlType.kVelocity);
+        pidController.setReference(rpm, ControlType.kVelocity, 0, -0.8);
     }
 
     public double calculateShooterSpeed (final double distance) {
         Entry<Double, Double[]> floorEntry = distanceLookUp.floorEntry(distance);
         Entry<Double, Double[]> ceilingEntry = distanceLookUp.higherEntry(distance);
-        System.out.format("Distance Floor %4.1f%n", floorEntry.getKey());
-        System.out.format("Distance current %4.1f%n", distance);
-        System.out.format("Distance current %4.1f", ceilingEntry.getKey());
-
         if (floorEntry != null && ceilingEntry != null) {
+
             // Charles' calculation
             double ratio = 1 - (ceilingEntry.getKey() - distance) / (ceilingEntry.getKey() - floorEntry.getKey());
-            System.out.format("Ratio %4.1f", ratio);
             double result = floorEntry.getValue()[0] + ratio * (ceilingEntry.getValue()[0] - floorEntry.getValue()[0]);
-            System.out.format("Interpolated shooter speed %4.1f", result);
 
-            // Mark's calculation
-            // double result = (ceilingEntry.getValue()[0] - floorEntry.getValue()[0]) / 
-            //                     (ceilingEntry.getKey() - floorEntry.getKey())
-            //                   * (ceilingEntry.getKey() - distance) / 
-            //                     (ceilingEntry.getKey() - floorEntry.getKey()) + floorEntry.getValue()[0];
-            return result;
+            System.out.format("Shooter: ratio %3.2f, floor %4.1f, dist %4.1f, ceiling %4.1f, RPM %4.1f",
+                              ratio, floorEntry.getKey(), distance,  ceilingEntry.getKey(), result);
+            return result/* + Robot.RPMAdjustment*/;
         }
         else {
+            System.out.println("Shooter: floorEntry or celingEntry was null");
             return -1000;
         }
     }
@@ -197,12 +202,12 @@ public class Shooter extends SubsystemBase {
             // Charles calculation
             double ratio = 1 - (ceilingEntry.getKey() - distance) / (ceilingEntry.getKey() - floorEntry.getKey());
             double result = floorEntry.getValue()[1] + ratio * (ceilingEntry.getValue()[1] - floorEntry.getValue()[1]);
+            System.out.format(" hood %3.0f%n", result);
 
             // Mark's calculation
             // double result = (ceilingEntry.getValue()[1] - floorEntry.getValue()[1]) / (ceilingEntry.getKey() - floorEntry.getKey()) * (ceilingEntry.getKey() - distance) / (ceilingEntry.getKey() - floorEntry.getKey())  + floorEntry.getValue()[1];
-            System.out.format("Interpolated Hood Angle %4.1f%n", result);
 
-            return result;
+            return result + Robot.HoodAdjustment;
         }
         else {
             return 60;
@@ -225,10 +230,12 @@ public class Shooter extends SubsystemBase {
     }
 
     public void calibratePID (final double p, final double i, final double d, final double f) {
+        pidController.setIAccum(0);
         pidController.setP(p);
         pidController.setI(i);
         pidController.setD(d);
         pidController.setFF(f);
+        pidController.setIZone(1000);
     }
 
     public void stopAll () {
@@ -247,8 +254,17 @@ public class Shooter extends SubsystemBase {
     }
 
     public void setTurretAdjusted(double adjustedAngle) {
-        Entry<Double, Double> floorEntry = turretAngleLookup.floorEntry(adjustedAngle);
-        Entry<Double, Double> ceilingEntry = turretAngleLookup.higherEntry(adjustedAngle);
+        if (adjustedAngle > 5) {
+            adjustedAngle = 5;
+        }
+        if (adjustedAngle < -5) {
+            adjustedAngle = -5;
+        }
+        Entry<Double, Double> floorEntry = adjustedAngle < 0 ? turretAngleLookup.higherEntry(adjustedAngle) :
+                                                               turretAngleLookup.floorEntry(adjustedAngle);
+        Entry<Double, Double> ceilingEntry = adjustedAngle < 0 ? turretAngleLookup.floorEntry(adjustedAngle) : 
+                                                                 turretAngleLookup.higherEntry(adjustedAngle);
+                                                        
         if (floorEntry != null && ceilingEntry != null) {
             // Charles calculation
             double ratio = 1 - (ceilingEntry.getKey() - adjustedAngle) / (ceilingEntry.getKey() - floorEntry.getKey());
@@ -256,11 +272,12 @@ public class Shooter extends SubsystemBase {
 
             // Mark's calculation
             // double result = (ceilingEntry.getValue()[1] - floorEntry.getValue()[1]) / (ceilingEntry.getKey() - floorEntry.getKey()) * (ceilingEntry.getKey() - distance) / (ceilingEntry.getKey() - floorEntry.getKey())  + floorEntry.getValue()[1];
-            System.out.format("Interpolated Hood Angle %4.1f%n", result);
 
             turretServo.setAngle(result);
+            System.out.println("Turret Adjustment should be working: " + result + "    " + adjustedAngle);
         }
         else {
+            System.out.println("Turret Adjustment not successful      " + adjustedAngle);
             turretServo.setAngle(72);
         }
     }
