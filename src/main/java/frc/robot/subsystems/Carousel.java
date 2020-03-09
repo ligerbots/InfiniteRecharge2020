@@ -29,7 +29,7 @@ public class Carousel extends SubsystemBase {
     public Carousel() {
         spinner = new WPI_TalonSRX(Constants.CAROUSEL_CAN_ID);
         spinner.setNeutralMode(NeutralMode.Brake);
-        carouselEncoder = new Encoder(5, 6);
+        carouselEncoder = new Encoder(7, 8);
     }
 
     @Override

@@ -26,8 +26,8 @@ public class VisionTargetDistance extends CommandBase {
   public void initialize() {
       System.out.println("Getting distance");
       shooter.setLEDRing(true);
-      SmartDashboard.putString("vision/active_mode/selected", "goalfinder");
-      SmartDashboard.putNumber("Distance", SmartDashboard.getNumberArray("vision/target_info", new double[]{0,0,0,0,0,0,0})[3]);
+      SmartDashboard.putString("vision/active_mode/selected", "intake");
+      //SmartDashboard.putNumber("Distance", SmartDashboard.getNumberArray("vision/target_info", new double[]{0,0,0,0,0,0,0})[3]);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

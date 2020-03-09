@@ -52,6 +52,8 @@ public class Climber extends SubsystemBase {
 
     @Override
     public void periodic() {
+        SmartDashboard.putNumber("Shoulder Current", shoulder.getOutputCurrent());
+        
 
 
         // This periodic() method should be used to move the shoulder and the winch to the
@@ -190,6 +192,7 @@ public class Climber extends SubsystemBase {
                 }
             }
         }*/
+        
     }
 
     public void moveShoulder(final double angle) {

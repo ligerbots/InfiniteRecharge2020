@@ -9,6 +9,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Robot;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Shooter;
 
@@ -43,7 +44,7 @@ public class FaceShootingTarget extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    shooter.setTurret(72);
+    shooter.setTurret(79.5);
     targetAcquired = false;
     oldOldCheck = false;
     check = false;
@@ -54,8 +55,9 @@ public class FaceShootingTarget extends CommandBase {
     startingAngle = robotDrive.getHeading();
     double[] visionData = SmartDashboard.getNumberArray("vision/target_info", new double[]{0,0,0,0,0,0,0});
     double distance = visionData[3];   
-    initialAngleOffset = visionData[4] * 180 / 3.1416 + 4.5;
+    initialAngleOffset = visionData[4] * 180 / 3.1416;
     startTime = System.nanoTime();
+    System.out.println("Initial initial heading: " + robotDrive.getHeading());
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -76,7 +78,7 @@ public class FaceShootingTarget extends CommandBase {
       oldOldCheck = Math.abs(currentHeading - (startingAngle - initialAngleOffset)) < acceptableError;
     }
     else {
-      initialAngleOffset = SmartDashboard.getNumberArray("vision/target_info", new double[]{0,0,0,0,0,0,0})[4] * 180 / 3.1416 + 3;
+      initialAngleOffset = SmartDashboard.getNumberArray("vision/target_info", new double[]{0,0,0,0,0,0,0})[4] * 180 / 3.1416;
       targetAcquired = initialAngleOffset != 0.0;
     }
   }
@@ -86,8 +88,10 @@ public class FaceShootingTarget extends CommandBase {
   public void end(boolean interrupted) {
     System.out.println("FACE SHOOTING FINISHED");
     System.out.println("Current Heading: " + robotDrive.getHeading() + System.getProperty("line.separator") + 
-    "Target Angle: " + (startingAngle - initialAngleOffset));    robotDrive.allDrive(0, 0, false);
-    //driveCommand.schedule();
+    "Target Angle: " + (startingAngle - initialAngleOffset));
+    robotDrive.allDrive(0, 0, false);
+    Robot.angleErrorAfterTurn = currentHeading - (startingAngle - initialAngleOffset);
+    driveCommand.schedule(); //TODO comment this back out
   }
 
   // Returns true when the command should end.

@@ -37,7 +37,7 @@ public final class Constants {
     //Talon SRX for the Carousel
     public static final int CAROUSEL_CAN_ID = 12; // CAN ID for the spinner for carousel
     public static final double CAROUSEL_SHOOTER_SPEED = 0.8; // This is just percent output
-    public static final double CAROUSEL_INTAKE_SPEED = 0.56; // This is just percent output
+    public static final double CAROUSEL_INTAKE_SPEED = 0.7; // This is just percent output
 
     // Talon SRX for the grabber (Carousel)
     public static final int GRABBER_TALON_ID = 1; //TALON SRX ID for grabber
@@ -82,9 +82,10 @@ public final class Constants {
     public static final double SHOULDER_HEIGHT_FOR_FRAME_PERIMETER = 0.56 - 2.0/360.0; 
     public static final double SHOULDER_HEIGHT_FOR_MAX_CLIMB = 0.62;
 
-    public static final double SHOULDER_SPEED_UP = 3.0; //VOLTAGE~!!!!!
-    public static final double SHOULDER_SPEED_HOLD = 0.1;
-    public static final double SHOULDER_RATE_DOWN = 40.0/360.0;
+    public static final double SHOULDER_SPEED_UP = 4.0; //VOLTAGE~!!!!!
+    public static final double SHOULDER_SPEED_HOLD = 0.3
+    ;
+    public static final double SHOULDER_RATE_DOWN = 40.0/360.0 * 12;
     // NOTE: This has to be negative to keep the robot level during climb
     public static final double SHOULDER_SPEED_LEVEL = -5.5;
 
@@ -92,7 +93,7 @@ public final class Constants {
 
     public static final int CAROUSEL_FIFTH_ROTATION_TICKS = 12561;
     public static final int WINCH_MOTOR_CAN_ID = 9; // Winch for the climber
-    public static final double WINCH_SPEED_FAST = 8.0; // winch speed for going fast
+    public static final double WINCH_SPEED_FAST = 10.0; // winch speed for going fast
     public static final double WINCH_SPEED_SLOW = 0.5; // winch speed for going slow
     public static final double WINCH_SPEED_CLIMB = 0.8; //winch speed for actually climbing
 
@@ -133,8 +134,8 @@ public final class Constants {
     public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(kTrackwidth);
 
     //MAX TRAJECTORY VELOCITY AND ACCELERATION
-    public static final double kMaxSpeed = 1.22; // TODO: ASSIGN A REAL VALUE meters per second
-    public static final double kMaxAcceleration = 1; // TODO: ASSIGN A REAL VALUE meters per second per second
+    public static final double kMaxSpeed = 1.75; // TODO: ASSIGN A REAL VALUE meters per second
+    public static final double kMaxAcceleration = 1.5; // TODO: ASSIGN A REAL VALUE meters per second per second
 
     //RAMSETE PARAMETERS
     public static final double kRamseteB = 2; // generic ramsete values

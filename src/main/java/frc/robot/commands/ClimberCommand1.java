@@ -40,10 +40,11 @@ public class ClimberCommand1 extends CommandBase {
     System.out.println(currentPhase);
     switch (currentPhase) {
       case RAISE_SHOULDER1:
-        climber.moveShoulder(Constants.SHOULDER_HEIGHT_FOR_RAISE1 + 0.05);
+        climber.moveShoulder(Constants.SHOULDER_HEIGHT_FOR_FRAME_PERIMETER + 0.05);
         if (climber.shoulderOnTarget()) {
           currentPhase = ClimbingPhase.RAISE_WINCH;
         }
+        System.out.println("Shoulder Position: " + climber.getShoulderPosition());
         break;
       case RAISE_WINCH:
         climber.moveWinch(Constants.WINCH_MAX_HEIGHT_TICK_COUNT);

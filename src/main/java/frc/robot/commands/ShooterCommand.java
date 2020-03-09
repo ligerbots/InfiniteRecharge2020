@@ -10,6 +10,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
+import frc.robot.Robot;
 import frc.robot.subsystems.Carousel;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Shooter;
@@ -28,6 +29,7 @@ public class ShooterCommand extends CommandBase {
   Shooter shooter;
   Carousel carousel;
   DriveTrain robotDrive;
+  double shooterTargetSpeed;
 
   boolean startShooting;
 
@@ -63,7 +65,7 @@ public class ShooterCommand extends CommandBase {
   }
 
   public void rapidFire() {
-    carousel.spin(0.5);
+    carousel.spin(0.8);
     shooter.shoot();
   }
 
@@ -71,7 +73,8 @@ public class ShooterCommand extends CommandBase {
   @Override
   public void initialize() {
     foundTarget = false;
-    shooter.calibratePID(0.000085, 0.000000035, 0, 6.776 * 0.00001);
+    shooterTargetSpeed = 0.0;
+    shooter.calibratePID(0.000145, 1e-8, 0, 6.6774 * 0.00001);
     driveCommand.cancel();
     startTime = System.nanoTime();
     SmartDashboard.putString("vision/active_mode/selected", "goalfinder");
@@ -80,18 +83,20 @@ public class ShooterCommand extends CommandBase {
     carouselCommand.cancel();
     currentControlMode = ControlMethod.SPIN_UP;
 
+    System.out.println("Initial NavX Heading: " + robotDrive.getHeading());
     // stor current carouselTick value
     initialCarouselTicks = carousel.getTicks();
     visionInfo = SmartDashboard.getNumberArray("vision/target_info", empty); 
 
-    angleError = visionInfo[4] * 180 / 3.1416 - (Math.atan(7.5 / distance));
+    angleError = visionInfo[4] * 180 / 3.1416;
     distance = visionInfo[3];
 
-    shooter.prepareShooter(distance);
+    //shooter.prepareShooter(distance);
     currentControlMode = ControlMethod.SPIN_UP;
     startedTimerFlag = false;
     //shooter.shoot();
-    shooter.setTurretAdjusted(-angleError);
+    System.out.println("Initial Angle Offset: " + Robot.angleErrorAfterTurn);
+    shooter.setTurretAdjusted(0/*-Robot.angleErrorAfterTurn*/);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -106,13 +111,13 @@ public class ShooterCommand extends CommandBase {
   public void execute() {
     visionInfo = SmartDashboard.getNumberArray("vision/target_info", empty); // TODO: need actual vision info
 
-
-    if (distance != 0.0) {
-      foundTarget = true;
-    }
-
     if (!foundTarget) {
       distance = visionInfo[3];
+      if (distance != 0.0) {
+        foundTarget = true;
+        shooterTargetSpeed = -shooter.calculateShooterSpeed(distance);  
+        shooter.prepareShooter(distance);   
+      }   
     }
 
     angleError = visionInfo[4] * 180 / 3.1416;
@@ -120,7 +125,8 @@ public class ShooterCommand extends CommandBase {
     //System.out.println("Target Speed: " + shooter.calculateShooterSpeed(distance) + "   Current Speed: " + shooter.getSpeed() + " ");
 
     if (currentControlMode == ControlMethod.SPIN_UP){ 
-      if (shooter.speedOnTarget(-shooter.calculateShooterSpeed(distance), 15)) {
+
+      if (shooter.speedOnTarget(shooterTargetSpeed, 15)) {
         if (startedTimerFlag) {
           if (System.nanoTime() - stableRPMTime > 0.2 * 1_000_000_000) {
             currentControlMode = ControlMethod.HOLD;
@@ -141,7 +147,7 @@ public class ShooterCommand extends CommandBase {
     }
 
   
-    speedOnTarget = (shooter.speedOnTarget(-shooter.calculateShooterSpeed(distance), 8) && currentControlMode == ControlMethod.HOLD) || (double)(System.nanoTime() - startTime) / 1_000_000_000 > 3.5; //TODO: May need to adjust acceptable error
+    speedOnTarget = (shooter.speedOnTarget(shooterTargetSpeed, 8) && currentControlMode == ControlMethod.HOLD) || (double)(System.nanoTime() - startTime) / 1_000_000_000 > 3.5; //TODO: May need to adjust acceptable error
     hoodOnTarget = (double)(System.nanoTime() - startTime) / 1_000_000_000 > 0.75;//shooter.hoodOnTarget(shooter.calculateShooterHood(distance));
 
     if (speedOnTarget && hoodOnTarget)
