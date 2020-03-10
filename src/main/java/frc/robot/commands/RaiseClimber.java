@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.Climber;
 
-public class ClimberCommand1 extends CommandBase {
+public class RaiseClimber extends CommandBase {
   /**
    * Creates a new ClimberCommand.
    */
@@ -23,7 +23,7 @@ public class ClimberCommand1 extends CommandBase {
 
   ClimbingPhase currentPhase;
 
-  public ClimberCommand1(Climber climber) {
+  public RaiseClimber(Climber climber) {
     this.climber = climber;
     // Use addRequirements() here to declare subsystem dependencies.
   }

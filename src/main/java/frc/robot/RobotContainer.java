@@ -31,7 +31,7 @@ import frc.robot.commands.WinchCommand;
 import frc.robot.commands.AdjustHood;
 import frc.robot.commands.AdjustRPM;
 import frc.robot.commands.CarouselCommand;
-import frc.robot.commands.ClimberCommand1;
+import frc.robot.commands.RaiseClimber;
 import frc.robot.commands.ClimberCommand2; 
 import frc.robot.commands.DeployShoulderCommand;
 import frc.robot.commands.DriveCommand;
@@ -155,7 +155,7 @@ public class RobotContainer {
     farm7.whenPressed(new AdjustHood(false));
 
     JoystickButton farm4 = new JoystickButton(farm, 4);
-    farm4.whenPressed(new ClimberCommand1(climber));
+    farm4.whenPressed(new RaiseClimber(climber));
 
     JoystickButton farm5 = new JoystickButton (farm, 5);
     farm5.whenPressed(new ClimberCommand2(climber));
