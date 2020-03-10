@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import frc.robot.Constants;
+import frc.robot.FieldMap;
 import frc.robot.subsystems.DriveTrain;
 
 public class SetTrajectory extends CommandBase {
@@ -43,11 +44,11 @@ public class SetTrajectory extends CommandBase {
   public void initialize() {
     trajectory = TrajectoryGenerator.generateTrajectory(
         // Start at the origin facing the +X direction
-        new Pose2d(0, 0, Rotation2d.fromDegrees(robotDrive.getHeading())), 
+        new Pose2d(FieldMap.startLineX * Constants.inchToMetersConversionFactor, (FieldMap.targetCenterPointY - 35)*Constants.inchToMetersConversionFactor, Rotation2d.fromDegrees(robotDrive.getHeading())), 
         List.of(
-            new Translation2d(-1.2, -0.63)
+            new Translation2d(FieldMap.startLineX * Constants.inchToMetersConversionFactor - 1.2, (FieldMap.targetCenterPointY - 35)*Constants.inchToMetersConversionFactor - 0.63)
         ),
-        new Pose2d(-6.5, -0.63, Rotation2d.fromDegrees(-10)),
+        new Pose2d(FieldMap.startLineX * Constants.inchToMetersConversionFactor - 6.5, (FieldMap.targetCenterPointY - 35)*Constants.inchToMetersConversionFactor - 0.63, Rotation2d.fromDegrees(-10)),
         trajectoryConfig
     ); 
 

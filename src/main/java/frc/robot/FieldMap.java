@@ -19,7 +19,7 @@ public class FieldMap {
     
     // centerline is the robot starting position
     public static final double targetCenterPointY = 92.341; // of target
-    public static final double startLineX = 509.145 + robotLength/2 - 1; //center the robot on the startpoint (Backedge of robot will line up with line)
+    public static final double startLineX = 509.145 + robotLength/2; //center the robot on the startpoint (Backedge of robot will line up with line)
     public static final double friendlyTrenchY = 25.414; // center line through long axis of trench
     public static final double enemyTrenchBall1Y = 302.016;       // Ball in enemy trench close to our goal
     public static final double enemyTrenchBall2Y = 283.516;       // Other Ball in enemy trench close to our goal

@@ -27,7 +27,7 @@ import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
-
+import frc.robot.FieldMap;
 public class EightBallAuto extends SequentialCommandGroup {
   /**
    * Add your docs here.
@@ -73,31 +73,16 @@ public class EightBallAuto extends SequentialCommandGroup {
 
     Trajectory comeBackTrajectory = TrajectoryGenerator.generateTrajectory(
         // Start at the origin facing the +X direction
-        new Pose2d(-6.5, -0.63, new Rotation2d(-10)), 
+        new Pose2d(FieldMap.startLineX * Constants.inchToMetersConversionFactor - 6.5, (FieldMap.targetCenterPointY - 35)*Constants.inchToMetersConversionFactor - 0.63, Rotation2d.fromDegrees(-10)), 
         List.of(
             //new Translation2d(-1.2, -0.63)
         ),
-        new Pose2d(-4.2, -0.63, Rotation2d.fromDegrees(10)),
+        new Pose2d(FieldMap.startLineX * Constants.inchToMetersConversionFactor -4.2, (FieldMap.targetCenterPointY - 35)*Constants.inchToMetersConversionFactor - 0.63, Rotation2d.fromDegrees(10)),
         configForward
     ); 
 
 
-    RamseteCommand ramseteCommand1 = new RamseteCommand(
-        temporaryTrajectory,
-        robotDrive::getPose,
-        new RamseteController(Constants.kRamseteB, Constants.kRamseteZeta),
-        new SimpleMotorFeedforward(Constants.ksVolts,
-                                   Constants.kvVoltSecondsPerMeter,
-                                   Constants.kaVoltSecondsSquaredPerMeter),
-        Constants.kDriveKinematics,
-        robotDrive::getWheelSpeeds,
-        new PIDController(Constants.kPDriveVel, 0, 0),
-        new PIDController(Constants.kPDriveVel, 0, 0),
-        robotDrive::tankDriveVolts,
-        robotDrive
-    );
-
-    RamseteCommand ramseteCommand2 = new RamseteCommand(
+    RamseteCommand comeBackRamseteCommand = new RamseteCommand(
         comeBackTrajectory,
         robotDrive::getPose,
         new RamseteController(Constants.kRamseteB, Constants.kRamseteZeta),
@@ -113,7 +98,7 @@ public class EightBallAuto extends SequentialCommandGroup {
     );
 
 
-    addCommands(deployShoulder.alongWith(shoot1), new SetTrajectory(robotDrive, configBackward).andThen(() -> robotDrive.tankDriveVolts(0, 0)), ramseteCommand2.andThen(() -> robotDrive.tankDriveVolts(0, 0)), new ResetCarousel(carousel, carouselCommand, false), new TurnAndShoot(robotDrive, shooter, carousel, carouselCommand, driveCommand, false), new ResetCarousel(carousel, carouselCommand, true));// new StartMatchCommand(), new
+    addCommands(deployShoulder.alongWith(shoot1), new SetTrajectory(robotDrive, configBackward).andThen(() -> robotDrive.tankDriveVolts(0, 0)), comeBackRamseteCommand.andThen(() -> robotDrive.tankDriveVolts(0, 0)), new ResetCarousel(carousel, carouselCommand, false), new TurnAndShoot(robotDrive, shooter, carousel, carouselCommand, driveCommand, false), new ResetCarousel(carousel, carouselCommand, true));// new StartMatchCommand(), new
                                                                                  // ShooterCommand (shooter, carousel,
                                                                                  // robotDrive, 3.0));
     
