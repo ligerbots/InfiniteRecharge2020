@@ -8,6 +8,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
 import frc.robot.subsystems.Carousel;
 
 public class CarouselPIDCommand extends CommandBase {
@@ -15,6 +16,10 @@ public class CarouselPIDCommand extends CommandBase {
    * Creates a new CarouselPIDCommand.
    */
   Carousel carousel;
+  int currentError, nextTarget;
+  int fifthRotationTicks = Constants.CAROUSEL_FIFTH_ROTATION_TICKS;
+  double P = 0.0001;
+  boolean stopForOpenSpace;
 
   public CarouselPIDCommand(Carousel carousel) {
     this.carousel = carousel;
@@ -24,11 +29,27 @@ public class CarouselPIDCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    nextTarget = carousel.getTicks() + fifthRotationTicks;
+    stopForOpenSpace = !carousel.isBallInFront();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    currentError = carousel.getTicks() - nextTarget;
+    if (!stopForOpenSpace) {
+      if (Math.abs(currentError) > 10) {
+        carousel.spin(P * currentError);
+      }
+      else {
+        stopForOpenSpace = carousel.isBallInFront();
+        nextTarget += fifthRotationTicks;
+      }
+    }
+    else {
+      stopForOpenSpace = carousel.isBallInFront();
+      carousel.spin(0);
+    }
   }
 
   // Called once the command ends or is interrupted.
