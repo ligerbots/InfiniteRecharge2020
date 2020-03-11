@@ -24,7 +24,7 @@ public class WinchCommand extends CommandBase {
   @Override
   public void initialize() {
       climber.moveWinch(requestedWinchHeight);
-      climber.moveShoulder(Constants.SHOULDER_CLIMB_HEIGHT);
+      climber.setShoulderHeight(Constants.SHOULDER_CLIMB_HEIGHT);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

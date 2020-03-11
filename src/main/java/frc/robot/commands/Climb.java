@@ -6,43 +6,48 @@
 /*----------------------------------------------------------------------------*/
 
 package frc.robot.commands;
-import java.util.function.DoubleSupplier;
-import edu.wpi.first.wpilibj2.command.CommandBase;
 
+import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
 import frc.robot.subsystems.Climber;
 
-public class RunShoulder extends CommandBase {
-
-  DoubleSupplier climb; // declare class to get climb speed
-  Climber climber; // declare motor class
-
+public class Climb extends CommandBase {
   /**
-   * Creates a new RunClimber.
+   * Creates a new Climb Command.
    */
-  public RunShoulder(Climber climber, DoubleSupplier climb) {
+  Climber climber;
+
+
+  public Climb(Climber climber) {
     this.climber = climber;
-    this.climb = climb; // init climber 
+    // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+	  // This command should only be called after the hook is on the bar.
+	  // We're going to start the winch going and set the shoulder to auto-level
+      climber.setWinchVoltage(Constants.WINCH_SPEED_CLIMB);
+	  climber.autoLevel(true);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-      climber.moveShoulder(climb.getAsDouble()); // set speed of soulder motors based on climb speed
+	  // Nothing to do here.
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+	  // Hold the winch but let the shoulder continue to auto level until the end of the match
+	  climber.stopWinch();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return climber.getWinchPosition() > Constants.WINCH_CLIMB_HEIGHT;
   }
 }

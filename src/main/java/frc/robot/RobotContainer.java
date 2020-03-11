@@ -32,7 +32,7 @@ import frc.robot.commands.AdjustHood;
 import frc.robot.commands.AdjustRPM;
 import frc.robot.commands.CarouselCommand;
 import frc.robot.commands.RaiseClimber;
-import frc.robot.commands.ClimberCommand2; 
+import frc.robot.commands.RaiseClimberToMaxHeight;
 import frc.robot.commands.DeployShoulderCommand;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.EightBallAuto;
@@ -41,7 +41,7 @@ import frc.robot.commands.GatherData;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.ManualCarousel;
 import frc.robot.commands.ResetCarousel;
-import frc.robot.commands.RunShoulder;
+import frc.robot.commands.SetClimberToLevelBarHeight;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
  //import edu.wpi.first.wpilibj.XboxController; will need later
@@ -155,11 +155,14 @@ public class RobotContainer {
     farm7.whenPressed(new AdjustHood(false));
 
     JoystickButton farm4 = new JoystickButton(farm, 4);
-    farm4.whenPressed(new RaiseClimber(climber));
+    farm4.whenPressed(new RaiseClimberToMaxHeight(climber));
 
-    JoystickButton farm5 = new JoystickButton (farm, 5);
-    farm5.whenPressed(new ClimberCommand2(climber));
+    JoystickButton farm5 = new JoystickButton(farm, 5);
+    farm5.whenPressed(new RaiseClimberToMaxHeight(climber).andThen(new SetClimberToLevelBarHeight(climber)));
     
+	// TODO: We need to add one more button to actually climber
+	// JoystickButton farm? = new JoystickButton(farm, ?);
+	// farm?.whenPressed(new Climb(climber));
 
     JoystickButton farm11 = new JoystickButton(farm, 11);
     farm11.whenPressed(new FaceShootingTarget(robotDrive, 3, driveCommand, shooter));

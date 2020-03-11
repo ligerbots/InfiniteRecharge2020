@@ -105,7 +105,7 @@ public class Climber extends SubsystemBase {
             }
         } else {
             // Auto levelling
-            System.out.println(" " + driveTrain.getPitch());
+            // System.out.println(" " + driveTrain.getPitch());
             if (driveTrain.getPitch() > Constants.ROBOT_PITCH_ANGLE_FOR_CLIMB) {
                 // Need to lift the front
                 shoulder.setVoltage(Constants.SHOULDER_SPEED_LEVEL);
@@ -118,64 +118,6 @@ public class Climber extends SubsystemBase {
         // save the angle for next time
         lastShoulderAngle = currentShoulderAngle;
     }
-        
- 
-        // // Now let's do the winch
-
-        // currentWinchHeight = winchEncoder.getPosition();
-
-        // if (requestedWinchHeight < currentWinchHeight) {
-        //     // Just stop the winch
-        //     stopWinch();
-        // }
-        // else {
-        //     winch.setVoltage(Constants.WINCH_SPEED_FAST);
-        // }
-
-        // The winch only moves in one direction
-        // This will also stop the winch when it gets to the desired set point
-        /*if (requestedWinchHeight < currentWinchHeight) {
-            // Just stop the winch
-            stopWinch();
-        }
-        else {
-            // If we're we have to make sure that the winch
-            // is below the frame perimeter height
-            if (currentShoulderAngle >= Constants.SHOULDER_HEIGHT_FOR_FRAME_PERIMETER) {
-                // if the winch is too low, we need to lower the shoulder to avoid exceeding
-                // frame perimeter
-                if (currentWinchHeight < Constants.WINCH_HEIGHT_FOR_LEVEL_BAR_AT_FRAME_PERIMETER) {
-                    stopWinch();
-                    tempRequestedShoulderAngle = requestedShoulderAngle;
-                    requestedShoulderAngle = Constants.SHOULDER_HEIGHT_FOR_FRAME_PERIMETER;
-                }
-                else {
-                    // winch is past the frame perimeter danger point, so we can raise the shoulder
-                    requestedShoulderAngle = tempRequestedShoulderAngle;
-                    // and let the winch go
-                    winch.setVoltage(Constants.WINCH_SPEED_FAST);
-                }
-            } else {
-                // Shoulder is low enough, just go
-                // We want to go fast up to max height
-                if (currentWinchHeight < Constants.WINCH_MAX_HEIGHT_TICK_COUNT) {
-                    winch.setVoltage(Constants.WINCH_SPEED_FAST);
-                }
-                else {
-                    // We're beyond max height. We're ether going to go slow to get to the
-                    // level bar, or climb
-                    if (currentWinchHeight < Constants.WINCH_HEIGHT_FOR_LEVEL_BAR_AT_FRAME_PERIMETER) {
-                        // We're beyond max height so go slow until we get to the level bar height
-                        winch.setVoltage(Constants.WINCH_SPEED_SLOW);
-                    }
-                    else {
-                        // We're climbing
-                        autoLevel = true;
-                        winch.setVoltage(Constants.WINCH_SPEED_CLIMB);
-                    }
-                }
-            }
-        }*/
 
     public void setShoulderHeight(double angle) {
         // This just sets parameters to be used in the periodic() method.
@@ -224,6 +166,10 @@ public class Climber extends SubsystemBase {
     public void setShoulderVoltage(double voltage) {
         shoulder.setVoltage(voltage);
     }
+	
+	public void setWinchVoltage(double voltage) {
+		winch.setVoltage(voltage);
+	}
 
     public double getWinchPosition(){
         return winchEncoder.getPosition();
