@@ -21,7 +21,12 @@ public class DeployShoulderCommand extends CommandBase {
  
   Climber climber;
   boolean deployed = false;
-
+  boolean shoulderMovingDown = false;
+  double currentShoulderAngle;
+  double requestedShoulderAngle;
+  double tempRequestedShoulderAngle;
+  double lastShoulderAngle;
+  
   public DeployShoulderCommand(Climber climber) {
       this.climber = climber;
     // Use addRequirements() here to declare subsystem dependencies.
@@ -32,36 +37,40 @@ public class DeployShoulderCommand extends CommandBase {
   public void initialize() {
     climber.shoulder.setIdleMode(IdleMode.kCoast);
     deployed = false;
+    shoulderMovingDown = false;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-      if (deployed) {
-          // Just go down
-          climber.moveShoulder(Constants.SHOULDER_MIN_HEIGHT);
-      }
-      else {
-          // Need to go up a little
-          climber.moveShoulder(Constants.SHOULDER_MAX_HEIGHT);
-          if (climber.getShoulderPosition() > Constants.SHOULDER_RELEASE_HEIGHT) {
-            deployed = true;
-            SmartDashboard.putBoolean("ShoulderDeployed", deployed);
-          }
+
+    if (deployed) {
+      // Just go down
+      climber.setShoulderHeight(Constants.SHOULDER_MIN_HEIGHT);
+    }
+    else {
+      // Need to go up to release hook
+      climber.setShoulderHeight(Constants.SHOULDER_RELEASE_HEIGHT);
+      if (climber.getShoulderPosition() >= Constants.SHOULDER_RELEASE_HEIGHT) {
+        deployed = true;
+        SmartDashboard.putBoolean("ShoulderDeployed", deployed);
       }
     }
+  }
 
-  // Called once the command ends or is interrupted.
+    // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    // Nothing to do
+    // We should already be here, but set it this way just in case.
+    // We don't want the arm to drop free fall
+    climber.setShoulderHeight(Constants.SHOULDER_MIN_HEIGHT);
   }
 
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-      // This is finished once we set the min heght since the subsystem will take it the rest of the way
+      // This is finished once we set the min height since the subsystem will take it the rest of the way
     return climber.shoulderAtMinHeight();
   }
 }

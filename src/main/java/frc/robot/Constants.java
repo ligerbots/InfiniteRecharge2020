@@ -73,7 +73,8 @@ public final class Constants {
     // or we'll just move t down really slowly.
     public static final double SHOULDER_MIN_VELOCITY_BUFFER = 2.0/360.0; // 2 degrees;
     public static final double SHOULDER_MIN_VELOCITY_HEIGHT = SHOULDER_MIN_HEIGHT + SHOULDER_MIN_VELOCITY_BUFFER;
-    public static final double SHOULDER_MAX_HEIGHT = 0.604; 
+    public static final double SHOULDER_MAX_HEIGHT_FOR_FRAME_PERIMETER = 0.604; 
+    public static final double SHOULDER_MAX_HEIGHT_DONT_GO_ABOVE_EVER = 0.621;
     public static final double SHOULDER_CLIMB_HEIGHT = 0.62;
     public static final double SHOULDER_RELEASE_HEIGHT = 0.6;
     public static final double SHOULDER_START_HEIGHT = 0.59;

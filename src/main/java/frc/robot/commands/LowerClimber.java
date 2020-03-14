@@ -6,33 +6,48 @@
 /*----------------------------------------------------------------------------*/
 
 package frc.robot.commands;
-import java.util.function.DoubleSupplier;
-import edu.wpi.first.wpilibj2.command.CommandBase;
 
+import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
 import frc.robot.subsystems.Climber;
 
-public class RunShoulder extends CommandBase {
-
-  DoubleSupplier climb; // declare class to get climb speed
-  Climber climber; // declare motor class
-
+public class LowerClimber extends CommandBase {
   /**
-   * Creates a new RunClimber.
+   * Creates a new ClimberCommand2.
    */
-  public RunShoulder(Climber climber, DoubleSupplier climb) {
+  Climber climber;
+
+  enum ClimbingPhase {
+    LOWER_WINCH, AUTO_LEVEL
+  }
+
+  ClimbingPhase currentPhase;
+
+  public LowerClimber(Climber climber) {
     this.climber = climber;
-    this.climb = climb; // init climber 
+    // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    currentPhase = ClimbingPhase.LOWER_WINCH;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-      climber.moveShoulder(climb.getAsDouble()); // set speed of soulder motors based on climb speed
+    System.out.println(currentPhase + "    " + climber.getWinchPosition());
+    switch (currentPhase) {
+      case LOWER_WINCH:
+          climber.moveWinch(Constants.WINCH_CLIMB_HEIGHT - 200);
+          if (Math.abs(climber.getWinchPosition() - (Constants.WINCH_CLIMB_HEIGHT - 200)) < 10) {
+            currentPhase = ClimbingPhase.AUTO_LEVEL;
+          }
+        case AUTO_LEVEL:
+          climber.autoLevel(true);
+          break;
+    }
   }
 
   // Called once the command ends or is interrupted.
@@ -43,6 +58,6 @@ public class RunShoulder extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return currentPhase == ClimbingPhase.AUTO_LEVEL;
   }
 }
