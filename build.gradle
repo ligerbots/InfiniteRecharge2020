@@ -2,6 +2,8 @@ plugins {
     id "java"
     id "edu.wpi.first.GradleRIO" version "2020.3.2"
 }
+wpi.maven.useDevelopment = true
+wpi.wpilibVersion = '2020.+'
 
 sourceCompatibility = JavaVersion.VERSION_11
 targetCompatibility = JavaVersion.VERSION_11
@@ -38,7 +40,7 @@ deploy {
 }
 
 // Set this to true to enable desktop support.
-def includeDesktopSupport = false
+def includeDesktopSupport = true
 
 // Defining my dependencies. In this case, WPILib (+ friends), and vendor libraries.
 // Also defines JUnit 4.
