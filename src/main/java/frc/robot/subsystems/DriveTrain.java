@@ -13,7 +13,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.PIDController;
+import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.PIDBase.Tolerance;
 import edu.wpi.first.wpilibj.SPI.Port;
@@ -60,9 +60,21 @@ public class DriveTrain extends SubsystemBase {
     Encoder leftEncoder = new Encoder(Constants.LEFT_ENCODER_PORTS[0], Constants.LEFT_ENCODER_PORTS[1]);
     Encoder rightEncoder = new Encoder(Constants.RIGHT_ENCODER_PORTS[0], Constants.RIGHT_ENCODER_PORTS[1]);
 
-    AHRS navX;
+    AHRS navX = null;
 
     double limitedThrottle;
+
+    // Simulation classes
+    public DifferentialDrivetrainSim drivetrainSimulator;
+    private EncoderSim leftEncoderSim;
+    private EncoderSim rightEncoderSim;
+    // The Field2d class simulates the field in the sim GUI. Note that we can have only one
+    // instance!
+    // Does this belong somewhere else??
+    private Field2d fieldSim;
+    private SimDouble gyroAngleSim;
+    private Gyro gyro = null;
+
 
     public DriveTrain() {
 
@@ -73,7 +85,7 @@ public class DriveTrain extends SubsystemBase {
         robotDrive = new DifferentialDrive(leftMotors, rightMotors);
         robotDrive.setSafetyEnabled(false);
 
-        navX = new AHRS(Port.kMXP, (byte) 200);
+        //navX = new AHRS(Port.kMXP, (byte) 200);
 
         // Set current limiting on drve train to prevent brown outs
         Arrays.asList(leftLeader, leftFollower, rightLeader, rightFollower)
@@ -92,9 +104,39 @@ public class DriveTrain extends SubsystemBase {
         leftEncoder.setDistancePerPulse(Constants.DISTANCE_PER_PULSE);
         rightEncoder.setDistancePerPulse(Constants.DISTANCE_PER_PULSE);
 
-        odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(0));
+        if (RobotBase.isSimulation()) {
+            // navX is not yet simulated, so use an different gyro
+            gyro = new ADXRS450_Gyro();
+            //turnSpeedController = new PIDController(0.015, 0.0001, 0.0, 0, gyro, output -> this.turnOutput = output);
+          } else {
+            navX = new AHRS(SPI.Port.kMXP, (byte) 200);
+            //turnSpeedController = new PIDController(0.015, 0.0001, 0.0, 0, navX, output -> this.turnOutput = output);
+          }
 
-        turnSpeedController = new PIDController(0.015, 0.0001, 0.0, 0, navX, output -> this.turnOutput = output);
+        odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(0));
+        
+        
+
+        if (RobotBase.isSimulation()) {
+            // If our robot is simulated
+            // This class simulates our drivetrain's motion around the field.
+            drivetrainSimulator = new DifferentialDrivetrainSim(
+                  Constants.kDrivetrainPlant,
+                  Constants.kDriveGearbox,
+                  Constants.kDriveGearing,
+                  Constants.kTrackwidth,
+                  Constants.kWheelDiameterMeters / 2.0);
+      
+            // The encoder and gyro angle sims let us set simulated sensor readings
+            leftEncoderSim = new EncoderSim(leftEncoder);
+            rightEncoderSim = new EncoderSim(rightEncoder);
+      
+            // string is the name. Does the value actually matter??
+            gyroAngleSim = new SimDeviceSim("ADXRS450_Gyro" + "[" + SPI.Port.kOnboardCS0.value + "]").getDouble("Angle");
+      
+            // the Field2d class lets us visualize our robot in the simulation GUI.
+            fieldSim = new Field2d();
+          }
 
         SmartDashboard.putString("vision/active_mode/selected", "goalfinder");
 
@@ -123,11 +165,21 @@ public class DriveTrain extends SubsystemBase {
     }
     
     public double getHeading() {
-        return Math.IEEEremainder(navX.getAngle(), 360) * -1; // -1 here for unknown reason look in documatation
+        //return Math.IEEEremainder(navX.getAngle(), 360) * -1; // -1 here for unknown reason look in documatation
+        if (navX != null) {
+            return Math.IEEEremainder(navX.getAngle(), 360) * -1.0; // -1 here for unknown reason look in documatation
+          } else {
+            return Math.IEEEremainder(gyro.getAngle(), 360) * -1.0;
+          }
     }
 
     public void resetHeading() {
-        navX.reset();
+        //navX.reset();
+        if (navX != null) {
+            navX.reset();
+        } else {
+            gyro.reset();
+        }
     }
     
     
@@ -157,12 +209,12 @@ public class DriveTrain extends SubsystemBase {
             targetAngle += 360.0;
         }
         
-        turnSpeedController.setSetpoint(targetAngle);
+        /*turnSpeedController.setSetpoint(targetAngle);
         turnSpeedController.enable();
         turnSpeedController.setInputRange(-180.0, 180.0);
         turnSpeedController.setAbsoluteTolerance(tolerance);
         turnSpeedController.setOutputRange(-1.0, 1.0);
-        turnSpeedController.setContinuous(true);
+        turnSpeedController.setContinuous(true);*/
 
 
         System.out.printf(
@@ -183,6 +235,27 @@ public class DriveTrain extends SubsystemBase {
         //SmartDashboard.putNumber("Arc tan adjustment", Math.atan(7.5 / SmartDashboard.getNumberArray("vision/target_info", new Double[]{0.0,0.0})[3]));
 
         // This method will be called once per scheduler run
+    }
+
+    @Override
+    public void simulationPeriodic() {
+      // To update our simulation, we set motor voltage inputs, update the simulation,
+      // and write the simulated positions and velocities to our simulated encoder and gyro.
+      // We negate the right side so that positive voltages make the right side
+      // move forward.
+      drivetrainSimulator.setInputs(leftMotors.get() * RobotController.getBatteryVoltage(),
+                                    -rightMotors.get() * RobotController.getBatteryVoltage());
+      drivetrainSimulator.update(0.020);
+  
+      leftEncoderSim.setDistance(drivetrainSimulator.getState(DifferentialDrivetrainSim.State.kLeftPosition));
+      leftEncoderSim.setRate(drivetrainSimulator.getState(DifferentialDrivetrainSim.State.kLeftVelocity));
+  
+      rightEncoderSim.setDistance(drivetrainSimulator.getState(DifferentialDrivetrainSim.State.kRightPosition));
+      rightEncoderSim.setRate(drivetrainSimulator.getState(DifferentialDrivetrainSim.State.kRightVelocity));
+  
+      gyroAngleSim.set(-drivetrainSimulator.getHeading().getDegrees());
+  
+      fieldSim.setRobotPose(getPose());
     }
 
     public void allDrive(double throttle, double rotate, boolean squaredInputs) {

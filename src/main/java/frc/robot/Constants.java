@@ -18,6 +18,12 @@ import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
  * It is advised to statically import this class (or one of its inner classes)
  * wherever the constants are needed, to reduce verbosity.
  */
+
+import edu.wpi.first.wpilibj.system.LinearSystem;
+import edu.wpi.first.wpilibj.system.plant.DCMotor;
+import edu.wpi.first.wpilibj.system.plant.LinearSystemId;
+import edu.wpi.first.wpiutil.math.numbers.N2;
+
 public final class Constants {
 
     //TALON IDs
@@ -119,6 +125,8 @@ public final class Constants {
     public static final int XBOX_JL = 9;
     public static final int XBOX_JR = 10;
 
+
+    
     // AUTO CHARACTERIZATION CONSTANTS
 
     public static final double DISTANCE_PER_PULSE = 0.00155852448;
@@ -143,5 +151,18 @@ public final class Constants {
 
     public static final double inchToMetersConversionFactor = 0.0254;
 
+
+    // Simulation parameters  FAKE!!
+    public static final double kvVoltSecondsPerRadian = 1.5;
+    public static final double kaVoltSecondsSquaredPerRadian = 0.3;
+
+    public static final LinearSystem<N2, N2, N2> kDrivetrainPlant =
+            LinearSystemId.identifyDrivetrainSystem(kvVoltSecondsPerMeter, kaVoltSecondsSquaredPerMeter,
+                kvVoltSecondsPerRadian, kaVoltSecondsSquaredPerRadian);
+
+    // Example values only -- use what's on your physical robot!
+    public static final DCMotor kDriveGearbox = DCMotor.getNEO(2);
+    public static final double kDriveGearing = 8;
+    public static final double kWheelDiameterMeters = 0.1016;  // meters = 4 inches
 
 }

@@ -49,6 +49,9 @@ import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 
+import frc.robot.commands.*;
+import frc.robot.subsystems.DriveTrain;
+
 @SuppressWarnings("all")
 /**
  * This class is where the bulk of the robot should be declared. Since
