@@ -15,33 +15,6 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 // import jdk.vm.ci.meta.Constant;
 import frc.robot.subsystems.DriveTrain;
-import frc.robot.commands.ShootFromKey;
-import frc.robot.commands.ShootOne;
-import frc.robot.commands.ShooterCommand;
-import frc.robot.commands.ShooterTuner;
-import frc.robot.commands.ShoulderCommand;
-import frc.robot.commands.StopAllShooting;
-import frc.robot.commands.TemporaryShooterCommand;
-import frc.robot.commands.TestCarousel;
-import frc.robot.commands.TestFlup;
-import frc.robot.commands.TestIntake;
-import frc.robot.commands.TurnAndShoot;
-import frc.robot.commands.VisionTargetDistance;
-import frc.robot.commands.WinchCommand;
-import frc.robot.commands.AdjustHood;
-import frc.robot.commands.AdjustRPM;
-import frc.robot.commands.CarouselCommand;
-import frc.robot.commands.ClimberCommand1;
-import frc.robot.commands.ClimberCommand2; 
-import frc.robot.commands.DeployShoulderCommand;
-import frc.robot.commands.DriveCommand;
-import frc.robot.commands.EightBallAuto;
-import frc.robot.commands.FaceShootingTarget;
-import frc.robot.commands.GatherData;
-import frc.robot.commands.IntakeCommand;
-import frc.robot.commands.ManualCarousel;
-import frc.robot.commands.ResetCarousel;
-import frc.robot.commands.RunShoulder;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
  //import edu.wpi.first.wpilibj.XboxController; will need later
@@ -191,8 +164,9 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
-  EightBallAuto auto = new EightBallAuto(robotDrive, shooter, intake, climber, carousel, driveCommand, carouselCommand);
+  //EightBallAuto auto = new EightBallAuto(robotDrive, shooter, intake, climber, carousel, driveCommand, carouselCommand);
   public Command getAutonomousCommand() {
-     return auto;
+    return new DriveForwardAuto(robotDrive, carouselCommand, driveCommand);
+    // return auto;
   }
 }
