@@ -25,7 +25,6 @@ import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.Robot;
 
 import edu.wpi.first.hal.SimDouble;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -38,7 +37,6 @@ import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 
-@SuppressWarnings("all")
 public class DriveTrain extends SubsystemBase {
 
     private CANSparkMax leftLeader = new CANSparkMax(Constants.LEADER_LEFT_CAN_ID, MotorType.kBrushless);
@@ -114,8 +112,6 @@ public class DriveTrain extends SubsystemBase {
           }
 
         odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(0));
-        
-        
 
         if (RobotBase.isSimulation()) {
             // If our robot is simulated
@@ -139,7 +135,6 @@ public class DriveTrain extends SubsystemBase {
           }
 
         SmartDashboard.putString("vision/active_mode/selected", "goalfinder");
-
     }
 
     public Pose2d getPose () {
@@ -174,14 +169,12 @@ public class DriveTrain extends SubsystemBase {
     }
 
     public void resetHeading() {
-        //navX.reset();
         if (navX != null) {
             navX.reset();
         } else {
             gyro.reset();
         }
     }
-    
     
     public void resetEncoders () {
         leftEncoder.reset();
@@ -259,6 +252,7 @@ public class DriveTrain extends SubsystemBase {
     }
 
     public void allDrive(double throttle, double rotate, boolean squaredInputs) {
+        // TODO: We should look into using the deadband settings in DifferentialDrive
         if (squaredInputs) {
             if (Math.abs(throttle) < 0.1)
                 throttle = 0;
@@ -301,7 +295,5 @@ public class DriveTrain extends SubsystemBase {
     public void setIdleMode(IdleMode idleMode) {
             Arrays.asList(leftLeader, leftFollower, rightLeader, rightFollower)
             .forEach((CANSparkMax spark) -> spark.setIdleMode(idleMode));
-
-
     }
 }

@@ -123,17 +123,17 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void disabledInit() {
-    m_robotContainer.climber.shoulder.setIdleMode(IdleMode.kCoast);
-    m_robotContainer.climber.winch.setIdleMode(IdleMode.kCoast);
-    // Set motors to coast so it's easier to move the robot.
-    m_robotContainer.robotDrive.setIdleMode(IdleMode.kCoast);
-    m_robotContainer.climber.coastWinch();
-  
+    if (Robot.isReal()) {
+      m_robotContainer.climber.shoulder.setIdleMode(IdleMode.kCoast);
+      m_robotContainer.climber.winch.setIdleMode(IdleMode.kCoast);
+      // Set motors to coast so it's easier to move the robot.
+      m_robotContainer.robotDrive.setIdleMode(IdleMode.kCoast);
+      m_robotContainer.climber.coastWinch();
+    }
   }
 
   @Override
   public void disabledPeriodic() {
-    
   }
 
   /**

@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Robot;
 
 public class Climber extends SubsystemBase {
     double currentShoulderAngle;
@@ -52,147 +53,121 @@ public class Climber extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("Shoulder Current", shoulder.getOutputCurrent());
-        
+        if (Robot.isReal()) {
+            SmartDashboard.putNumber("Shoulder Current", shoulder.getOutputCurrent());
 
+            // This periodic() method should be used to move the shoulder and the winch to
+            // the
+            // requested setting.
 
-        // This periodic() method should be used to move the shoulder and the winch to the
-        // requested setting.
+            // Commands should use other methods to set parameters for the shoulder and
+            // winch
+            // This method adjusts the shoulder and winch to get to the requested settings
 
-        // Commands should use other methods to set parameters for the shoulder and winch
-        // This method adjusts the shoulder and winch to get to the requested settings
+            // SmartDashboard.putNumber("Shoulder Encoder Location", shoulderEncoder.get());
+            // SmartDashboard.putNumber("Winch Encoder Location",
+            // winchEncoder.getPosition());
+            // winch.set(winchSpeed = SmartDashboard.getNumber("winch speed", 0));
 
-        // SmartDashboard.putNumber("Shoulder Encoder Location", shoulderEncoder.get());
-        // SmartDashboard.putNumber("Winch Encoder Location", winchEncoder.getPosition());
-        //winch.set(winchSpeed = SmartDashboard.getNumber("winch speed", 0));
+            // Let's do the shoulder first
+            // This should keep the shoulder at the requested height or let it down slowly
+            currentShoulderAngle = shoulderEncoder.get();
 
+            SmartDashboard.putNumber("Shoulder Ticks", currentShoulderAngle);
 
-        // Let's do the shoulder first
-        // This should keep the shoulder at the requested height or let it down slowly
-        currentShoulderAngle = shoulderEncoder.get();
-
-        SmartDashboard.putNumber("Shoulder Ticks", currentShoulderAngle);
-
-        if (!autoLevel) {
-            if (!shoulderMovingDown) {
-                // move up
-                if (currentShoulderAngle > Constants.SHOULDER_MAX_HEIGHT) {
-                    // Hold Position
-                    shoulder.setVoltage(shoulderSpeedHold);
-                }
-                else {
-                    if (currentShoulderAngle < requestedShoulderAngle) {
-                        // Need to move up
-                        shoulder.setVoltage(shoulderSpeedUp);
-                    }
-                    else {
-                        // hold postion
+            if (!autoLevel) {
+                if (!shoulderMovingDown) {
+                    // move up
+                    if (currentShoulderAngle > Constants.SHOULDER_MAX_HEIGHT) {
+                        // Hold Position
                         shoulder.setVoltage(shoulderSpeedHold);
+                    } else {
+                        if (currentShoulderAngle < requestedShoulderAngle) {
+                            // Need to move up
+                            shoulder.setVoltage(shoulderSpeedUp);
+                        } else {
+                            // hold postion
+                            shoulder.setVoltage(shoulderSpeedHold);
+                        }
+                    }
+                } else {
+                    // We're moving down. Check to see if we need to move slowly
+                    if (currentShoulderAngle < Constants.SHOULDER_MIN_VELOCITY_HEIGHT) {
+                        // Let it coast down the last 10 degrees
+                        shoulder.setIdleMode(IdleMode.kCoast);
+                        shoulder.setVoltage(0.0);
+                    } else {
+                        if (currentShoulderAngle < requestedShoulderAngle) {
+                            // We've gone down far enough
+                            shoulder.setVoltage(shoulderSpeedHold);
+                            shoulder.setIdleMode(IdleMode.kBrake);
+                        } else {
+                            // Now we get clever. We have to only allow it to fall at the
+                            // shoulderRateDown
+                            if (lastShoulderAngle - currentShoulderAngle > shoulderRateDown * 0.02) {
+                                // It's going too fast so we need to slow it down
+                                shoulder.setIdleMode(IdleMode.kBrake);
+                            } else {
+                                // Let it coast for a while
+                                shoulder.setIdleMode(IdleMode.kCoast);
+                                shoulder.setVoltage(0.0);
+                            }
+                        }
                     }
                 }
             }
+            // Auto levelling
             else {
-                // We're moving down. Check to see if we need to move slowly
-                if (currentShoulderAngle < Constants.SHOULDER_MIN_VELOCITY_HEIGHT) {
-                    // Let it coast down the last 10 degrees
-                    shoulder.setIdleMode(IdleMode.kCoast);
+                System.out.println(" " + driveTrain.getPitch());
+                if (driveTrain.getPitch() > Constants.ROBOT_PITCH_ANGLE_FOR_CLIMB) {
+                    // Need to lift the front
+                    shoulder.setVoltage(Constants.SHOULDER_SPEED_LEVEL);
+                } else {
+                    // Hold where it is
+                    shoulder.setIdleMode(IdleMode.kBrake);
                     shoulder.setVoltage(0.0);
                 }
-                else {
-                    if (currentShoulderAngle < requestedShoulderAngle) {
-                        // We've gone down far enough
-                        shoulder.setVoltage(shoulderSpeedHold);
-                        shoulder.setIdleMode(IdleMode.kBrake);
-                    }
-                    else {
-                        // Now we get clever. We have to only allow it to fall at the
-                        // shoulderRateDown
-                        if ( lastShoulderAngle - currentShoulderAngle > shoulderRateDown * 0.02) {
-                            // It's going too fast so we need to slow it down
-                            shoulder.setIdleMode(IdleMode.kBrake);
-                        }
-                        else {
-                            // Let it coast for a while
-                            shoulder.setIdleMode(IdleMode.kCoast);
-                            shoulder.setVoltage(0.0);
-                        }
-                    }
-                }
             }
-        }
-        // Auto levelling
-        else {
-            System.out.println(" " + driveTrain.getPitch());
-            if (driveTrain.getPitch() > Constants.ROBOT_PITCH_ANGLE_FOR_CLIMB ) {
-                // Need to lift the front
-                shoulder.setVoltage(Constants.SHOULDER_SPEED_LEVEL);
-            }
-            else {
-                // Hold where it is
-                shoulder.setIdleMode(IdleMode.kBrake);
-                shoulder.setVoltage(0.0);
-            }
-        }
-        // save the angle for next time
-        lastShoulderAngle = currentShoulderAngle;
+            // save the angle for next time
+            lastShoulderAngle = currentShoulderAngle;
 
-        // Now let's do the winch
+            // Now let's do the winch
 
-        currentWinchHeight = winchEncoder.getPosition();
+            currentWinchHeight = winchEncoder.getPosition();
 
-        if (requestedWinchHeight < currentWinchHeight) {
-            // Just stop the winch
-            stopWinch();
-        }
-        else {
-            winch.setVoltage(Constants.WINCH_SPEED_FAST);
-        }
-
-        // The winch only moves in one direction
-        // This will also stop the winch when it gets to the desired set point
-        /*if (requestedWinchHeight < currentWinchHeight) {
-            // Just stop the winch
-            stopWinch();
-        }
-        else {
-            // If we're we have to make sure that the winch
-            // is below the frame perimeter height
-            if (currentShoulderAngle >= Constants.SHOULDER_HEIGHT_FOR_FRAME_PERIMETER) {
-                // if the winch is too low, we need to lower the shoulder to avoid exceeding
-                // frame perimeter
-                if (currentWinchHeight < Constants.WINCH_HEIGHT_FOR_LEVEL_BAR_AT_FRAME_PERIMETER) {
-                    stopWinch();
-                    tempRequestedShoulderAngle = requestedShoulderAngle;
-                    requestedShoulderAngle = Constants.SHOULDER_HEIGHT_FOR_FRAME_PERIMETER;
-                }
-                else {
-                    // winch is past the frame perimeter danger point, so we can raise the shoulder
-                    requestedShoulderAngle = tempRequestedShoulderAngle;
-                    // and let the winch go
-                    winch.setVoltage(Constants.WINCH_SPEED_FAST);
-                }
+            if (requestedWinchHeight < currentWinchHeight) {
+                // Just stop the winch
+                stopWinch();
             } else {
-                // Shoulder is low enough, just go
-                // We want to go fast up to max height
-                if (currentWinchHeight < Constants.WINCH_MAX_HEIGHT_TICK_COUNT) {
-                    winch.setVoltage(Constants.WINCH_SPEED_FAST);
-                }
-                else {
-                    // We're beyond max height. We're ether going to go slow to get to the
-                    // level bar, or climb
-                    if (currentWinchHeight < Constants.WINCH_HEIGHT_FOR_LEVEL_BAR_AT_FRAME_PERIMETER) {
-                        // We're beyond max height so go slow until we get to the level bar height
-                        winch.setVoltage(Constants.WINCH_SPEED_SLOW);
-                    }
-                    else {
-                        // We're climbing
-                        autoLevel = true;
-                        winch.setVoltage(Constants.WINCH_SPEED_CLIMB);
-                    }
-                }
+                winch.setVoltage(Constants.WINCH_SPEED_FAST);
             }
-        }*/
-        
+
+            // The winch only moves in one direction
+            // This will also stop the winch when it gets to the desired set point
+            /*
+             * if (requestedWinchHeight < currentWinchHeight) { // Just stop the winch
+             * stopWinch(); } else { // If we're we have to make sure that the winch // is
+             * below the frame perimeter height if (currentShoulderAngle >=
+             * Constants.SHOULDER_HEIGHT_FOR_FRAME_PERIMETER) { // if the winch is too low,
+             * we need to lower the shoulder to avoid exceeding // frame perimeter if
+             * (currentWinchHeight <
+             * Constants.WINCH_HEIGHT_FOR_LEVEL_BAR_AT_FRAME_PERIMETER) { stopWinch();
+             * tempRequestedShoulderAngle = requestedShoulderAngle; requestedShoulderAngle =
+             * Constants.SHOULDER_HEIGHT_FOR_FRAME_PERIMETER; } else { // winch is past the
+             * frame perimeter danger point, so we can raise the shoulder
+             * requestedShoulderAngle = tempRequestedShoulderAngle; // and let the winch go
+             * winch.setVoltage(Constants.WINCH_SPEED_FAST); } } else { // Shoulder is low
+             * enough, just go // We want to go fast up to max height if (currentWinchHeight
+             * < Constants.WINCH_MAX_HEIGHT_TICK_COUNT) {
+             * winch.setVoltage(Constants.WINCH_SPEED_FAST); } else { // We're beyond max
+             * height. We're ether going to go slow to get to the // level bar, or climb if
+             * (currentWinchHeight <
+             * Constants.WINCH_HEIGHT_FOR_LEVEL_BAR_AT_FRAME_PERIMETER) { // We're beyond
+             * max height so go slow until we get to the level bar height
+             * winch.setVoltage(Constants.WINCH_SPEED_SLOW); } else { // We're climbing
+             * autoLevel = true; winch.setVoltage(Constants.WINCH_SPEED_CLIMB); } } } }
+             */
+        }
     }
 
     public void moveShoulder(final double angle) {
