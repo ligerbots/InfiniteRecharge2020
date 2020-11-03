@@ -25,7 +25,7 @@ import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-
+import frc.robot.SparkMaxWrapper;
 import edu.wpi.first.hal.SimDouble;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
@@ -39,10 +39,10 @@ import edu.wpi.first.wpilibj.interfaces.Gyro;
 
 public class DriveTrain extends SubsystemBase {
 
-    private CANSparkMax leftLeader = new CANSparkMax(Constants.LEADER_LEFT_CAN_ID, MotorType.kBrushless);
-    private CANSparkMax leftFollower = new CANSparkMax(Constants.FOLLOWER_LEFT_CAN_ID, MotorType.kBrushless);
-    private CANSparkMax rightLeader = new CANSparkMax(Constants.LEADER_RIGHT_CAN_ID, MotorType.kBrushless);
-    private CANSparkMax rightFollower = new CANSparkMax(Constants.FOLLOWER_RIGHT_CAN_ID, MotorType.kBrushless);
+    private CANSparkMax leftLeader = new SparkMaxWrapper(Constants.LEADER_LEFT_CAN_ID, MotorType.kBrushless);
+    private CANSparkMax leftFollower = new SparkMaxWrapper(Constants.FOLLOWER_LEFT_CAN_ID, MotorType.kBrushless);
+    private CANSparkMax rightLeader = new SparkMaxWrapper(Constants.LEADER_RIGHT_CAN_ID, MotorType.kBrushless);
+    private CANSparkMax rightFollower = new SparkMaxWrapper(Constants.FOLLOWER_RIGHT_CAN_ID, MotorType.kBrushless);
 
     private final SpeedControllerGroup leftMotors = new SpeedControllerGroup(leftLeader, leftFollower);
 
