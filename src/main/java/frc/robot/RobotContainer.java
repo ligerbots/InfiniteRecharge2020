@@ -13,6 +13,7 @@ import frc.robot.subsystems.Carousel;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Vision;
 // import jdk.vm.ci.meta.Constant;
 import frc.robot.subsystems.DriveTrain;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -48,6 +49,7 @@ public class RobotContainer {
   public final Carousel carousel = new Carousel();
   public final Shooter shooter = new Shooter();
 
+  public final Vision vision = new Vision();
 
   private final Shoulder shoulder = new Shoulder();
   public final Climber climber = new Climber(robotDrive);
