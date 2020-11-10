@@ -25,7 +25,7 @@ import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-
+import frc.robot.Robot;
 // For simulation
 import frc.robot.simulation.SparkMaxWrapper;
 import frc.robot.simulation.AHRSSimWrapper;
@@ -276,7 +276,9 @@ public class DriveTrain extends SubsystemBase {
     }
 
     public void setIdleMode(IdleMode idleMode) {
+        if (Robot.isReal()) {
             Arrays.asList(leftLeader, leftFollower, rightLeader, rightFollower)
-            .forEach((CANSparkMax spark) -> spark.setIdleMode(idleMode));
+                .forEach((CANSparkMax spark) -> spark.setIdleMode(idleMode));
+        }
     }
 }
