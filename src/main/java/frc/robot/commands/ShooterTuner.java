@@ -34,7 +34,7 @@ public class ShooterTuner extends CommandBase {
   @Override
   public void initialize() {
     shooter.calibratePID(0.000145, 1e-8, 0, 6.6774 * 0.00001);
-    shooter.setLEDRing(true);
+    shooter.vision.setLEDRing(true);
     SmartDashboard.putNumber("Distance", SmartDashboard.getNumberArray("vision/target_info", new double[]{0,0,0,0,0,0,0})[3]);
     System.out.println("Shooter Tuner going!");
     shooter.shoot();

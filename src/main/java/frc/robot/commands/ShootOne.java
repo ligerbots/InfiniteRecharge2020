@@ -10,6 +10,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.Carousel;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Shooter;
@@ -74,8 +75,7 @@ public class ShootOne extends CommandBase {
     shooter.calibratePID(0.000085, 0.000000035, 0, 6.776 * 0.00001);
     driveCommand.cancel();
     startTime = System.nanoTime();
-    SmartDashboard.putString("vision/active_mode/selected", "goalfinder");
-    shooter.setLEDRing(true);
+    shooter.vision.setMode("goalfinder");
     //TODO: remember to set to shooting camera mode!!
     carouselCommand.cancel();
     currentControlMode = ControlMethod.SPIN_UP;
@@ -157,7 +157,7 @@ public class ShootOne extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     shooter.stopAll();
-    shooter.setLEDRing(false);
+    shooter.vision.setLEDRing(false);
     carousel.setBallCount(0);
     carouselCommand.schedule();
     if (rescheduleDriveCommand) {

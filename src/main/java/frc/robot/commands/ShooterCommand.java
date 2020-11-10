@@ -78,7 +78,7 @@ public class ShooterCommand extends CommandBase {
     driveCommand.cancel();
     startTime = System.nanoTime();
     SmartDashboard.putString("vision/active_mode/selected", "goalfinder");
-    shooter.setLEDRing(true);
+    shooter.vision.setLEDRing(true);
     //TODO: remember to set to shooting camera mode!!
     carouselCommand.cancel();
     currentControlMode = ControlMethod.SPIN_UP;
@@ -163,7 +163,7 @@ public class ShooterCommand extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     shooter.stopAll();
-    shooter.setLEDRing(false);
+    shooter.vision.setLEDRing(false);
     carousel.setBallCount(0);
     carouselCommand.schedule();
     if (rescheduleDriveCommand) {

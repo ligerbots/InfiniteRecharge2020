@@ -67,7 +67,7 @@ public class BangBangShooter extends CommandBase {
     startTime = System.nanoTime();
     driveCommand.cancel();
     SmartDashboard.putString("vision/active_mode/selected", "goalfinder");
-    shooter.setLEDRing(true);
+    shooter.vision.setLEDRing(true);
     //TODO: remember to set to shooting camera mode!!
     carouselCommand.cancel();
 
@@ -155,7 +155,7 @@ public class BangBangShooter extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     shooter.stopAll();
-    shooter.setLEDRing(false);
+    shooter.vision.setLEDRing(false);
     carousel.setBallCount(0);
     carouselCommand.schedule();
     driveCommand.schedule();
