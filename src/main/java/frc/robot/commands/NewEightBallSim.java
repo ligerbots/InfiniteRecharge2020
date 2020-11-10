@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
+import frc.robot.FieldMap;
 import frc.robot.subsystems.DriveTrain;
 
 public class NewEightBallSim extends SequentialCommandGroup{
@@ -40,21 +41,22 @@ public class NewEightBallSim extends SequentialCommandGroup{
 
     Trajectory ForwardTrajectory = TrajectoryGenerator.generateTrajectory(
         // Starting from Starting Point #2
-        new Pose2d(0, 0, new Rotation2d(0)), 
+        new Pose2d(FieldMap.ballPosition[3], Rotation2d.fromDegrees(67.5)),
         List.of(
-            new Translation2d(-1.2, -0.63)
+            
         ),
-        new Pose2d(-5.5, -0.63, Rotation2d.fromDegrees(0)),
+        new Pose2d(FieldMap.startLineX, FieldMap.startPositions[2].getY(), Rotation2d.fromDegrees(0)),
         configBackward
     ); 
 
     Trajectory BackTrajectory = TrajectoryGenerator.generateTrajectory(
         // Start at the origin facing the +X direction
-        new Pose2d(-6.5, -0.63, new Rotation2d(-10)), 
+        FieldMap.startPositions[2], 
         List.of(
-            //new Translation2d(-1.2, -0.63)
+            FieldMap.ballPosition[5],
+            FieldMap.ballPosition[4]
         ),
-        new Pose2d(-4.2, -0.63, Rotation2d.fromDegrees(10)),
+        new Pose2d(FieldMap.ballPosition[3], Rotation2d.fromDegrees(67.5)),
         configForward
     ); 
 
