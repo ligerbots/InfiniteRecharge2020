@@ -66,8 +66,7 @@ public class BangBangShooter extends CommandBase {
   public void initialize() {
     startTime = System.nanoTime();
     driveCommand.cancel();
-    SmartDashboard.putString("vision/active_mode/selected", "goalfinder");
-    shooter.vision.setLEDRing(true);
+    shooter.vision.setMode("goalfinder");
     //TODO: remember to set to shooting camera mode!!
     carouselCommand.cancel();
 
@@ -95,7 +94,7 @@ public class BangBangShooter extends CommandBase {
 
     visionInfo = SmartDashboard.getNumberArray("vision/target_info", empty); // TODO: need actual vision info
 
-    angleError = visionInfo[4];
+    angleError = visionInfo[4]; //should this be visionInfo[4] * 180 / Math.PI?
 
     System.out.println("Target Speed: " + shooter.calculateShooterSpeed(distance) + "   Current Speed: " + shooter.getSpeed() + "   " + currentControlMode);
 

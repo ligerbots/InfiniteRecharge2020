@@ -71,7 +71,7 @@ public class FaceShootingTarget extends CommandBase {
       oldOldCheck = Math.abs(currentHeading - (startingAngle - initialAngleOffset)) < acceptableError;
     }
     else {
-      initialAngleOffset = SmartDashboard.getNumberArray("vision/target_info", new double[]{0,0,0,0,0,0,0})[4] * 180 / 3.1416;
+      initialAngleOffset = shooter.vision.getRobotAngle();
       targetAcquired = initialAngleOffset != 0.0;
     }
   }

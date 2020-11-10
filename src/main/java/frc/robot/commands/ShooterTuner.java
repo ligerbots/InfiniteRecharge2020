@@ -41,7 +41,7 @@ public class ShooterTuner extends CommandBase {
     shooter.setHood(SmartDashboard.getNumber("Target Hood Angle", 60));
     shooter.setShooterRPM(SmartDashboard.getNumber("TSR", -1000));
     shooter.setTurret(SmartDashboard.getNumber("Turret Angle", 72));
-    SmartDashboard.putString("vision/active_mode/selected", "goalfinder");
+    shooter.vision.setMode("goalfinder");
     startTicks = carousel.getTicks();
     cc.cancel();
   }

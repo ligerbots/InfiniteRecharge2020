@@ -84,8 +84,8 @@ public class ShootOne extends CommandBase {
     initialCarouselTicks = carousel.getTicks();
     visionInfo = SmartDashboard.getNumberArray("vision/target_info", empty); 
 
-    angleError = visionInfo[4] * 180 / 3.1416 - (Math.atan(7.5 / distance));
-    distance = visionInfo[3];
+    angleError = visionInfo[4] * 180 / Math.PI - (Math.atan(7.5 / distance));
+    distance = shooter.vision.getDistance();
 
     shooter.prepareShooter(distance);
     currentControlMode = ControlMethod.SPIN_UP;
@@ -112,10 +112,11 @@ public class ShootOne extends CommandBase {
     }
 
     if (!foundTarget) {
-      distance = visionInfo[3];
+
+      distance = shooter.vision.getDistance();
     }
 
-    angleError = visionInfo[4] * 180 / 3.1416;
+    angleError = shooter.vision.getRobotAngle();
 
     //System.out.println("Target Speed: " + shooter.calculateShooterSpeed(distance) + "   Current Speed: " + shooter.getSpeed() + " ");
 

@@ -77,8 +77,7 @@ public class ShooterCommand extends CommandBase {
     shooter.calibratePID(0.000145, 1e-8, 0, 6.6774 * 0.00001);
     driveCommand.cancel();
     startTime = System.nanoTime();
-    SmartDashboard.putString("vision/active_mode/selected", "goalfinder");
-    shooter.vision.setLEDRing(true);
+    shooter.vision.setMode("goalfinder");
     //TODO: remember to set to shooting camera mode!!
     carouselCommand.cancel();
     currentControlMode = ControlMethod.SPIN_UP;
@@ -88,8 +87,8 @@ public class ShooterCommand extends CommandBase {
     initialCarouselTicks = carousel.getTicks();
     visionInfo = SmartDashboard.getNumberArray("vision/target_info", empty); 
 
-    angleError = visionInfo[4] * 180 / 3.1416;
-    distance = visionInfo[3];
+    angleError = shooter.vision.getRobotAngle();
+    distance = shooter.vision.getDistance();
 
     //shooter.prepareShooter(distance);
     currentControlMode = ControlMethod.SPIN_UP;
@@ -120,7 +119,7 @@ public class ShooterCommand extends CommandBase {
       }   
     }
 
-    angleError = visionInfo[4] * 180 / 3.1416;
+    angleError = shooter.vision.getRobotAngle();
 
     //System.out.println("Target Speed: " + shooter.calculateShooterSpeed(distance) + "   Current Speed: " + shooter.getSpeed() + " ");
 

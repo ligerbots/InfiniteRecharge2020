@@ -26,7 +26,7 @@ public class VisionTargetDistance extends CommandBase {
   public void initialize() {
       System.out.println("Getting distance");
       shooter.vision.setLEDRing(true);
-      SmartDashboard.putString("vision/active_mode/selected", "intake");
+      shooter.vision.setMode("intake");
       //SmartDashboard.putNumber("Distance", SmartDashboard.getNumberArray("vision/target_info", new double[]{0,0,0,0,0,0,0})[3]);
   }
 
