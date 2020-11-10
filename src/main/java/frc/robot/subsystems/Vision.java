@@ -28,4 +28,22 @@ public class Vision extends SubsystemBase{
         }        
         return visionInfo;
     }
+   /*
+    public void setLed(boolean on) {
+        shooter.setLEDRing(on); TODO fix this
+    }
+    */
+    public void setMode(String mode) {
+        SmartDashboard.putString("vision/active_mode/selected", mode);
+    }
+    
+    public double getDistance() {
+        double[] visionData = SmartDashboard.getNumberArray("vision/target_info", new double[]{0,0,0,0,0,0,0});
+        return visionData[3];
+    }
+    
+    public double getRobotAngle() {
+        double[] visionData = SmartDashboard.getNumberArray("vision/target_info", new double[]{0,0,0,0,0,0,0});
+        return visionData[4] * 180 / Math.PI;
+    }
 }

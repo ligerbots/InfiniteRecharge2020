@@ -50,14 +50,7 @@ public class FaceShootingTarget extends CommandBase {
     check = false;
     oldCheck = false;
     driveCommand.cancel();
-    shooter.setLEDRing(true);
-    SmartDashboard.putString("vision/active_mode/selected", "goalfinder");
-    startingAngle = robotDrive.getHeading();
-    double[] visionData = SmartDashboard.getNumberArray("vision/target_info", new double[]{0,0,0,0,0,0,0});
-    double distance = visionData[3];   
-    initialAngleOffset = visionData[4] * 180 / 3.1416;
-    startTime = System.nanoTime();
-    System.out.println("Initial initial heading: " + robotDrive.getHeading());
+    
   }
 
   // Called every time the scheduler runs while the command is scheduled.
