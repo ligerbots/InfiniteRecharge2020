@@ -36,7 +36,7 @@ public class Vision extends SubsystemBase{
    
     public void setMode(String mode) {
         SmartDashboard.putString("vision/active_mode/selected", mode);
-        if (mode == "goalfinder") {
+        if (mode.equals("goalfinder")) {
             setLEDRing(true);
         } else {
             setLEDRing(false);
