@@ -25,6 +25,8 @@ import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+
+// For simulation
 import frc.robot.simulation.SparkMaxWrapper;
 import frc.robot.simulation.AHRSSimWrapper;
 import edu.wpi.first.hal.SimDouble;
@@ -123,7 +125,7 @@ public class DriveTrain extends SubsystemBase {
       
             // the Field2d class lets us visualize our robot in the simulation GUI.
             fieldSim = new Field2d();
-          }
+        }
 
         SmartDashboard.putString("vision/active_mode/selected", "goalfinder");
     }
