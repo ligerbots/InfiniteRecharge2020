@@ -21,7 +21,7 @@ public class ShootOne extends CommandBase {
    * Creates a new ShooterCommand.
    */
 
-  double[] visionInfo;
+  
   double[] empty = new double[] {0.0,0.0,0.0,0.0,0.0,0.0,0.0}; 
   double waitTime;
   double startTime;
@@ -82,9 +82,9 @@ public class ShootOne extends CommandBase {
 
     // stor current carouselTick value
     initialCarouselTicks = carousel.getTicks();
-    visionInfo = SmartDashboard.getNumberArray("vision/target_info", empty); 
+     
 
-    angleError = visionInfo[4] * 180 / Math.PI - (Math.atan(7.5 / distance));
+    angleError = shooter.vision.getRobotAngle();
     distance = shooter.vision.getDistance();
 
     shooter.prepareShooter(distance);
@@ -104,8 +104,6 @@ public class ShootOne extends CommandBase {
 
   @Override
   public void execute() {
-    visionInfo = SmartDashboard.getNumberArray("vision/target_info", empty); // TODO: need actual vision info
-
 
     if (distance != 0.0) {
       foundTarget = true;
