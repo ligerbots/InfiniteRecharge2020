@@ -1,5 +1,5 @@
 package frc.robot;
-
+import frc.robot.Constants;
 import java.util.ArrayList;
 
 import edu.wpi.first.wpilibj.geometry.Pose2d;
@@ -23,8 +23,8 @@ public class FieldMap {
     public static final double friendlyTrenchY = 25.414; // center line through long axis of trench
     public static final double enemyTrenchBall1Y = 302.016;       // Ball in enemy trench close to our goal
     public static final double enemyTrenchBall2Y = 283.516;       // Other Ball in enemy trench close to our goal
+    public static final double bottomLeftCornerConversion = 325.00;
     
-
     public static ArrayList<Translation2d> ballPositions = new ArrayList<Translation2d>();
     public static Pose2d[] startPositions = new Pose2d[5];
     // public static Translation2d[] controlPanel = new Translation2d[0];
@@ -40,25 +40,25 @@ public class FieldMap {
 
         // start positions are in terms of the robot center (x,y)
 
-        startPositions[1] = new Pose2d(startLineX, targetCenterPointY,  new Rotation2d(0.0));        // directly centered
-        startPositions[2] = new Pose2d(startLineX, targetCenterPointY - 35, new Rotation2d(0.0));   // offcenter by 35 inches
-        startPositions[3] = new Pose2d(startLineX, targetCenterPointY + 35, new Rotation2d(0.0));   // offcenter by -35 inches
-        startPositions[4] = new Pose2d(startLineX, friendlyTrenchY,  new Rotation2d(0.0));            // facing trench
-        startPositions[5] = new Pose2d(startLineX, 220.341, new Rotation2d(0.0)); // centered in front of enemy feeder station
+        startPositions[1] = new Pose2d(startLineX * Constants.inchToMetersConversionFactor,(bottomLeftCornerConversion - targetCenterPointY) * Constants.inchToMetersConversionFactor,  new Rotation2d(0.0));        // directly centered
+        startPositions[2] = new Pose2d(startLineX * Constants.inchToMetersConversionFactor,(bottomLeftCornerConversion - targetCenterPointY + 35) * Constants.inchToMetersConversionFactor, new Rotation2d(0.0));   // offcenter by 35 inches
+        startPositions[3] = new Pose2d(startLineX * Constants.inchToMetersConversionFactor,(bottomLeftCornerConversion - targetCenterPointY - 35) * Constants.inchToMetersConversionFactor, new Rotation2d(0.0));   // offcenter by -35 inches
+        startPositions[4] = new Pose2d(startLineX * Constants.inchToMetersConversionFactor,(bottomLeftCornerConversion - friendlyTrenchY) * Constants.inchToMetersConversionFactor,  new Rotation2d(0.0));            // facing trench
+        startPositions[5] = new Pose2d(startLineX * Constants.inchToMetersConversionFactor,(bottomLeftCornerConversion - 220.341) * Constants.inchToMetersConversionFactor, new Rotation2d(0.0)); // centered in front of enemy feeder station
         //locations of balls
         //Positions of balls 1-12 on the field
-        ballPosition[1] = new Translation2d( 378.959, enemyTrenchBall1Y);  
-        ballPosition[2] = new Translation2d( 378.959, enemyTrenchBall2Y);
-        ballPosition[3] = new Translation2d(388.637, 173.480); 
-        ballPosition[4] = new Translation2d(394.975, 158.178);                            
-        ballPosition[5] = new Translation2d(401.313, 142.877 );
-        ballPosition[6] = new Translation2d(394.200, 118.470);
-        ballPosition[7] = new Translation2d(378.899, 112.131);  
-        ballPosition[8] = new Translation2d(386.688, friendlyTrenchY);    
-        ballPosition[9] = new Translation2d(350.688, friendlyTrenchY);     
-        ballPosition[10] = new Translation2d(314.688, friendlyTrenchY);
-        ballPosition[11] = new Translation2d(250.417, 34.664);
-        ballPosition[12] = new Translation2d(250.417,16.164);
+        ballPosition[1] = new Translation2d(378.959 * Constants.inchToMetersConversionFactor,(bottomLeftCornerConversion - enemyTrenchBall1Y) * Constants.inchToMetersConversionFactor);  
+        ballPosition[2] = new Translation2d(378.959 * Constants.inchToMetersConversionFactor,(bottomLeftCornerConversion - enemyTrenchBall2Y) * Constants.inchToMetersConversionFactor);
+        ballPosition[3] = new Translation2d(388.637 * Constants.inchToMetersConversionFactor,(bottomLeftCornerConversion - 173.480) * Constants.inchToMetersConversionFactor); 
+        ballPosition[4] = new Translation2d(394.975 * Constants.inchToMetersConversionFactor,(bottomLeftCornerConversion - 158.178) * Constants.inchToMetersConversionFactor);                            
+        ballPosition[5] = new Translation2d(401.313 * Constants.inchToMetersConversionFactor,(bottomLeftCornerConversion - 142.877) * Constants.inchToMetersConversionFactor);
+        ballPosition[6] = new Translation2d(394.200 * Constants.inchToMetersConversionFactor,(bottomLeftCornerConversion - 118.470) * Constants.inchToMetersConversionFactor);
+        ballPosition[7] = new Translation2d(378.899 * Constants.inchToMetersConversionFactor,(bottomLeftCornerConversion - 112.131) * Constants.inchToMetersConversionFactor);  
+        ballPosition[8] = new Translation2d(386.688 * Constants.inchToMetersConversionFactor,(bottomLeftCornerConversion - friendlyTrenchY) * Constants.inchToMetersConversionFactor);    
+        ballPosition[9] = new Translation2d(350.688 * Constants.inchToMetersConversionFactor,(bottomLeftCornerConversion - friendlyTrenchY) * Constants.inchToMetersConversionFactor);     
+        ballPosition[10] = new Translation2d(314.688 * Constants.inchToMetersConversionFactor,(bottomLeftCornerConversion - friendlyTrenchY) * Constants.inchToMetersConversionFactor);
+        ballPosition[11] = new Translation2d(250.417 * Constants.inchToMetersConversionFactor,(bottomLeftCornerConversion - 34.664) * Constants.inchToMetersConversionFactor);
+        ballPosition[12] = new Translation2d(250.417 * Constants.inchToMetersConversionFactor,(bottomLeftCornerConversion - 16.164) * Constants.inchToMetersConversionFactor);
 
         
         ballPositions.add(ballPosition[1]);
