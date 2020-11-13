@@ -7,6 +7,10 @@
 
 package frc.robot.commands;
 
+//
+// PaulR Nov 2020: this is not going to work, and is not actually used!!
+//
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
