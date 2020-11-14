@@ -37,7 +37,7 @@ public class Vision extends SubsystemBase{
     // should be used only for special cases
     public void setMode(String mode, boolean led) {
         SmartDashboard.putString("vision/active_mode/selected", mode);
-        setLEDRing(led);
+        setLedRing(led);
     }
     
     public boolean getStatus() {
@@ -56,7 +56,7 @@ public class Vision extends SubsystemBase{
         return visionData[4] * 180.0 / Math.PI;
     }
 
-    public void setLEDRing (boolean on) {
+    public void setLedRing (boolean on) {
         spike.set(on ? Value.kForward : Value.kReverse);
     }
 }

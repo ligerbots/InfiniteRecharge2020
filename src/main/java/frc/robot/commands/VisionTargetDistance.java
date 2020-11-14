@@ -29,7 +29,7 @@ public class VisionTargetDistance extends CommandBase {
       // This is only for testing
       // Turn on the LED but put the camera into "Intake", which does not find the target!!
       
-      shooter.vision.setLEDRing(true);
+      shooter.vision.setLedRing(true);
       shooter.vision.setMode("intake");
       //SmartDashboard.putNumber("Distance", SmartDashboard.getNumberArray("vision/target_info", new double[]{0,0,0,0,0,0,0})[3]);
   }

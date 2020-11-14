@@ -78,8 +78,8 @@ public class BangBangShooter extends CommandBase {
     initialCarouselTicks = carousel.getTicks();
     visionInfo = SmartDashboard.getNumberArray("vision/target_info", empty); 
 
-    angleError = visionInfo[4];
-    distance = visionInfo[3];
+    angleError = shooter.vision.getRobotAngle();
+    distance = shooter.vision.getDistance();
 
     shooter.prepareShooter(distance);
 
@@ -98,7 +98,7 @@ public class BangBangShooter extends CommandBase {
 
     visionInfo = SmartDashboard.getNumberArray("vision/target_info", empty); // TODO: need actual vision info
 
-    angleError = visionInfo[4]; //should this be visionInfo[4] * 180 / Math.PI?
+    angleError = shooter.vision.getRobotAngle(); 
 
     System.out.println("Target Speed: " + shooter.calculateShooterSpeed(distance) + "   Current Speed: " + shooter.getSpeed() + "   " + currentControlMode);
 
@@ -158,7 +158,7 @@ public class BangBangShooter extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     shooter.stopAll();
-    shooter.vision.setLEDRing(false);
+    shooter.vision.setLedRing(false);
     carousel.setBallCount(0);
     carouselCommand.schedule();
     driveCommand.schedule();

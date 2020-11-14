@@ -34,14 +34,13 @@ public class ShooterTuner extends CommandBase {
   @Override
   public void initialize() {
     shooter.calibratePID(0.000145, 1e-8, 0, 6.6774 * 0.00001);
-    shooter.vision.setLEDRing(true);
+    shooter.vision.setMode("goalfinder");
     SmartDashboard.putNumber("Distance", SmartDashboard.getNumberArray("vision/target_info", new double[]{0,0,0,0,0,0,0})[3]);
     System.out.println("Shooter Tuner going!");
     shooter.shoot();
     shooter.setHood(SmartDashboard.getNumber("Target Hood Angle", 60));
     shooter.setShooterRPM(SmartDashboard.getNumber("TSR", -1000));
     shooter.setTurret(SmartDashboard.getNumber("Turret Angle", 72));
-    shooter.vision.setMode("goalfinder");
     startTicks = carousel.getTicks();
     cc.cancel();
   }
