@@ -56,7 +56,7 @@ public class Vision extends SubsystemBase{
         return visionData[4] * 180.0 / Math.PI;
     }
 
-    private void setLedRing (boolean on) {
+    public void setLedRing (boolean on) {
         spike.set(on ? Value.kForward : Value.kReverse);
     }
 }
