@@ -156,7 +156,7 @@ public class ShootOne extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     shooter.stopAll();
-    shooter.vision.setLedRing(false);
+    shooter.vision.setMode("intake");
     carousel.setBallCount(0);
     carouselCommand.schedule();
     if (rescheduleDriveCommand) {

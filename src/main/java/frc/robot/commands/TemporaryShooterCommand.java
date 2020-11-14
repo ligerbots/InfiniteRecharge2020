@@ -61,7 +61,7 @@ public class TemporaryShooterCommand extends CommandBase {
   public void end(boolean interrupted) {
     shooter.stopAll();
     carouselCommand.schedule();
-    shooter.vision.setLedRing(false);
+    shooter.vision.setMode("intake");
   }
 
   // Returns true when the command should end.
