@@ -30,7 +30,7 @@ public class VisionTargetDistance extends CommandBase {
       // Turn on the LED but put the camera into "Intake", which does not find the target!!
       
       shooter.vision.setMode("intake");
-      //TODO find out why the led was turned on for intake mode, if it was purposeful, change setmode()
+
 
       //SmartDashboard.putNumber("Distance", SmartDashboard.getNumberArray("vision/target_info", new double[]{0,0,0,0,0,0,0})[3]);
   }
