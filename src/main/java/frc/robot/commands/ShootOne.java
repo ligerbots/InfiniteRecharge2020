@@ -10,6 +10,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.Carousel;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Shooter;
@@ -20,7 +21,7 @@ public class ShootOne extends CommandBase {
    * Creates a new ShooterCommand.
    */
 
-  double[] visionInfo;
+  
   double[] empty = new double[] {0.0,0.0,0.0,0.0,0.0,0.0,0.0}; 
   double waitTime;
   double startTime;
@@ -74,18 +75,17 @@ public class ShootOne extends CommandBase {
     shooter.calibratePID(0.000085, 0.000000035, 0, 6.776 * 0.00001);
     driveCommand.cancel();
     startTime = System.nanoTime();
-    SmartDashboard.putString("vision/active_mode/selected", "goalfinder");
-    shooter.setLEDRing(true);
+    shooter.vision.setMode("goalfinder");
     //TODO: remember to set to shooting camera mode!!
     carouselCommand.cancel();
     currentControlMode = ControlMethod.SPIN_UP;
 
     // stor current carouselTick value
     initialCarouselTicks = carousel.getTicks();
-    visionInfo = SmartDashboard.getNumberArray("vision/target_info", empty); 
+     
 
-    angleError = visionInfo[4] * 180 / 3.1416 - (Math.atan(7.5 / distance));
-    distance = visionInfo[3];
+    angleError = shooter.vision.getRobotAngle();
+    distance = shooter.vision.getDistance();
 
     shooter.prepareShooter(distance);
     currentControlMode = ControlMethod.SPIN_UP;
@@ -104,18 +104,17 @@ public class ShootOne extends CommandBase {
 
   @Override
   public void execute() {
-    visionInfo = SmartDashboard.getNumberArray("vision/target_info", empty); // TODO: need actual vision info
-
 
     if (distance != 0.0) {
       foundTarget = true;
     }
 
     if (!foundTarget) {
-      distance = visionInfo[3];
+
+      distance = shooter.vision.getDistance();
     }
 
-    angleError = visionInfo[4] * 180 / 3.1416;
+    angleError = shooter.vision.getRobotAngle();
 
     //System.out.println("Target Speed: " + shooter.calculateShooterSpeed(distance) + "   Current Speed: " + shooter.getSpeed() + " ");
 
@@ -157,7 +156,7 @@ public class ShootOne extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     shooter.stopAll();
-    shooter.setLEDRing(false);
+    shooter.vision.setMode("intake");
     carousel.setBallCount(0);
     carouselCommand.schedule();
     if (rescheduleDriveCommand) {

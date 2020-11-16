@@ -45,11 +45,11 @@ public class RobotContainer {
   XboxController xbox = new XboxController(0);
   Joystick farm = new Joystick(1);
 
+  public final Vision vision = new Vision();
+
   public final Intake intake = new Intake();
   public final Carousel carousel = new Carousel();
-  public final Shooter shooter = new Shooter();
-
-  public final Vision vision = new Vision();
+  public final Shooter shooter = new Shooter(vision);
 
   private final Shoulder shoulder = new Shoulder();
   public final Climber climber = new Climber(robotDrive);

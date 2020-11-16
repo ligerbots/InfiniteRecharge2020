@@ -41,9 +41,10 @@ public class Shooter extends SubsystemBase {
     private TreeMap<Double, Double[]> distanceLookUp = new TreeMap<Double,Double[]>() {}; //set up lookup table for ranges
     private TreeMap<Double, Double> turretAngleLookup = new TreeMap<Double, Double>() {};
     CANPIDController pidController;
-    Relay spike;
+    public Vision vision;
 
-    public Shooter() {
+    public Shooter(Vision vision) {
+        this.vision = vision;
         motor1 = new CANSparkMax(Constants.SHOOTER_ONE_CAN_ID,MotorType.kBrushless);
         motor2 = new CANSparkMax(Constants.SHOOTER_TWO_CAN_ID,MotorType.kBrushless);
         motor3 = new CANSparkMax(Constants.SHOOTER_THREE_CAN_ID,MotorType.kBrushless);
@@ -64,7 +65,7 @@ public class Shooter extends SubsystemBase {
         motor1.follow(motor2, true);  //  We want motor1 to be master and motor2 and 3 follow the speed of motor1
         motor3.follow(motor2);
 
-        spike = new Relay(0);
+        
 
         motor1.setSmartCurrentLimit(40);
         motor2.setSmartCurrentLimit(40);
@@ -282,7 +283,5 @@ public class Shooter extends SubsystemBase {
         }
     }
 
-    public void setLEDRing (boolean on) {
-        spike.set(on ? Value.kForward : Value.kReverse);
-    }
+    
 }

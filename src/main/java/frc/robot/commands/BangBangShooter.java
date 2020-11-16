@@ -7,6 +7,10 @@
 
 package frc.robot.commands;
 
+//
+// PaulR Nov 2020: this is not going to work, and is not actually used!!
+//
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
@@ -66,8 +70,7 @@ public class BangBangShooter extends CommandBase {
   public void initialize() {
     startTime = System.nanoTime();
     driveCommand.cancel();
-    SmartDashboard.putString("vision/active_mode/selected", "goalfinder");
-    shooter.setLEDRing(true);
+    shooter.vision.setMode("goalfinder");
     //TODO: remember to set to shooting camera mode!!
     carouselCommand.cancel();
 
@@ -75,8 +78,8 @@ public class BangBangShooter extends CommandBase {
     initialCarouselTicks = carousel.getTicks();
     visionInfo = SmartDashboard.getNumberArray("vision/target_info", empty); 
 
-    angleError = visionInfo[4];
-    distance = visionInfo[3];
+    angleError = shooter.vision.getRobotAngle();
+    distance = shooter.vision.getDistance();
 
     shooter.prepareShooter(distance);
 
@@ -95,7 +98,7 @@ public class BangBangShooter extends CommandBase {
 
     visionInfo = SmartDashboard.getNumberArray("vision/target_info", empty); // TODO: need actual vision info
 
-    angleError = visionInfo[4];
+    angleError = shooter.vision.getRobotAngle(); 
 
     System.out.println("Target Speed: " + shooter.calculateShooterSpeed(distance) + "   Current Speed: " + shooter.getSpeed() + "   " + currentControlMode);
 
@@ -155,7 +158,7 @@ public class BangBangShooter extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     shooter.stopAll();
-    shooter.setLEDRing(false);
+    shooter.vision.setMode("intake");
     carousel.setBallCount(0);
     carouselCommand.schedule();
     driveCommand.schedule();

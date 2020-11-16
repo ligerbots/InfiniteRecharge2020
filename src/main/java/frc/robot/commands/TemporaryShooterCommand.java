@@ -43,7 +43,7 @@ public class TemporaryShooterCommand extends CommandBase {
     shooter.testSpin();
     shooter.setHood(60);
     startTime = System.nanoTime();
-    shooter.setLEDRing(true);
+    shooter.vision.setMode("goalfinder");
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -61,7 +61,7 @@ public class TemporaryShooterCommand extends CommandBase {
   public void end(boolean interrupted) {
     shooter.stopAll();
     carouselCommand.schedule();
-    shooter.setLEDRing(false);
+    shooter.vision.setMode("intake");
   }
 
   // Returns true when the command should end.

@@ -50,12 +50,10 @@ public class FaceShootingTarget extends CommandBase {
     check = false;
     oldCheck = false;
     driveCommand.cancel();
-    shooter.setLEDRing(true);
-    SmartDashboard.putString("vision/active_mode/selected", "goalfinder");
+    shooter.vision.setMode("goalfinder");
     startingAngle = robotDrive.getHeading();
-    double[] visionData = SmartDashboard.getNumberArray("vision/target_info", new double[]{0,0,0,0,0,0,0});
-    double distance = visionData[3];   
-    initialAngleOffset = visionData[4] * 180 / 3.1416;
+    double distance = shooter.vision.getDistance();   
+    initialAngleOffset = shooter.vision.getRobotAngle();
     startTime = System.nanoTime();
     System.out.println("Initial initial heading: " + robotDrive.getHeading());
   }
@@ -78,7 +76,7 @@ public class FaceShootingTarget extends CommandBase {
       oldOldCheck = Math.abs(currentHeading - (startingAngle - initialAngleOffset)) < acceptableError;
     }
     else {
-      initialAngleOffset = SmartDashboard.getNumberArray("vision/target_info", new double[]{0,0,0,0,0,0,0})[4] * 180 / 3.1416;
+      initialAngleOffset = shooter.vision.getRobotAngle();
       targetAcquired = initialAngleOffset != 0.0;
     }
   }
