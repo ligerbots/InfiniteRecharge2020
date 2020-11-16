@@ -13,7 +13,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.controller.PIDController;
+import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.PIDBase.Tolerance;
 import edu.wpi.first.wpilibj.SPI.Port;
@@ -25,7 +25,10 @@ import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.SparkMaxWrapper;
+import frc.robot.Robot;
+// For simulation
+import frc.robot.simulation.SparkMaxWrapper;
+import frc.robot.simulation.AHRSSimWrapper;
 import edu.wpi.first.hal.SimDouble;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
@@ -34,8 +37,6 @@ import edu.wpi.first.wpilibj.simulation.EncoderSim;
 import edu.wpi.first.wpilibj.simulation.SimDeviceSim;
 import edu.wpi.first.wpilibj.simulation.Field2d;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
-import edu.wpi.first.wpilibj.ADXRS450_Gyro;
-import edu.wpi.first.wpilibj.interfaces.Gyro;
 
 public class DriveTrain extends SubsystemBase {
 
@@ -58,7 +59,7 @@ public class DriveTrain extends SubsystemBase {
     Encoder leftEncoder = new Encoder(Constants.LEFT_ENCODER_PORTS[0], Constants.LEFT_ENCODER_PORTS[1]);
     Encoder rightEncoder = new Encoder(Constants.RIGHT_ENCODER_PORTS[0], Constants.RIGHT_ENCODER_PORTS[1]);
 
-    AHRS navX = null;
+    AHRS navX;
 
     double limitedThrottle;
 
@@ -71,8 +72,6 @@ public class DriveTrain extends SubsystemBase {
     // Does this belong somewhere else??
     private Field2d fieldSim;
     private SimDouble gyroAngleSim;
-    private Gyro gyro = null;
-
 
     public DriveTrain() {
 
@@ -83,7 +82,7 @@ public class DriveTrain extends SubsystemBase {
         robotDrive = new DifferentialDrive(leftMotors, rightMotors);
         robotDrive.setSafetyEnabled(false);
 
-        //navX = new AHRS(Port.kMXP, (byte) 200);
+        navX = new AHRSSimWrapper(Port.kMXP, (byte) 200);
 
         // Set current limiting on drve train to prevent brown outs
         Arrays.asList(leftLeader, leftFollower, rightLeader, rightFollower)
@@ -102,16 +101,9 @@ public class DriveTrain extends SubsystemBase {
         leftEncoder.setDistancePerPulse(Constants.DISTANCE_PER_PULSE);
         rightEncoder.setDistancePerPulse(Constants.DISTANCE_PER_PULSE);
 
-        if (RobotBase.isSimulation()) {
-            // navX is not yet simulated, so use an different gyro
-            gyro = new ADXRS450_Gyro();
-            //turnSpeedController = new PIDController(0.015, 0.0001, 0.0, 0, gyro, output -> this.turnOutput = output);
-          } else {
-            navX = new AHRS(SPI.Port.kMXP, (byte) 200);
-            //turnSpeedController = new PIDController(0.015, 0.0001, 0.0, 0, navX, output -> this.turnOutput = output);
-          }
-
         odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(0));
+
+        turnSpeedController = new PIDController(0.015, 0.0001, 0.0, 0, navX, output -> this.turnOutput = output);
 
         if (RobotBase.isSimulation()) {
             // If our robot is simulated
@@ -126,13 +118,14 @@ public class DriveTrain extends SubsystemBase {
             // The encoder and gyro angle sims let us set simulated sensor readings
             leftEncoderSim = new EncoderSim(leftEncoder);
             rightEncoderSim = new EncoderSim(rightEncoder);
-      
-            // string is the name. Does the value actually matter??
-            gyroAngleSim = new SimDeviceSim("ADXRS450_Gyro" + "[" + SPI.Port.kOnboardCS0.value + "]").getDouble("Angle");
+            
+            // get the angle simulation variable
+            // SimDevice is found by name and index, like "name[index]"
+            gyroAngleSim = new SimDeviceSim("AHRS[" + SPI.Port.kMXP.value + "]").getDouble("Angle");
       
             // the Field2d class lets us visualize our robot in the simulation GUI.
             fieldSim = new Field2d();
-          }
+        }
 
         SmartDashboard.putString("vision/active_mode/selected", "goalfinder");
     }
@@ -160,20 +153,11 @@ public class DriveTrain extends SubsystemBase {
     }
     
     public double getHeading() {
-        //return Math.IEEEremainder(navX.getAngle(), 360) * -1; // -1 here for unknown reason look in documatation
-        if (navX != null) {
-            return Math.IEEEremainder(navX.getAngle(), 360) * -1.0; // -1 here for unknown reason look in documatation
-          } else {
-            return Math.IEEEremainder(gyro.getAngle(), 360) * -1.0;
-          }
+        return Math.IEEEremainder(navX.getAngle(), 360) * -1; // -1 here for unknown reason look in documatation
     }
 
     public void resetHeading() {
-        if (navX != null) {
-            navX.reset();
-        } else {
-            gyro.reset();
-        }
+        navX.reset();
     }
     
     public void resetEncoders () {
@@ -202,18 +186,17 @@ public class DriveTrain extends SubsystemBase {
             targetAngle += 360.0;
         }
         
-        /*turnSpeedController.setSetpoint(targetAngle);
+        turnSpeedController.setSetpoint(targetAngle);
         turnSpeedController.enable();
         turnSpeedController.setInputRange(-180.0, 180.0);
         turnSpeedController.setAbsoluteTolerance(tolerance);
         turnSpeedController.setOutputRange(-1.0, 1.0);
-        turnSpeedController.setContinuous(true);*/
-
+        turnSpeedController.setContinuous(true);
 
         System.out.printf(
             "currentAngle: %5.2f, originalTargetAngle: %5.2f, targetAngle: %5.2f, ",
             startAngle, originalTargetAngle, targetAngle);
-  }
+    }
 
     public DifferentialDriveWheelSpeeds getWheelSpeeds () {
         return new DifferentialDriveWheelSpeeds(leftEncoder.getRate(), rightEncoder.getRate());
@@ -293,7 +276,9 @@ public class DriveTrain extends SubsystemBase {
     }
 
     public void setIdleMode(IdleMode idleMode) {
+        if (Robot.isReal()) {
             Arrays.asList(leftLeader, leftFollower, rightLeader, rightFollower)
-            .forEach((CANSparkMax spark) -> spark.setIdleMode(idleMode));
+                .forEach((CANSparkMax spark) -> spark.setIdleMode(idleMode));
+        }
     }
 }
