@@ -96,7 +96,7 @@ public class Robot extends TimedRobot {
         m_robotContainer.driveCommand,
         m_robotContainer.carouselCommand));
   */
-    chosenAuto.addObject("NewEightBallSim", new NewEightBallSim(m_robotContainer.robotDrive, m_robotContainer.driveCommand, m_robotContainer.climber));
+    chosenAuto.addDefault("NewEightBallSim", new NewEightBallSim(m_robotContainer.robotDrive, m_robotContainer.driveCommand, m_robotContainer.climber));
 
    SmartDashboard.putData("Chosen Auto", chosenAuto);
   }

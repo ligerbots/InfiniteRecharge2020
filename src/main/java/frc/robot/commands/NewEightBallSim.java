@@ -42,8 +42,11 @@ public class NewEightBallSim extends SequentialCommandGroup {
 
         Trajectory backTrajectory = TrajectoryGenerator.generateTrajectory(
                 // Start at the origin facing the +X direction
-                FieldMap.startPositions[2], List.of(FieldMap.ballPosition[5], FieldMap.ballPosition[4]),
-                new Pose2d(FieldMap.ballPosition[3], Rotation2d.fromDegrees(67.5)), configForward);
+                FieldMap.startPositions[2], 
+                List.of(FieldMap.ballPosition[5], 
+                        FieldMap.ballPosition[4]),
+                new Pose2d(FieldMap.ballPosition[3], Rotation2d.fromDegrees(67.5)),
+                configForward);
 
         for (State state : backTrajectory.getStates()) {
             System.out.println("DEBUG: backTrajectory STATE "+ state.poseMeters);
