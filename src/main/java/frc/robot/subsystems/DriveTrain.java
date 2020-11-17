@@ -148,7 +148,18 @@ public class DriveTrain extends SubsystemBase {
         return odometry.getPoseMeters();
     }
 
-    public void tankDriveVolts (double leftVolts, double rightVolts) {
+    public void setPose(Pose2d pose) {
+        // The left and right encoders MUST be reset when odometry is reset
+        leftEncoder.reset();
+        rightEncoder.reset();
+        odometry.resetPosition(pose, Rotation2d.fromDegrees(getGyroAngle()));
+    
+        if (RobotBase.isSimulation()) {
+          fieldSim.setRobotPose(pose);
+        }
+      }
+      
+        public void tankDriveVolts (double leftVolts, double rightVolts) {
         leftMotors.setVoltage(-leftVolts);
         rightMotors.setVoltage(rightVolts);// make sure right is negative becuase sides are opposite
         robotDrive.feed();
@@ -167,6 +178,10 @@ public class DriveTrain extends SubsystemBase {
     }
     
     public double getHeading() {
+        return odometry.getPoseMeters().getRotation().getDegrees();
+      }
+    
+    public double getGyroAngle() {
         //return Math.IEEEremainder(navX.getAngle(), 360) * -1; // -1 here for unknown reason look in documatation
         if (navX != null) {
             return Math.IEEEremainder(navX.getAngle(), 360) * -1.0; // -1 here for unknown reason look in documatation
@@ -191,12 +206,12 @@ public class DriveTrain extends SubsystemBase {
     public void resetOdometry (Pose2d pose) {
         resetEncoders();
         resetHeading();
-        odometry.resetPosition(pose, Rotation2d.fromDegrees(getHeading()));
+        odometry.resetPosition(pose, Rotation2d.fromDegrees(getGyroAngle()));
     }
 
     public void enableTurningControl(double angle, double tolerance) {
         double angleOffset = angle;
-        double startAngle = getHeading();
+        double startAngle = getGyroAngle();
         double targetAngle = startAngle + angle;
     
         // We need to keep all angles between -180 and 180. Account for that here
@@ -228,8 +243,8 @@ public class DriveTrain extends SubsystemBase {
 
     @Override
     public void periodic() {
-        odometry.update(Rotation2d.fromDegrees(getHeading()), leftEncoder.getDistance(), rightEncoder.getDistance());
-        SmartDashboard.putNumber("Heading", getHeading());
+        odometry.update(Rotation2d.fromDegrees(getGyroAngle()), leftEncoder.getDistance(), rightEncoder.getDistance());
+        SmartDashboard.putNumber("Heading", getGyroAngle());
         SmartDashboard.putString("Pose", getPose().toString());
         // SmartDashboard.putNumber("Vision Angle", SmartDashboard.getNumberArray("vision/target_info", new Double[]{0.0,0.0})[4] * 180.0 / 3.1416);
         //SmartDashboard.putNumber("Arc tan adjustment", Math.atan(7.5 / SmartDashboard.getNumberArray("vision/target_info", new Double[]{0.0,0.0})[3]));
