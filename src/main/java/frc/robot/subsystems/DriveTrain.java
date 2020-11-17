@@ -210,7 +210,7 @@ public class DriveTrain extends SubsystemBase {
 
     public void enableTurningControl(double angle, double tolerance) {
         double angleOffset = angle;
-        double startAngle = getGyroAngle();
+        double startAngle = getHeading();
         double targetAngle = startAngle + angle;
     
         // We need to keep all angles between -180 and 180. Account for that here
@@ -243,7 +243,7 @@ public class DriveTrain extends SubsystemBase {
     @Override
     public void periodic() {
         odometry.update(Rotation2d.fromDegrees(getGyroAngle()), leftEncoder.getDistance(), rightEncoder.getDistance());
-        SmartDashboard.putNumber("Heading", getGyroAngle());
+        SmartDashboard.putNumber("Heading", getHeading());
         SmartDashboard.putString("Pose", getPose().toString());
         // SmartDashboard.putNumber("Vision Angle", SmartDashboard.getNumberArray("vision/target_info", new Double[]{0.0,0.0})[4] * 180.0 / 3.1416);
         //SmartDashboard.putNumber("Arc tan adjustment", Math.atan(7.5 / SmartDashboard.getNumberArray("vision/target_info", new Double[]{0.0,0.0})[3]));
