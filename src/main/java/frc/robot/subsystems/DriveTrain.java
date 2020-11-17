@@ -20,14 +20,13 @@ import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.geometry.Transform2d;
-import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
+
 // For simulation
 import frc.robot.simulation.SparkMaxWrapper;
 import frc.robot.simulation.AHRSSimWrapper;
@@ -74,10 +73,6 @@ public class DriveTrain extends SubsystemBase {
     // Does this belong somewhere else??
     private Field2d fieldSim;
     private SimDouble gyroAngleSim;
-
-
-
-
 
     public DriveTrain() {
 
@@ -131,10 +126,9 @@ public class DriveTrain extends SubsystemBase {
       
             // the Field2d class lets us visualize our robot in the simulation GUI.
             fieldSim = new Field2d();
-            fieldSim.setRobotPose(getPose());
-            
-          }
+        }
 
+        // TODO this should not be here
         SmartDashboard.putString("vision/active_mode/selected", "goalfinder");
     }
 
@@ -175,32 +169,32 @@ public class DriveTrain extends SubsystemBase {
         return odometry.getPoseMeters().getRotation().getDegrees();
       }
     
-    public double getGyroAngle() {
-        //return Math.IEEEremainder(navX.getAngle(), 360) * -1; // -1 here for unknown reason look in documatation
-        if (navX != null) {
-            return Math.IEEEremainder(navX.getAngle(), 360) * -1.0; // -1 here for unknown reason look in documatation
-          } else {
-            return Math.IEEEremainder(gyro.getAngle(), 360) * -1.0;
-          }
+    private double getGyroAngle() {
+        return Math.IEEEremainder(navX.getAngle(), 360) * -1; // -1 here for unknown reason look in documatation
     }
 
-    public void resetHeading() {
-        navX.reset();
-    }
+    // private void resetHeading() {
+    //     navX.reset();
+    // }
     
-    public void resetEncoders () {
+    private void resetEncoders () {
         leftEncoder.reset();
         rightEncoder.reset();
     }
-    
+
+    // This is the same as setPose() but leave here for compatibility
     public void resetOdometry (Pose2d pose) {
         resetEncoders();
-        resetHeading();
+        //resetHeading();
         odometry.resetPosition(pose, Rotation2d.fromDegrees(getGyroAngle()));
+
+        if (RobotBase.isSimulation()) {
+            fieldSim.setRobotPose(pose);
+        }
     }
 
     public void enableTurningControl(double angle, double tolerance) {
-        double angleOffset = angle;
+        //double angleOffset = angle;
         double startAngle = getHeading();
         double targetAngle = startAngle + angle;
     
