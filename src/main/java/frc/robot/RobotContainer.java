@@ -40,7 +40,7 @@ public class RobotContainer {
   private final Turn turn = new Turn();
   public final DriveTrain robotDrive = new DriveTrain();
   public final DriveCommand driveCommand = new DriveCommand(robotDrive, throttle, turn);
-  
+
   XboxController xbox = new XboxController(0);
   Joystick farm = new Joystick(1);
 
@@ -52,6 +52,7 @@ public class RobotContainer {
   private final Shoulder shoulder = new Shoulder();
   public final Climber climber = new Climber(robotDrive);
 
+
   public final DeployShoulderCommand deployShoulderCommand = new DeployShoulderCommand(climber);
 
   public final ShoulderCommand lowerShoulder = new ShoulderCommand(climber, Constants.SHOULDER_MIN_HEIGHT);
@@ -60,7 +61,8 @@ public class RobotContainer {
   public TestIntake testIntake = new TestIntake(intake);
   public TestFlup testFlup;
 
-  
+  //public final NewEightBallSim newEightBallSimCommand = new NewEightBallSim(robotDrive, driveCommand, climber);
+
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -165,8 +167,8 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   //EightBallAuto auto = new EightBallAuto(robotDrive, shooter, intake, climber, carousel, driveCommand, carouselCommand);
-  public Command getAutonomousCommand() {
-    return new DriveForwardAuto(robotDrive, carouselCommand, driveCommand);
+  public Command _getAutonomousCommand() {
+    return new NewEightBallSim(robotDrive, driveCommand, climber);
     // return auto;
   }
 }
