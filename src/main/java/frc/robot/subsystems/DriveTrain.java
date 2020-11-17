@@ -75,7 +75,6 @@ public class DriveTrain extends SubsystemBase {
     private Field2d fieldSim;
     private SimDouble gyroAngleSim;
 
-    Transform2d tempTransform=new Transform2d(new Pose2d(0,0, new Rotation2d(0)), new Pose2d(5, 5, new Rotation2d(0)));
 
 
     public DriveTrain() {
@@ -130,7 +129,7 @@ public class DriveTrain extends SubsystemBase {
       
             // the Field2d class lets us visualize our robot in the simulation GUI.
             fieldSim = new Field2d();
-            fieldSim.setRobotPose(getPose().plus(tempTransform));
+            fieldSim.setRobotPose(getPose());
             
           }
 
@@ -148,11 +147,11 @@ public class DriveTrain extends SubsystemBase {
         odometry.resetPosition(pose, Rotation2d.fromDegrees(getGyroAngle()));
     
         if (RobotBase.isSimulation()) {
-          fieldSim.setRobotPose(pose);
+            fieldSim.setRobotPose(pose);
         }
-      }
+    }
       
-        public void tankDriveVolts (double leftVolts, double rightVolts) {
+    public void tankDriveVolts (double leftVolts, double rightVolts) {
         leftMotors.setVoltage(-leftVolts);
         rightMotors.setVoltage(rightVolts);// make sure right is negative becuase sides are opposite
         robotDrive.feed();
@@ -258,7 +257,8 @@ public class DriveTrain extends SubsystemBase {
   
       gyroAngleSim.set(-drivetrainSimulator.getHeading().getDegrees());
   
-      fieldSim.setRobotPose(getPose().plus(tempTransform));
+      fieldSim.setRobotPose(getPose());
+      //System.out.println("DEBUG: POSITION !!! "+getPose().getX()+" "+getPose().getY());
     }
 
     public void allDrive(double throttle, double rotate, boolean squaredInputs) {
