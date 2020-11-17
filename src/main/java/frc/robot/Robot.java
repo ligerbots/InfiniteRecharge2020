@@ -68,7 +68,10 @@ public class Robot extends TimedRobot {
     RPMAdjustment = 0;
     HoodAdjustment = 0;
 
-    
+    // Configure the initial Pose (field position, angle) of the robot
+    // For now, we're hardcoding the pose. Eventually we will use a selected robot pose
+    m_robotContainer.robotDrive.setPose(FieldMap.startPositions[1]);
+  
     
     // SmartDashboard.putData(new TestTurret(m_robotContainer.shooter));
     /*

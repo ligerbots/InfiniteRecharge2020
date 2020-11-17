@@ -55,7 +55,7 @@ public class FaceShootingTarget extends CommandBase {
     double distance = shooter.vision.getDistance();   
     initialAngleOffset = shooter.vision.getRobotAngle();
     startTime = System.nanoTime();
-    System.out.println("Initial initial heading: " + robotDrive.getHeading());
+    System.out.println("Initial initial heading: " + robotDrive.getGyroAngle());
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -66,10 +66,10 @@ public class FaceShootingTarget extends CommandBase {
     SmartDashboard.putNumber("initialAngleOffset", initialAngleOffset);
 
     if (targetAcquired) {
-      currentHeading = robotDrive.getHeading();
+      currentHeading = robotDrive.getGyroAngle();
       check = Math.abs(currentHeading - (startingAngle - initialAngleOffset)) < acceptableError && oldCheck;
       System.out.format("FaceShootingTarget: %3.2f%n", initialAngleOffset);
-      robotDrive.allDrive(0, robotDrive.turnSpeedCalc(robotDrive.getHeading() - (startingAngle - initialAngleOffset)), false);
+      robotDrive.allDrive(0, robotDrive.turnSpeedCalc(robotDrive.getGyroAngle() - (startingAngle - initialAngleOffset)), false);
 
       oldCheck = Math.abs(currentHeading - (startingAngle - initialAngleOffset)) < acceptableError && oldOldCheck;
 
@@ -85,7 +85,7 @@ public class FaceShootingTarget extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     System.out.println("FACE SHOOTING FINISHED");
-    System.out.println("Current Heading: " + robotDrive.getHeading() + System.getProperty("line.separator") + 
+    System.out.println("Current Heading: " + robotDrive.getGyroAngle() + System.getProperty("line.separator") + 
     "Target Angle: " + (startingAngle - initialAngleOffset));
     robotDrive.allDrive(0, 0, false);
     Robot.angleErrorAfterTurn = currentHeading - (startingAngle - initialAngleOffset);
@@ -95,6 +95,6 @@ public class FaceShootingTarget extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (Math.abs(robotDrive.getHeading() - (startingAngle - initialAngleOffset)) < acceptableError && check) || (initialAngleOffset == 0.0 && (double)(System.nanoTime() - startTime) / 1_000_000_000.0 > 0.5);
+    return (Math.abs(robotDrive.getGyroAngle() - (startingAngle - initialAngleOffset)) < acceptableError && check) || (initialAngleOffset == 0.0 && (double)(System.nanoTime() - startTime) / 1_000_000_000.0 > 0.5);
   }
 }
