@@ -71,8 +71,10 @@ public class Robot extends TimedRobot {
     
     
     // SmartDashboard.putData(new TestTurret(m_robotContainer.shooter));
-
+    /*
     chosenAuto.addDefault("Default Auto", new DriveForwardAuto(m_robotContainer.robotDrive, m_robotContainer.carouselCommand, m_robotContainer.driveCommand));
+   
+   
     chosenAuto.addObject("EightBallAuto", new EightBallAuto(
       m_robotContainer.robotDrive,
       m_robotContainer.shooter,
@@ -90,7 +92,8 @@ public class Robot extends TimedRobot {
         m_robotContainer.carousel,
         m_robotContainer.driveCommand,
         m_robotContainer.carouselCommand));
-  
+  */
+    chosenAuto.addObject("NewEightBallSim", new NewEightBallSim(m_robotContainer.robotDrive, m_robotContainer.driveCommand, m_robotContainer.climber));
 
    SmartDashboard.putData("Chosen Auto", chosenAuto);
   }
@@ -182,10 +185,11 @@ public class Robot extends TimedRobot {
     //SmartDashboard.putData(m_robotContainer.testFlup);
     if (m_autonomousCommand != null)
       m_autonomousCommand.cancel();
-    m_robotContainer.driveCommand.schedule();
+
+    //m_robotContainer.driveCommand.schedule();
     //m_robotContainer.testFlup.schedule();
     //m_robotContainer.shooter.testSpin();
-    m_robotContainer.carouselCommand.schedule();
+    //m_robotContainer.carouselCommand.schedule();
     //m_robotContainer.testFlup.schedule();
     //m_robotContainer.testIntake.schedule();
     //RunWinch aaa = new RunWinch(m_robotContainer.climber, m_robotContainer);

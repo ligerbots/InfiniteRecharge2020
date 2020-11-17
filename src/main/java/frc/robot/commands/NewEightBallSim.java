@@ -24,77 +24,79 @@ public class NewEightBallSim extends SequentialCommandGroup{
         drivecommand.cancel();
         DeployShoulderCommand deployShoulder = new DeployShoulderCommand(climber);
         robotDrive.resetOdometry(new Pose2d());
-    var autoVoltageConstraint =
-    new DifferentialDriveVoltageConstraint(
-        new SimpleMotorFeedforward(Constants.ksVolts,
-                                   Constants.kvVoltSecondsPerMeter,
-                                   Constants.kaVoltSecondsSquaredPerMeter),
-        Constants.kDriveKinematics,
-        10);
-    TrajectoryConfig configForward =
-        new TrajectoryConfig(Constants.kMaxSpeed,
-                             Constants.kMaxAcceleration)
-            .setKinematics(Constants.kDriveKinematics)
-            .addConstraint(autoVoltageConstraint);
-        
-    TrajectoryConfig configBackward =
-        new TrajectoryConfig(Constants.kMaxSpeed,
-                             Constants.kMaxAcceleration)
-            .setKinematics(Constants.kDriveKinematics)
-            .addConstraint(autoVoltageConstraint)
-            .setReversed(true);
+        var autoVoltageConstraint =
+        new DifferentialDriveVoltageConstraint(
+            new SimpleMotorFeedforward(Constants.ksVolts,
+                                    Constants.kvVoltSecondsPerMeter,
+                                    Constants.kaVoltSecondsSquaredPerMeter),
+            Constants.kDriveKinematics,
+            10);
+        TrajectoryConfig configForward =
+            new TrajectoryConfig(Constants.kMaxSpeed,
+                                Constants.kMaxAcceleration)
+                .setKinematics(Constants.kDriveKinematics)
+                .addConstraint(autoVoltageConstraint);
+            
+        TrajectoryConfig configBackward =
+            new TrajectoryConfig(Constants.kMaxSpeed,
+                                Constants.kMaxAcceleration)
+                .setKinematics(Constants.kDriveKinematics)
+                .addConstraint(autoVoltageConstraint)
+                .setReversed(true);
 
-    Trajectory forwardTrajectory = TrajectoryGenerator.generateTrajectory(
-        // Starting from Starting Point #2
-        List.of(
+
+        Trajectory forwardTrajectory = TrajectoryGenerator.generateTrajectory(
+            // Starting from Starting Point #2
+            List.of(
+                new Pose2d(FieldMap.ballPosition[3], Rotation2d.fromDegrees(67.5)),
+                new Pose2d(FieldMap.startLineX, FieldMap.startPositions[2].getY(), Rotation2d.fromDegrees(0))
+            ),
+            configBackward
+        ); 
+
+        Trajectory backTrajectory = TrajectoryGenerator.generateTrajectory(
+            // Start at the origin facing the +X direction
+            FieldMap.startPositions[2], 
+            List.of(
+                FieldMap.ballPosition[5],
+                FieldMap.ballPosition[4]
+            ),
             new Pose2d(FieldMap.ballPosition[3], Rotation2d.fromDegrees(67.5)),
-            new Pose2d(FieldMap.startLineX, FieldMap.startPositions[2].getY(), Rotation2d.fromDegrees(0))
-        ),
-        configBackward
-    ); 
-
-    Trajectory backTrajectory = TrajectoryGenerator.generateTrajectory(
-        // Start at the origin facing the +X direction
-        FieldMap.startPositions[2], 
-        List.of(
-            FieldMap.ballPosition[5],
-            FieldMap.ballPosition[4]
-        ),
-        new Pose2d(FieldMap.ballPosition[3], Rotation2d.fromDegrees(67.5)),
-        configForward
-    ); 
-    
-    RamseteCommand ramseteBackward = new RamseteCommand(
-        backTrajectory,
-        robotDrive::getPose,
-        new RamseteController(Constants.kRamseteB, Constants.kRamseteZeta),
-        new SimpleMotorFeedforward(Constants.ksVolts,
-                                   Constants.kvVoltSecondsPerMeter,
-                                   Constants.kaVoltSecondsSquaredPerMeter),
-        Constants.kDriveKinematics,
-        robotDrive::getWheelSpeeds,
-        new PIDController(Constants.kPDriveVel, 0, 0),
-        new PIDController(Constants.kPDriveVel, 0, 0),
-        robotDrive::tankDriveVolts,
-        robotDrive
-    );
-    RamseteCommand ramseteForward = new RamseteCommand(
-        forwardTrajectory,
-        robotDrive::getPose,
-        new RamseteController(Constants.kRamseteB, Constants.kRamseteZeta),
-        new SimpleMotorFeedforward(Constants.ksVolts,
-                                   Constants.kvVoltSecondsPerMeter,
-                                   Constants.kaVoltSecondsSquaredPerMeter),
-        Constants.kDriveKinematics,
-        robotDrive::getWheelSpeeds,
-        new PIDController(Constants.kPDriveVel, 0, 0),
-        new PIDController(Constants.kPDriveVel, 0, 0),
-        robotDrive::tankDriveVolts,
-        robotDrive
-    );
-    addCommands(deployShoulder,
-    new SetTrajectory(robotDrive, configBackward).andThen(() -> robotDrive.tankDriveVolts(0, 0)),
-    ramseteBackward.andThen(() -> robotDrive.tankDriveVolts(0, 0)),
-    ramseteForward.andThen(() -> robotDrive.tankDriveVolts(0, 0)));
+            configForward
+        ); 
+        
+        RamseteCommand ramseteBackward = new RamseteCommand(
+            backTrajectory,
+            robotDrive::getPose,
+            new RamseteController(Constants.kRamseteB, Constants.kRamseteZeta),
+            new SimpleMotorFeedforward(Constants.ksVolts,
+                                    Constants.kvVoltSecondsPerMeter,
+                                    Constants.kaVoltSecondsSquaredPerMeter),
+            Constants.kDriveKinematics,
+            robotDrive::getWheelSpeeds,
+            new PIDController(Constants.kPDriveVel, 0, 0),
+            new PIDController(Constants.kPDriveVel, 0, 0),
+            robotDrive::tankDriveVolts,
+            robotDrive
+        );
+        RamseteCommand ramseteForward = new RamseteCommand(
+            forwardTrajectory,
+            robotDrive::getPose,
+            new RamseteController(Constants.kRamseteB, Constants.kRamseteZeta),
+            new SimpleMotorFeedforward(Constants.ksVolts,
+                                    Constants.kvVoltSecondsPerMeter,
+                                    Constants.kaVoltSecondsSquaredPerMeter),
+            Constants.kDriveKinematics,
+            robotDrive::getWheelSpeeds,
+            new PIDController(Constants.kPDriveVel, 0, 0),
+            new PIDController(Constants.kPDriveVel, 0, 0),
+            robotDrive::tankDriveVolts,
+            robotDrive
+        );
+        addCommands(deployShoulder,
+            //new SetTrajectory(robotDrive, configBackward).andThen(() -> robotDrive.tankDriveVolts(0, 0))//,
+            ramseteBackward.andThen(() -> robotDrive.tankDriveVolts(0, 0)),
+            ramseteForward.andThen(() -> robotDrive.tankDriveVolts(0, 0))
+        );
     }
 }

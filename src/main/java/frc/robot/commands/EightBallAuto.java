@@ -113,7 +113,13 @@ public class EightBallAuto extends SequentialCommandGroup {
     );
 
 
-    addCommands(deployShoulder.alongWith(shoot1), new SetTrajectory(robotDrive, configBackward).andThen(() -> robotDrive.tankDriveVolts(0, 0)), ramseteCommand2.andThen(() -> robotDrive.tankDriveVolts(0, 0)), new ResetCarousel(carousel, carouselCommand, false), new TurnAndShoot(robotDrive, shooter, carousel, carouselCommand, driveCommand, false), new ResetCarousel(carousel, carouselCommand, true));// new StartMatchCommand(), new
+    addCommands(deployShoulder.alongWith(shoot1),
+        new SetTrajectory(robotDrive, configBackward).andThen(() -> robotDrive.tankDriveVolts(0, 0)),
+        ramseteCommand2.andThen(() -> robotDrive.tankDriveVolts(0, 0)),
+        new ResetCarousel(carousel, carouselCommand, false), 
+        new TurnAndShoot(robotDrive, shooter, carousel, carouselCommand, driveCommand, false), 
+        new ResetCarousel(carousel, carouselCommand, true)
+    );// new StartMatchCommand(), new
                                                                                  // ShooterCommand (shooter, carousel,
                                                                                  // robotDrive, 3.0));
     

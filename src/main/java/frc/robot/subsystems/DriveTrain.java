@@ -20,6 +20,8 @@ import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.geometry.Transform2d;
+import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -73,6 +75,9 @@ public class DriveTrain extends SubsystemBase {
     private Field2d fieldSim;
     private SimDouble gyroAngleSim;
 
+    Transform2d tempTransform=new Transform2d(new Pose2d(0,0, new Rotation2d(0)), new Pose2d(5, 5, new Rotation2d(0)));
+
+
     public DriveTrain() {
 
         // TODO: Verify which motors need to be inverted
@@ -125,7 +130,9 @@ public class DriveTrain extends SubsystemBase {
       
             // the Field2d class lets us visualize our robot in the simulation GUI.
             fieldSim = new Field2d();
-        }
+            fieldSim.setRobotPose(getPose().plus(tempTransform));
+            
+          }
 
         SmartDashboard.putString("vision/active_mode/selected", "goalfinder");
     }
@@ -231,7 +238,7 @@ public class DriveTrain extends SubsystemBase {
   
       gyroAngleSim.set(-drivetrainSimulator.getHeading().getDegrees());
   
-      fieldSim.setRobotPose(getPose());
+      fieldSim.setRobotPose(getPose().plus(tempTransform));
     }
 
     public void allDrive(double throttle, double rotate, boolean squaredInputs) {
