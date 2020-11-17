@@ -82,7 +82,7 @@ public class ShooterCommand extends CommandBase {
     carouselCommand.cancel();
     currentControlMode = ControlMethod.SPIN_UP;
 
-    System.out.println("Initial NavX Heading: " + robotDrive.getGyroAngle());
+    System.out.println("Initial NavX Heading: " + robotDrive.getHeading());
     // stor current carouselTick value
     initialCarouselTicks = carousel.getTicks();
     visionInfo = SmartDashboard.getNumberArray("vision/target_info", empty); 

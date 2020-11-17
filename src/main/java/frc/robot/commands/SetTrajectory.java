@@ -43,7 +43,7 @@ public class SetTrajectory extends CommandBase {
   public void initialize() {
     trajectory = TrajectoryGenerator.generateTrajectory(
         // Start at the origin facing the +X direction
-        new Pose2d(0, 0, Rotation2d.fromDegrees(robotDrive.getGyroAngle())), 
+        new Pose2d(0, 0, Rotation2d.fromDegrees(robotDrive.getHeading())), 
         List.of(
             new Translation2d(-1.2, -0.63)
         ),
