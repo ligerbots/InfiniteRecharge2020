@@ -9,6 +9,8 @@ package frc.robot;
 import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -43,7 +45,7 @@ public class Robot extends TimedRobot {
   public static int HoodAdjustment;
   public static double angleErrorAfterTurn = 0;
 
-
+  private Pose2d initialPose2d = new Pose2d(FieldMap.ballPosition[2],new Rotation2d(0.0));
   /**
    * This function is run when the robot is first started up and should be used
    * for any initialization code.
@@ -70,8 +72,9 @@ public class Robot extends TimedRobot {
 
     // Configure the initial Pose (field position, angle) of the robot
     // For now, we're hardcoding the pose. Eventually we will use a selected robot pose
-    m_robotContainer.robotDrive.setPose(FieldMap.startPositions[1]);
-  
+    // m_robotContainer.robotDrive.setPose(FieldMap.startPositions[1]);
+
+    m_robotContainer.robotDrive.setPose(initialPose2d);
     
     // SmartDashboard.putData(new TestTurret(m_robotContainer.shooter));
     /*
@@ -96,7 +99,8 @@ public class Robot extends TimedRobot {
         m_robotContainer.driveCommand,
         m_robotContainer.carouselCommand));
   */
-    chosenAuto.addDefault("NewEightBallSim", new NewEightBallSim(m_robotContainer.robotDrive, m_robotContainer.driveCommand, m_robotContainer.climber));
+  // chosenAuto.addDefault("NewEightBallSim", new NewEightBallSim(m_robotContainer.robotDrive, m_robotContainer.driveCommand, m_robotContainer.climber));
+  chosenAuto.addDefault("MoveAroundField", new MoveAroundField(m_robotContainer.robotDrive));
 
    SmartDashboard.putData("Chosen Auto", chosenAuto);
   }
