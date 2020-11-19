@@ -48,9 +48,9 @@ public class MoveAroundField extends CommandBase {
 
     // Use either start of ball to set robot pose.
     // 10 is the dummy default value for start.
-    if (start < FieldMap.startPositions.length) {
+    if (start < FieldMap.startPosition.length) {
       // The start value is valid. Use it to position the robot.
-      robotPose = FieldMap.startPositions[start];
+      robotPose = FieldMap.startPosition[start];
     } else if (ball < FieldMap.ballPosition.length) {
       // start value is invalid, so use the ball position with 0 rotation angle
       robotPose = new Pose2d(FieldMap.ballPosition[ball], new Rotation2d(0.0));
