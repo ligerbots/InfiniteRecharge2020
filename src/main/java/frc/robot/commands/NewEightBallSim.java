@@ -35,18 +35,32 @@ public class NewEightBallSim extends SequentialCommandGroup {
 
         Trajectory forwardTrajectory = TrajectoryGenerator.generateTrajectory(
                 // Starting from Starting Point #2
-                List.of(new Pose2d(FieldMap.ballPosition[3], Rotation2d.fromDegrees(67.5)),
-                        new Pose2d(FieldMap.startLineX, FieldMap.startPosition[2].getY(), Rotation2d.fromDegrees(0))),
-                configBackward);
-        System.out.println("DEBUG: " + FieldMap.ballPosition[5] + " " + FieldMap.ballPosition[4]);
+                new Pose2d(FieldMap.ballPosition[3], Rotation2d.fromDegrees(-67.5)),
+                List.of(
+                    new Translation2d(FieldMap.ballPosition[4].getX()+1.5, FieldMap.ballPosition[4].getY())
+                ) ,
+                new Pose2d(FieldMap.startLineX, FieldMap.startPosition[1].getY(), Rotation2d.fromDegrees(0)),
+                configForward);
+        //System.out.println("DEBUG: " + FieldMap.ballPosition[5] + " " + FieldMap.ballPosition[4]);
 
         Trajectory backTrajectory = TrajectoryGenerator.generateTrajectory(
                 // Start at the origin facing the +X direction
-                FieldMap.startPosition[2], 
-                List.of(FieldMap.ballPosition[5], 
-                        FieldMap.ballPosition[4]),
-                new Pose2d(FieldMap.ballPosition[3], Rotation2d.fromDegrees(67.5)),
-                configForward);
+                List.of( 
+                    FieldMap.startPosition[1],
+                    new Pose2d(FieldMap.ballPosition[4], Rotation2d.fromDegrees(0)), 
+                    new Pose2d(FieldMap.ballPosition[3], Rotation2d.fromDegrees(-67.5)), 
+                    new Pose2d(FieldMap.ballPosition[2], Rotation2d.fromDegrees(-67.5))
+                ),
+                configBackward);
+        /*
+        OLD Trajectory
+        Trajectory backTrajectory = TrajectoryGenerator.generateTrajectory(
+                // Start at the origin facing the +X direction
+                FieldMap.startPosition[1], 
+                List.of(FieldMap.ballPosition[4], 
+                        FieldMap.ballPosition[3]),
+                new Pose2d(FieldMap.ballPosition[2], Rotation2d.fromDegrees(-67.5)),
+                configBackward);*/
 
         for (State state : backTrajectory.getStates()) {
             System.out.println("DEBUG: backTrajectory STATE "+ state.poseMeters);
@@ -85,8 +99,8 @@ public class NewEightBallSim extends SequentialCommandGroup {
         );
         addCommands(
             //new SetTrajectory(robotDrive, configBackward).andThen(() -> robotDrive.tankDriveVolts(0, 0))//,
-            ramseteBackward.andThen(() -> robotDrive.tankDriveVolts(0, 0))//,
-            //ramseteForward.andThen(() -> robotDrive.tankDriveVolts(0, 0))
+            ramseteBackward.andThen(() -> robotDrive.tankDriveVolts(0, 0)),
+            ramseteForward.andThen(() -> robotDrive.tankDriveVolts(0, 0))
         );
     }
 }

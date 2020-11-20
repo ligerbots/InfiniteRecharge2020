@@ -45,7 +45,7 @@ public class Robot extends TimedRobot {
   public static int HoodAdjustment;
   public static double angleErrorAfterTurn = 0;
 
-  private Pose2d initialPose2d = new Pose2d(FieldMap.ballPosition[2],new Rotation2d(0.0));
+  private Pose2d initialPose2d = FieldMap.startPosition[1];
   /**
    * This function is run when the robot is first started up and should be used
    * for any initialization code.
@@ -99,8 +99,8 @@ public class Robot extends TimedRobot {
         m_robotContainer.driveCommand,
         m_robotContainer.carouselCommand));
   */
-  // chosenAuto.addDefault("NewEightBallSim", new NewEightBallSim(m_robotContainer.robotDrive, m_robotContainer.driveCommand, m_robotContainer.climber));
-  chosenAuto.addDefault("MoveAroundField", new MoveAroundField(m_robotContainer.robotDrive));
+   chosenAuto.addDefault("NewEightBallSim", new NewEightBallSim(m_robotContainer.robotDrive, m_robotContainer.driveCommand, m_robotContainer.climber));
+  chosenAuto.addObject("MoveAroundField", new MoveAroundField(m_robotContainer.robotDrive));
 
    SmartDashboard.putData("Chosen Auto", chosenAuto);
   }
