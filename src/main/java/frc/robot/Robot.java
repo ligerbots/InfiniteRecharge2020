@@ -101,6 +101,7 @@ public class Robot extends TimedRobot {
   */
    chosenAuto.addDefault("NewEightBallSim", new NewEightBallSim(m_robotContainer.robotDrive, m_robotContainer.driveCommand, m_robotContainer.climber));
   chosenAuto.addObject("MoveAroundField", new MoveAroundField(m_robotContainer.robotDrive));
+  chosenAuto.addObject("TrenchAuto", new TrenchAuto(m_robotContainer.robotDrive , m_robotContainer.driveCommand, m_robotContainer.climber));
 
    SmartDashboard.putData("Chosen Auto", chosenAuto);
   }
