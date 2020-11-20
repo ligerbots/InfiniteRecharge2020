@@ -67,6 +67,22 @@ draw_ball(x, y)
 y += 18.5
 draw_ball(x, y)
 
+#shield generator (based on https://firstfrc.blob.core.windows.net/frc2020/PlayingField/LayoutandMarkingDiagram.pdf)
+shield_generator_points=[(198.75,field_height/2+43.75),(198.75+116+51.06,field_height/2+112.88)]
+shield_generator_balls=[(130.25,19.79),(114.94,26.13),(107.83, 50.54),(114.17,65.84),(120.51, 81.14)]
+shield_generator_balls=[(field_width-120-x,y+ 94.66) for x,y in shield_generator_balls]
+
+for point in shield_generator_balls:
+    draw_ball(*point)
+
+plt.plot(*zip(*(
+    shield_generator_points +
+    [(field_width-x,field_height-y) for x,y in shield_generator_points] +
+    shield_generator_points[0:1]
+)),"gray")
+
+
+
 plt.axis('off')
 plt.savefig("fieldmap.png", bbox_inches='tight', pad_inches=0, dpi=400, transparent=True)
 plt.show()
