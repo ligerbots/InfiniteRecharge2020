@@ -16,7 +16,7 @@ import frc.robot.RobotContainer;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.Robot;
 
-public class MoveAroundField extends CommandBase {
+public class MoveAroundField extends CommandBase implements AutoCommandInterface {
   /**
    * Creates a new MoveAroundField.
    */
@@ -26,10 +26,8 @@ public class MoveAroundField extends CommandBase {
   // These are for the values to be read from the Smart Dashboard
   private Integer start = 10;
   private Integer ball = 0;
-  private DriveTrain driveTrain;
-
-  public MoveAroundField(DriveTrain driveTrain) {
-    this.driveTrain = driveTrain;
+  
+  public MoveAroundField() {
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -43,6 +41,21 @@ public class MoveAroundField extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+  }
+
+  // Called once the command ends or is interrupted.
+  @Override
+  public void end(boolean interrupted) {
+  }
+
+  // Returns true when the command should end.
+  @Override
+  public boolean isFinished() {
+    return false;
+  }
+
+  // Allows the system to get the initial pose of this command
+  public Pose2d getInitialPose() {
     start = (int)SmartDashboard.getNumber("start", 10);
     ball = (int)SmartDashboard.getNumber("ball", 0);
 
@@ -57,17 +70,6 @@ public class MoveAroundField extends CommandBase {
     } else {
       robotPose = new Pose2d();
     }
-    driveTrain.setPose(robotPose);
-  }
-
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {
-  }
-
-  // Returns true when the command should end.
-  @Override
-  public boolean isFinished() {
-    return false;
+      return robotPose;
   }
 }

@@ -20,9 +20,18 @@ import frc.robot.FieldMap;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.DriveTrain;
 
-public class TrenchAuto extends SequentialCommandGroup {
+public class TrenchAuto extends SequentialCommandGroup implements AutoCommandInterface {
+
+    // Define the initial pose to be used by this command. This will be used in the initial trajectory
+    // and will allow the system to query for it
+    private Pose2d initialPose = FieldMap.startPosition[2];
+
     public TrenchAuto(DriveTrain robotDrive, DriveCommand drivecommand, Climber climber) {
         drivecommand.cancel();
+
+        // Since this is an autonomous command, we need to reset the robot position to the initialPose
+        robotDrive.setPose(initialPose);
+
         DeployShoulderCommand deployShoulder = new DeployShoulderCommand(climber);
         var autoVoltageConstraint = new DifferentialDriveVoltageConstraint(new SimpleMotorFeedforward(Constants.ksVolts,
                 Constants.kvVoltSecondsPerMeter, Constants.kaVoltSecondsSquaredPerMeter), Constants.kDriveKinematics,
@@ -39,7 +48,7 @@ public class TrenchAuto extends SequentialCommandGroup {
         Trajectory backTrajectory = TrajectoryGenerator.generateTrajectory(
                 // Start at the origin facing the +X direction
                 List.of( 
-                    FieldMap.startPosition[1],
+                    initialPose,
                     new Pose2d(FieldMap.ballPosition[7], Rotation2d.fromDegrees(0)), 
                     new Pose2d(FieldMap.ballPosition[10].getX(), (FieldMap.ballPosition[10].getY() + FieldMap.ballPosition[11].getY())/2,Rotation2d.fromDegrees(0))
                     
@@ -95,5 +104,10 @@ public class TrenchAuto extends SequentialCommandGroup {
             ramseteBackward.andThen(() -> robotDrive.tankDriveVolts(0, 0)),
             ramseteForward.andThen(() -> robotDrive.tankDriveVolts(0, 0))
         );
+    }
+
+    // Allows the system to get the initial pose of this command
+    public Pose2d getInitialPose() {
+        return initialPose;
     }
 }
