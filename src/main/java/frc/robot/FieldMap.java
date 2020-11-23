@@ -74,12 +74,12 @@ public class FieldMap {
         ballPosition[5] = new Translation2d(startLineX - 113.94 * Constants.inchToMetersConversionFactor, targetCenterPointY + 26.13 * Constants.inchToMetersConversionFactor);
         ballPosition[6] = new Translation2d(startLineX - 129.25 * Constants.inchToMetersConversionFactor, targetCenterPointY + 19.79 * Constants.inchToMetersConversionFactor);  
         // Next three are along the center of our trench from far wall back to control panel
-        ballPosition[7] = new Translation2d(startLineX - 122.63 * Constants.inchToMetersConversionFactor, friendlyTrenchY);    
-        ballPosition[8] = new Translation2d(startLineX - 158.63 * Constants.inchToMetersConversionFactor, friendlyTrenchY);     
-        ballPosition[9] = new Translation2d(startLineX - 194.63 * Constants.inchToMetersConversionFactor, friendlyTrenchY);
+        ballPosition[7] = new Translation2d(startLineX - 121.63 * Constants.inchToMetersConversionFactor, friendlyTrenchY);    
+        ballPosition[8] = new Translation2d(startLineX - 157.63 * Constants.inchToMetersConversionFactor, friendlyTrenchY);     
+        ballPosition[9] = new Translation2d(startLineX - 193.63 * Constants.inchToMetersConversionFactor, friendlyTrenchY);
         // Last two are under our control panel
-        ballPosition[10] = new Translation2d(startLineX - 258.90 * Constants.inchToMetersConversionFactor, friendlyTrenchY + 9.25 * Constants.inchToMetersConversionFactor);
-        ballPosition[11] = new Translation2d(startLineX - 258.90 * Constants.inchToMetersConversionFactor, friendlyTrenchY - 9.25 * Constants.inchToMetersConversionFactor);
+        ballPosition[10] = new Translation2d(startLineX - 257.90 * Constants.inchToMetersConversionFactor, friendlyTrenchY + 9.25 * Constants.inchToMetersConversionFactor);
+        ballPosition[11] = new Translation2d(startLineX - 257.90 * Constants.inchToMetersConversionFactor, friendlyTrenchY - 9.25 * Constants.inchToMetersConversionFactor);
 
     };
 }

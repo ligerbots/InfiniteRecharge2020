@@ -168,8 +168,7 @@ public class Robot extends TimedRobot {
     //m_robotContainer.carouselCommand.schedule();
     // schedule the autonomous command (example)
     if (m_autoCommandInterface != null) {
-      m_autonomousCommand = (Command) m_autoCommandInterface;
-      m_autonomousCommand.schedule();
+      m_autoCommandInterface.schedule();
     }
   }
 
