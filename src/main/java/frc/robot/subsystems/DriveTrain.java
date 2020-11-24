@@ -26,6 +26,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
+
 // For simulation
 import frc.robot.simulation.SparkMaxWrapper;
 import frc.robot.simulation.AHRSSimWrapper;
@@ -127,6 +128,7 @@ public class DriveTrain extends SubsystemBase {
             fieldSim = new Field2d();
         }
 
+        // TODO this should not be here
         SmartDashboard.putString("vision/active_mode/selected", "goalfinder");
     }
 
@@ -134,6 +136,17 @@ public class DriveTrain extends SubsystemBase {
         return odometry.getPoseMeters();
     }
 
+    public void setPose(Pose2d pose) {
+        // The left and right encoders MUST be reset when odometry is reset
+        leftEncoder.reset();
+        rightEncoder.reset();
+        odometry.resetPosition(pose, Rotation2d.fromDegrees(getGyroAngle()));
+    
+        if (RobotBase.isSimulation()) {
+            fieldSim.setRobotPose(pose);
+        }
+    }
+      
     public void tankDriveVolts (double leftVolts, double rightVolts) {
         leftMotors.setVoltage(-leftVolts);
         rightMotors.setVoltage(rightVolts);// make sure right is negative becuase sides are opposite
@@ -153,26 +166,35 @@ public class DriveTrain extends SubsystemBase {
     }
     
     public double getHeading() {
+        return odometry.getPoseMeters().getRotation().getDegrees();
+      }
+    
+    private double getGyroAngle() {
         return Math.IEEEremainder(navX.getAngle(), 360) * -1; // -1 here for unknown reason look in documatation
     }
 
-    public void resetHeading() {
-        navX.reset();
-    }
+    // private void resetHeading() {
+    //     navX.reset();
+    // }
     
-    public void resetEncoders () {
+    private void resetEncoders () {
         leftEncoder.reset();
         rightEncoder.reset();
     }
-    
+
+    // This is the same as setPose() but leave here for compatibility
     public void resetOdometry (Pose2d pose) {
         resetEncoders();
-        resetHeading();
-        odometry.resetPosition(pose, Rotation2d.fromDegrees(getHeading()));
+        //resetHeading();
+        odometry.resetPosition(pose, Rotation2d.fromDegrees(getGyroAngle()));
+
+        if (RobotBase.isSimulation()) {
+            fieldSim.setRobotPose(pose);
+        }
     }
 
     public void enableTurningControl(double angle, double tolerance) {
-        double angleOffset = angle;
+        //double angleOffset = angle;
         double startAngle = getHeading();
         double targetAngle = startAngle + angle;
     
@@ -204,7 +226,7 @@ public class DriveTrain extends SubsystemBase {
 
     @Override
     public void periodic() {
-        odometry.update(Rotation2d.fromDegrees(getHeading()), leftEncoder.getDistance(), rightEncoder.getDistance());
+        odometry.update(Rotation2d.fromDegrees(getGyroAngle()), leftEncoder.getDistance(), rightEncoder.getDistance());
         SmartDashboard.putNumber("Heading", getHeading());
         SmartDashboard.putString("Pose", getPose().toString());
         // SmartDashboard.putNumber("Vision Angle", SmartDashboard.getNumberArray("vision/target_info", new Double[]{0.0,0.0})[4] * 180.0 / 3.1416);
@@ -219,8 +241,8 @@ public class DriveTrain extends SubsystemBase {
       // and write the simulated positions and velocities to our simulated encoder and gyro.
       // We negate the right side so that positive voltages make the right side
       // move forward.
-      drivetrainSimulator.setInputs(leftMotors.get() * RobotController.getBatteryVoltage(),
-                                    -rightMotors.get() * RobotController.getBatteryVoltage());
+      drivetrainSimulator.setInputs(-leftMotors.get() * RobotController.getBatteryVoltage(),
+                                    rightMotors.get() * RobotController.getBatteryVoltage());
       drivetrainSimulator.update(0.020);
   
       leftEncoderSim.setDistance(drivetrainSimulator.getState(DifferentialDrivetrainSim.State.kLeftPosition));
@@ -232,6 +254,7 @@ public class DriveTrain extends SubsystemBase {
       gyroAngleSim.set(-drivetrainSimulator.getHeading().getDegrees());
   
       fieldSim.setRobotPose(getPose());
+      //System.out.println("DEBUG: POSITION !!! "+getPose().getX()+" "+getPose().getY());
     }
 
     public void allDrive(double throttle, double rotate, boolean squaredInputs) {

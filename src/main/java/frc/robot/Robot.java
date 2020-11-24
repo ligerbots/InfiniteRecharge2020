@@ -9,6 +9,8 @@ package frc.robot;
 import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -43,7 +45,7 @@ public class Robot extends TimedRobot {
   public static int HoodAdjustment;
   public static double angleErrorAfterTurn = 0;
 
-
+  private Pose2d initialPose2d = FieldMap.startPosition[1];
   /**
    * This function is run when the robot is first started up and should be used
    * for any initialization code.
@@ -68,11 +70,17 @@ public class Robot extends TimedRobot {
     RPMAdjustment = 0;
     HoodAdjustment = 0;
 
-    
+    // Configure the initial Pose (field position, angle) of the robot
+    // For now, we're hardcoding the pose. Eventually we will use a selected robot pose
+    // m_robotContainer.robotDrive.setPose(FieldMap.startPositions[1]);
+
+    m_robotContainer.robotDrive.setPose(initialPose2d);
     
     // SmartDashboard.putData(new TestTurret(m_robotContainer.shooter));
-
+    /*
     chosenAuto.addDefault("Default Auto", new DriveForwardAuto(m_robotContainer.robotDrive, m_robotContainer.carouselCommand, m_robotContainer.driveCommand));
+   
+   
     chosenAuto.addObject("EightBallAuto", new EightBallAuto(
       m_robotContainer.robotDrive,
       m_robotContainer.shooter,
@@ -90,7 +98,10 @@ public class Robot extends TimedRobot {
         m_robotContainer.carousel,
         m_robotContainer.driveCommand,
         m_robotContainer.carouselCommand));
-  
+  */
+   chosenAuto.addDefault("NewEightBallSim", new NewEightBallSim(m_robotContainer.robotDrive, m_robotContainer.driveCommand, m_robotContainer.climber));
+  chosenAuto.addObject("MoveAroundField", new MoveAroundField(m_robotContainer.robotDrive));
+  chosenAuto.addObject("TrenchAuto", new TrenchAuto(m_robotContainer.robotDrive , m_robotContainer.driveCommand, m_robotContainer.climber));
 
    SmartDashboard.putData("Chosen Auto", chosenAuto);
   }
@@ -182,6 +193,7 @@ public class Robot extends TimedRobot {
     //SmartDashboard.putData(m_robotContainer.testFlup);
     if (m_autonomousCommand != null)
       m_autonomousCommand.cancel();
+
     m_robotContainer.driveCommand.schedule();
     //m_robotContainer.testFlup.schedule();
     //m_robotContainer.shooter.testSpin();
