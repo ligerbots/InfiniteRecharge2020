@@ -104,7 +104,7 @@ public class Robot extends TimedRobot {
   chosenAuto.addObject("MoveAroundField", new MoveAroundField());
   chosenAuto.addObject("TrenchAuto Pos 0", new TrenchAuto(FieldMap.startPosition[0], m_robotContainer.robotDrive , m_robotContainer.driveCommand, m_robotContainer.climber));
   chosenAuto.addObject("TrenchAuto Pos 2", new TrenchAuto(FieldMap.startPosition[2], m_robotContainer.robotDrive , m_robotContainer.driveCommand, m_robotContainer.climber));
-
+  chosenAuto.addObject("ShedTest", new ShedTest(m_robotContainer.robotDrive));
    SmartDashboard.putData("Chosen Auto", chosenAuto);
   }
 
