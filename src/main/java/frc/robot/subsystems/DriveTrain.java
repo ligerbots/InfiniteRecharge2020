@@ -24,6 +24,8 @@ import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpiutil.math.Matrix;
+import edu.wpi.first.wpiutil.math.Nat;
 import frc.robot.Constants;
 import frc.robot.Robot;
 
@@ -141,8 +143,14 @@ public class DriveTrain extends SubsystemBase {
         leftEncoder.reset();
         rightEncoder.reset();
         odometry.resetPosition(pose, Rotation2d.fromDegrees(getGyroAngle()));
-    
+
         if (RobotBase.isSimulation()) {
+            // This is a bit hokey, but if the Robot jumps on the field, we need
+            //   to reset the internal state of the DriveTrainSimulator.
+            //   No method to do it, but we can reset the state variables.
+            //   NOTE: this assumes the robot is not moving, since we are not resetting
+            //   the rate variables.
+            drivetrainSimulator.setState(new Matrix<>(Nat.N7(), Nat.N1()));
             fieldSim.setRobotPose(pose);
         }
     }
@@ -177,20 +185,21 @@ public class DriveTrain extends SubsystemBase {
     //     navX.reset();
     // }
     
-    private void resetEncoders () {
-        leftEncoder.reset();
-        rightEncoder.reset();
-    }
+    // private void resetEncoders() {
+    //     leftEncoder.reset();
+    //     rightEncoder.reset();
+    // }
 
     // This is the same as setPose() but leave here for compatibility
     public void resetOdometry (Pose2d pose) {
-        resetEncoders();
-        //resetHeading();
-        odometry.resetPosition(pose, Rotation2d.fromDegrees(getGyroAngle()));
+        setPose(pose);
+        // resetEncoders();
+        // //resetHeading();
+        // odometry.resetPosition(pose, Rotation2d.fromDegrees(getGyroAngle()));
 
-        if (RobotBase.isSimulation()) {
-            fieldSim.setRobotPose(pose);
-        }
+        // if (RobotBase.isSimulation()) {
+        //     fieldSim.setRobotPose(pose);
+        // }
     }
 
     public void enableTurningControl(double angle, double tolerance) {
@@ -244,7 +253,7 @@ public class DriveTrain extends SubsystemBase {
       drivetrainSimulator.setInputs(-leftMotors.get() * RobotController.getBatteryVoltage(),
                                     rightMotors.get() * RobotController.getBatteryVoltage());
       drivetrainSimulator.update(0.020);
-  
+
       leftEncoderSim.setDistance(drivetrainSimulator.getState(DifferentialDrivetrainSim.State.kLeftPosition));
       leftEncoderSim.setRate(drivetrainSimulator.getState(DifferentialDrivetrainSim.State.kLeftVelocity));
   
@@ -254,7 +263,6 @@ public class DriveTrain extends SubsystemBase {
       gyroAngleSim.set(-drivetrainSimulator.getHeading().getDegrees());
   
       fieldSim.setRobotPose(getPose());
-      //System.out.println("DEBUG: POSITION !!! "+getPose().getX()+" "+getPose().getY());
     }
 
     public void allDrive(double throttle, double rotate, boolean squaredInputs) {
