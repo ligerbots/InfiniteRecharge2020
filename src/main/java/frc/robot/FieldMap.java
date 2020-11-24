@@ -31,9 +31,9 @@ public class FieldMap {
     // X position of the two enemy trench balls closest to our goal
     public static final double enemyTrenchBallX = (10 * 12 + 258.9) * Constants.inchToMetersConversionFactor;
     // Ball in enemy trench close to our goal closest to wall
-    public static final double enemyTrenchBall1Y = (325 - 27.75 + 9.25) * Constants.inchToMetersConversionFactor;
+    public static final double enemyTrenchBall1Y = fieldWidth - (27.75 + 9.25) * Constants.inchToMetersConversionFactor;
     // Other Ball in enemy trench close to our goal
-    public static final double enemyTrenchBall2Y = (325 - 27.75 - 9.25) * Constants.inchToMetersConversionFactor;       
+    public static final double enemyTrenchBall2Y = fieldWidth - (27.75 - 9.25) * Constants.inchToMetersConversionFactor;       
     
     // public static ArrayList<Translation2d> ballPositions = new ArrayList<Translation2d>();
     public static Translation2d[] ballPosition = new Translation2d[12];
