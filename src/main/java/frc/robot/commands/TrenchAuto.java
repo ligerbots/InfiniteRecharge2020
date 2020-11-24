@@ -24,10 +24,13 @@ public class TrenchAuto extends SequentialCommandGroup implements AutoCommandInt
 
     // Define the initial pose to be used by this command. This will be used in the initial trajectory
     // and will allow the system to query for it
-    private Pose2d initialPose = FieldMap.startPosition[2];
+    private Pose2d initialPose;
 
-    public TrenchAuto(DriveTrain robotDrive, DriveCommand drivecommand, Climber climber) {
+    public TrenchAuto(Pose2d initialPose, DriveTrain robotDrive, DriveCommand drivecommand, Climber climber) {
         drivecommand.cancel();
+
+        // Save the passed in initialPose so we can use it later
+        this.initialPose = initialPose;
 
         // Since this is an autonomous command, we need to reset the robot position to the initialPose
         robotDrive.setPose(initialPose);
