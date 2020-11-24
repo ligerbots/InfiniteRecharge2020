@@ -194,10 +194,10 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null)
       m_autonomousCommand.cancel();
 
-    //m_robotContainer.driveCommand.schedule();
+    m_robotContainer.driveCommand.schedule();
     //m_robotContainer.testFlup.schedule();
     //m_robotContainer.shooter.testSpin();
-    //m_robotContainer.carouselCommand.schedule();
+    m_robotContainer.carouselCommand.schedule();
     //m_robotContainer.testFlup.schedule();
     //m_robotContainer.testIntake.schedule();
     //RunWinch aaa = new RunWinch(m_robotContainer.climber, m_robotContainer);
