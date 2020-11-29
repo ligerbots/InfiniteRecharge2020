@@ -29,9 +29,6 @@ public class NewEightBallSim extends SequentialCommandGroup implements AutoComma
     public NewEightBallSim(DriveTrain robotDrive, DriveCommand drivecommand, Climber climber) {
         drivecommand.cancel();
 
-        // Since this is an autonomous command, we need to reset the robot position to the initialPose
-        robotDrive.setPose(initialPose);
-
         DeployShoulderCommand deployShoulder = new DeployShoulderCommand(climber);
         var autoVoltageConstraint = new DifferentialDriveVoltageConstraint(new SimpleMotorFeedforward(Constants.ksVolts,
                 Constants.kvVoltSecondsPerMeter, Constants.kaVoltSecondsSquaredPerMeter), Constants.kDriveKinematics,

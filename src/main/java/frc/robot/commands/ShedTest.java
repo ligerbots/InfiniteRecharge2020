@@ -25,13 +25,7 @@ public class ShedTest extends SequentialCommandGroup implements AutoCommandInter
     private Pose2d initialPose = new Pose2d(FieldMap.ballPosition[7], Rotation2d.fromDegrees(0));
 
     public ShedTest(DriveTrain robotDrive) {
-        // Save the passed in initialPose so we can use it later
-
-
-        // Since this is an autonomous command, we need to reset the robot position to the initialPose
-        robotDrive.setPose(initialPose);
-
-
+        
         var autoVoltageConstraint = new DifferentialDriveVoltageConstraint(new SimpleMotorFeedforward(Constants.ksVolts,
                 Constants.kvVoltSecondsPerMeter, Constants.kaVoltSecondsSquaredPerMeter), Constants.kDriveKinematics,
                 10);
@@ -60,13 +54,12 @@ public class ShedTest extends SequentialCommandGroup implements AutoCommandInter
                 new Pose2d(FieldMap.ballPosition[8], Rotation2d.fromDegrees(0)), 
                 configForward);
                 
-
-        for (State state : backTrajectory.getStates()) {
-            System.out.println("DEBUG: backTrajectory STATE "+ state.poseMeters);
-        }
-        for (State state : forwardTrajectory.getStates()) {
-            System.out.println("DEBUG: forwardTrajectory STATE "+ state.poseMeters);
-        }
+        // for (State state : backTrajectory.getStates()) {
+        //     System.out.println("DEBUG: backTrajectory STATE "+ state.poseMeters);
+        // }
+        // for (State state : forwardTrajectory.getStates()) {
+        //     System.out.println("DEBUG: forwardTrajectory STATE "+ state.poseMeters);
+        // }
 
         RamseteCommand ramseteBackward = new RamseteCommand(
             backTrajectory,

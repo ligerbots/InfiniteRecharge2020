@@ -32,9 +32,6 @@ public class TrenchAuto extends SequentialCommandGroup implements AutoCommandInt
         // Save the passed in initialPose so we can use it later
         this.initialPose = initialPose;
 
-        // Since this is an autonomous command, we need to reset the robot position to the initialPose
-        robotDrive.setPose(initialPose);
-
         DeployShoulderCommand deployShoulder = new DeployShoulderCommand(climber);
         var autoVoltageConstraint = new DifferentialDriveVoltageConstraint(new SimpleMotorFeedforward(Constants.ksVolts,
                 Constants.kvVoltSecondsPerMeter, Constants.kaVoltSecondsSquaredPerMeter), Constants.kDriveKinematics,
@@ -64,15 +61,14 @@ public class TrenchAuto extends SequentialCommandGroup implements AutoCommandInt
                     FieldMap.ballPosition[8]
                 ),
                 new Pose2d(FieldMap.ballPosition[7].plus(new Translation2d(.4,.4)), Rotation2d.fromDegrees(20)),
-                configForward);
-                
+                configForward);   
 
-        for (State state : backTrajectory.getStates()) {
-            System.out.println("DEBUG: backTrajectory STATE "+ state.poseMeters);
-        }
-        for (State state : forwardTrajectory.getStates()) {
-            System.out.println("DEBUG: forwardTrajectory STATE "+ state.poseMeters);
-        }
+        // for (State state : backTrajectory.getStates()) {
+        //     System.out.println("DEBUG: backTrajectory STATE "+ state.poseMeters);
+        // }
+        // for (State state : forwardTrajectory.getStates()) {
+        //     System.out.println("DEBUG: forwardTrajectory STATE "+ state.poseMeters);
+        // }
 
         RamseteCommand ramseteBackward = new RamseteCommand(
             backTrajectory,
