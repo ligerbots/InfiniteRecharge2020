@@ -32,6 +32,7 @@ import frc.robot.commands.*;
 @SuppressWarnings("all")
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
+  private AutoCommandInterface m_autoCommandInterface;
   private RobotContainer m_robotContainer;
   // private DriveTrain driveTrain;
   // private Carousel carousel;
@@ -39,7 +40,7 @@ public class Robot extends TimedRobot {
   // private DriveCommand driveCommand;
   // private Shooter shooter;
   // private Climber climber;
-  SendableChooser<Command> chosenAuto = new SendableChooser<>();
+  SendableChooser<AutoCommandInterface> chosenAuto = new SendableChooser<>();
 
   public static int RPMAdjustment;
   public static int HoodAdjustment;
@@ -99,10 +100,11 @@ public class Robot extends TimedRobot {
         m_robotContainer.driveCommand,
         m_robotContainer.carouselCommand));
   */
-   chosenAuto.addDefault("NewEightBallSim", new NewEightBallSim(m_robotContainer.robotDrive, m_robotContainer.driveCommand, m_robotContainer.climber));
-  chosenAuto.addObject("MoveAroundField", new MoveAroundField(m_robotContainer.robotDrive));
-  chosenAuto.addObject("TrenchAuto", new TrenchAuto(m_robotContainer.robotDrive , m_robotContainer.driveCommand, m_robotContainer.climber));
-
+  chosenAuto.addDefault("NewEightBallSim", new NewEightBallSim(m_robotContainer.robotDrive, m_robotContainer.driveCommand, m_robotContainer.climber));
+  chosenAuto.addObject("MoveAroundField", new MoveAroundField());
+  chosenAuto.addObject("TrenchAuto Pos 0", new TrenchAuto(FieldMap.startPosition[0], m_robotContainer.robotDrive , m_robotContainer.driveCommand, m_robotContainer.climber));
+  chosenAuto.addObject("TrenchAuto Pos 2", new TrenchAuto(FieldMap.startPosition[2], m_robotContainer.robotDrive , m_robotContainer.driveCommand, m_robotContainer.climber));
+  chosenAuto.addObject("ShedTest", new ShedTest(m_robotContainer.robotDrive));
    SmartDashboard.putData("Chosen Auto", chosenAuto);
   }
 
@@ -145,6 +147,12 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledPeriodic() {
+    m_autoCommandInterface = chosenAuto.getSelected();
+    //m_robotContainer.carouselCommand.schedule();
+    // schedule the autonomous command (example)
+    if (m_autoCommandInterface != null) {
+      m_robotContainer.robotDrive.setPose(m_autoCommandInterface.getInitialPose());
+    }
   }
 
   /**
@@ -157,11 +165,12 @@ public class Robot extends TimedRobot {
     // Set motors to brake for the drive train
     m_robotContainer.robotDrive.setIdleMode(IdleMode.kBrake);
 
-    m_autonomousCommand = chosenAuto.getSelected();
+    m_autoCommandInterface = chosenAuto.getSelected();
     //m_robotContainer.carouselCommand.schedule();
     // schedule the autonomous command (example)
-    if (m_autonomousCommand != null)
-      m_autonomousCommand.schedule();
+    if (m_autoCommandInterface != null) {
+      m_autoCommandInterface.schedule();
+    }
   }
 
   /**

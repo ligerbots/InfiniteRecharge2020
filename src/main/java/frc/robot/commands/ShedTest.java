@@ -17,19 +17,15 @@ import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 import frc.robot.FieldMap;
-import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.DriveTrain;
 
-public class NewEightBallSim extends SequentialCommandGroup implements AutoCommandInterface {
-
-    // Define the initial pose to be used by this command. This will be used in the initial trajectory
+public class ShedTest extends SequentialCommandGroup implements AutoCommandInterface {
+       // Define the initial pose to be used by this command. This will be used in the initial trajectory
     // and will allow the system to query for it
-    private Pose2d initialPose = FieldMap.startPosition[1];
+    private Pose2d initialPose = new Pose2d(FieldMap.ballPosition[7], Rotation2d.fromDegrees(0));
 
-    public NewEightBallSim(DriveTrain robotDrive, DriveCommand drivecommand, Climber climber) {
-        drivecommand.cancel();
-
-        DeployShoulderCommand deployShoulder = new DeployShoulderCommand(climber);
+    public ShedTest(DriveTrain robotDrive) {
+        
         var autoVoltageConstraint = new DifferentialDriveVoltageConstraint(new SimpleMotorFeedforward(Constants.ksVolts,
                 Constants.kvVoltSecondsPerMeter, Constants.kaVoltSecondsSquaredPerMeter), Constants.kDriveKinematics,
                 10);
@@ -39,41 +35,31 @@ public class NewEightBallSim extends SequentialCommandGroup implements AutoComma
         TrajectoryConfig configBackward = new TrajectoryConfig(Constants.kMaxSpeed, Constants.kMaxAcceleration)
                 .setKinematics(Constants.kDriveKinematics).addConstraint(autoVoltageConstraint).setReversed(true);
 
-        Trajectory forwardTrajectory = TrajectoryGenerator.generateTrajectory(
-                // Starting from Starting Point #2
-                new Pose2d(FieldMap.ballPosition[3], Rotation2d.fromDegrees(-67.5)),
-                List.of(
-                    new Translation2d(FieldMap.ballPosition[4].getX()+1.5, FieldMap.ballPosition[4].getY())
-                ) ,
-                new Pose2d(FieldMap.startLineX, FieldMap.startPosition[1].getY(), Rotation2d.fromDegrees(0)),
-                configForward);
+
         //System.out.println("DEBUG: " + FieldMap.ballPosition[5] + " " + FieldMap.ballPosition[4]);
 
         Trajectory backTrajectory = TrajectoryGenerator.generateTrajectory(
                 // Start at the origin facing the +X direction
                 List.of( 
                     initialPose,
-                    new Pose2d(FieldMap.ballPosition[4], Rotation2d.fromDegrees(0)), 
-                    new Pose2d(FieldMap.ballPosition[3], Rotation2d.fromDegrees(-67.5)), 
-                    new Pose2d(FieldMap.ballPosition[2], Rotation2d.fromDegrees(-67.5))
+                    new Pose2d(FieldMap.ballPosition[8], Rotation2d.fromDegrees(0)), 
+                    new Pose2d(FieldMap.ballPosition[9], Rotation2d.fromDegrees(0)) 
+     
                 ),
                 configBackward);
-        /*
-        OLD Trajectory
-        Trajectory backTrajectory = TrajectoryGenerator.generateTrajectory(
-                // Start at the origin facing the +X direction
-                FieldMap.startPosition[1], 
-                List.of(FieldMap.ballPosition[4], 
-                        FieldMap.ballPosition[3]),
-                new Pose2d(FieldMap.ballPosition[2], Rotation2d.fromDegrees(-67.5)),
-                configBackward);*/
-
-        for (State state : backTrajectory.getStates()) {
-            System.out.println("DEBUG: backTrajectory STATE "+ state.poseMeters);
-        }
-        for (State state : forwardTrajectory.getStates()) {
-            System.out.println("DEBUG: forwardTrajectory STATE "+ state.poseMeters);
-        }
+        Trajectory forwardTrajectory = TrajectoryGenerator.generateTrajectory(
+        // Starting from Starting Point #2
+                new Pose2d(FieldMap.ballPosition[9], Rotation2d.fromDegrees(0)), 
+                List.of(),
+                new Pose2d(FieldMap.ballPosition[8], Rotation2d.fromDegrees(0)), 
+                configForward);
+                
+        // for (State state : backTrajectory.getStates()) {
+        //     System.out.println("DEBUG: backTrajectory STATE "+ state.poseMeters);
+        // }
+        // for (State state : forwardTrajectory.getStates()) {
+        //     System.out.println("DEBUG: forwardTrajectory STATE "+ state.poseMeters);
+        // }
 
         RamseteCommand ramseteBackward = new RamseteCommand(
             backTrajectory,

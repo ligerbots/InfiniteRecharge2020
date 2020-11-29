@@ -20,9 +20,18 @@ import frc.robot.FieldMap;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.DriveTrain;
 
-public class TrenchAuto extends SequentialCommandGroup {
-    public TrenchAuto(DriveTrain robotDrive, DriveCommand drivecommand, Climber climber) {
+public class TrenchAuto extends SequentialCommandGroup implements AutoCommandInterface {
+
+    // Define the initial pose to be used by this command. This will be used in the initial trajectory
+    // and will allow the system to query for it
+    private Pose2d initialPose;
+
+    public TrenchAuto(Pose2d initialPose, DriveTrain robotDrive, DriveCommand drivecommand, Climber climber) {
         drivecommand.cancel();
+
+        // Save the passed in initialPose so we can use it later
+        this.initialPose = initialPose;
+
         DeployShoulderCommand deployShoulder = new DeployShoulderCommand(climber);
         var autoVoltageConstraint = new DifferentialDriveVoltageConstraint(new SimpleMotorFeedforward(Constants.ksVolts,
                 Constants.kvVoltSecondsPerMeter, Constants.kaVoltSecondsSquaredPerMeter), Constants.kDriveKinematics,
@@ -39,7 +48,7 @@ public class TrenchAuto extends SequentialCommandGroup {
         Trajectory backTrajectory = TrajectoryGenerator.generateTrajectory(
                 // Start at the origin facing the +X direction
                 List.of( 
-                    FieldMap.startPosition[1],
+                    initialPose,
                     new Pose2d(FieldMap.ballPosition[7], Rotation2d.fromDegrees(0)), 
                     new Pose2d(FieldMap.ballPosition[10].getX(), (FieldMap.ballPosition[10].getY() + FieldMap.ballPosition[11].getY())/2,Rotation2d.fromDegrees(0))
                     
@@ -52,15 +61,14 @@ public class TrenchAuto extends SequentialCommandGroup {
                     FieldMap.ballPosition[8]
                 ),
                 new Pose2d(FieldMap.ballPosition[7].plus(new Translation2d(.4,.4)), Rotation2d.fromDegrees(20)),
-                configForward);
-                
+                configForward);   
 
-        for (State state : backTrajectory.getStates()) {
-            System.out.println("DEBUG: backTrajectory STATE "+ state.poseMeters);
-        }
-        for (State state : forwardTrajectory.getStates()) {
-            System.out.println("DEBUG: forwardTrajectory STATE "+ state.poseMeters);
-        }
+        // for (State state : backTrajectory.getStates()) {
+        //     System.out.println("DEBUG: backTrajectory STATE "+ state.poseMeters);
+        // }
+        // for (State state : forwardTrajectory.getStates()) {
+        //     System.out.println("DEBUG: forwardTrajectory STATE "+ state.poseMeters);
+        // }
 
         RamseteCommand ramseteBackward = new RamseteCommand(
             backTrajectory,
@@ -95,5 +103,10 @@ public class TrenchAuto extends SequentialCommandGroup {
             ramseteBackward.andThen(() -> robotDrive.tankDriveVolts(0, 0)),
             ramseteForward.andThen(() -> robotDrive.tankDriveVolts(0, 0))
         );
+    }
+
+    // Allows the system to get the initial pose of this command
+    public Pose2d getInitialPose() {
+        return initialPose;
     }
 }
