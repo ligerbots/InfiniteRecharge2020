@@ -25,7 +25,7 @@ public class Vision extends SubsystemBase{
 
     @Override
     public void simulationPeriodic() {
-        Transform2d goalDif = driveTrain.getPose().minus(FieldMap.goalCenterPoint);
+        Transform2d goalDif = FieldMap.goalCenterPoint.minus(driveTrain.getPose());
         Translation2d goalDifTranslation = goalDif.getTranslation();
         double distance = Math.sqrt(Math.pow(goalDifTranslation.getX(), 2) +  
         Math.pow(goalDifTranslation.getY(), 2));
