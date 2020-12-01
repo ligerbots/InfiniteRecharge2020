@@ -26,7 +26,7 @@ public class Vision extends SubsystemBase {
     @Override
     public void simulationPeriodic() {
         Translation2d goalDiff = FieldMap.goalCenterPoint.minus(driveTrain.getPose().getTranslation());
-        double distance = Math.sqrt(Math.pow(goalDiff.getX(), 2) + Math.pow(goalDiff.getY(), 2));
+        double distance = goalDiff.getNorm();
         targetInfoSim[3] = distance / Constants.inchToMetersConversionFactor;
 
         double angleRobotGoal = Math.atan2(goalDiff.getY(), goalDiff.getX());
