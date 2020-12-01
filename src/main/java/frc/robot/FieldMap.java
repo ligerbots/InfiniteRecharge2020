@@ -22,6 +22,9 @@ public class FieldMap {
     public static final double rW2 = robotWidth/2.0;
     public static final double rL2 = robotLength/2.0;
     
+    //the position of the opponent goal
+    //TODO real numbers
+    public static final Pose2d goalCenterPoint = new Pose2d(fieldLength, 4, Rotation2d.fromDegrees(0));
     // centerline is the robot starting position
     public static final double targetCenterPointY = 94.66 * Constants.inchToMetersConversionFactor; // of target
     //center the robot on the startpoint (Inside of back frame rail lines up with near edge of line)
