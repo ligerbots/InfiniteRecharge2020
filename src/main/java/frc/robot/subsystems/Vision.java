@@ -30,6 +30,9 @@ public class Vision extends SubsystemBase{
         double distance = Math.sqrt(Math.pow(goalDifTranslation.getX(), 2) +  
         Math.pow(goalDifTranslation.getY(), 2));
         targetInfoSim[3] = distance;
+
+        double angleRobotGoal = Math.atan2(goalDifTranslation.getY(), goalDifTranslation.getX());
+        targetInfoSim[4] = angleRobotGoal - Math.toRadians(driveTrain.getHeading());
         SmartDashboard.putNumberArray("vision/target_info", targetInfoSim);
     }
 
