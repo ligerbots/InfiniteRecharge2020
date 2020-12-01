@@ -1,15 +1,15 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.Relay;
-import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Relay.Value;
-import edu.wpi.first.wpilibj.geometry.Transform2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
+import frc.robot.Constants;
 import frc.robot.FieldMap;
 
-public class Vision extends SubsystemBase{
+public class Vision extends SubsystemBase {
     private static final double[] EMPTY_TARGET_INFO = new double[] {0.0,0.0,0.0,0.0,0.0,0.0,0.0};
     private Relay spike;
     private DriveTrain driveTrain;
@@ -25,26 +25,14 @@ public class Vision extends SubsystemBase{
 
     @Override
     public void simulationPeriodic() {
-        Transform2d goalDif = FieldMap.goalCenterPoint.minus(driveTrain.getPose());
-        Translation2d goalDifTranslation = goalDif.getTranslation();
-        double distance = Math.sqrt(Math.pow(goalDifTranslation.getX(), 2) +  
-        Math.pow(goalDifTranslation.getY(), 2));
-        targetInfoSim[3] = distance;
+        Translation2d goalDiff = FieldMap.goalCenterPoint.minus(driveTrain.getPose().getTranslation());
+        double distance = Math.sqrt(Math.pow(goalDiff.getX(), 2) + Math.pow(goalDiff.getY(), 2));
+        targetInfoSim[3] = distance / Constants.inchToMetersConversionFactor;
 
-        double angleRobotGoal = Math.atan2(goalDifTranslation.getY(), goalDifTranslation.getX());
+        double angleRobotGoal = Math.atan2(goalDiff.getY(), goalDiff.getX());
         targetInfoSim[4] = angleRobotGoal - Math.toRadians(driveTrain.getHeading());
         SmartDashboard.putNumberArray("vision/target_info", targetInfoSim);
     }
-
-    // public double[] getTargetInfo() {
-    //     if (RobotBase.isSimulation()) {
-    //         //TODO implement
-    //     } else {
-    //         visionInfo = SmartDashboard.getNumberArray("vision/target_info", EMPTY_TARGET_INFO);
-            
-    //     }        
-    //     return visionInfo;
-    // }
 
     // set vision processing mode, and set LED to match what is needed
     public void setMode(String mode) {
@@ -71,7 +59,7 @@ public class Vision extends SubsystemBase{
     
     public double getRobotAngle() {
         double[] visionData = SmartDashboard.getNumberArray("vision/target_info", EMPTY_TARGET_INFO);
-        return visionData[4] * 180.0 / Math.PI;
+        return Math.toDegrees(visionData[4]);
     }
 
     public void setLedRing (boolean on) {
