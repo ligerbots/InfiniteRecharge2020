@@ -1,25 +1,12 @@
-/*----------------------------------------------------------------------------*/
-/* Copyright (c) 2017-2019 FIRST. All Rights Reserved.                        */
-/* Open Source Software - may be modified and shared by FRC teams. The code   */
-/* must be accompanied by the FIRST BSD license file in the root directory of */
-/* the project.                                                               */
-/*----------------------------------------------------------------------------*/
 package frc.robot;
 
 import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.geometry.Pose2d;
-import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.subsystems.Carousel;
-import frc.robot.subsystems.Climber;
-import frc.robot.subsystems.DriveTrain;
-import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.Shooter;
 import frc.robot.commands.*;
 
 /**
@@ -29,24 +16,16 @@ import frc.robot.commands.*;
  * creating this project, you must also update the build.gradle file in the
  * project.
  */
-@SuppressWarnings("all")
 public class Robot extends TimedRobot {
+
   private Command m_autonomousCommand;
-  private AutoCommandInterface m_autoCommandInterface;
   private RobotContainer m_robotContainer;
-  // private DriveTrain driveTrain;
-  // private Carousel carousel;
-  // private Intake intake;
-  // private DriveCommand driveCommand;
-  // private Shooter shooter;
-  // private Climber climber;
   SendableChooser<AutoCommandInterface> chosenAuto = new SendableChooser<>();
 
   public static int RPMAdjustment;
   public static int HoodAdjustment;
   public static double angleErrorAfterTurn = 0;
 
-  private Pose2d initialPose2d = FieldMap.startPosition[1];
   /**
    * This function is run when the robot is first started up and should be used
    * for any initialization code.
@@ -74,8 +53,6 @@ public class Robot extends TimedRobot {
     // Configure the initial Pose (field position, angle) of the robot
     // For now, we're hardcoding the pose. Eventually we will use a selected robot pose
     // m_robotContainer.robotDrive.setPose(FieldMap.startPositions[1]);
-
-    m_robotContainer.robotDrive.setPose(initialPose2d);
     
     // SmartDashboard.putData(new TestTurret(m_robotContainer.shooter));
     /*
@@ -99,13 +76,14 @@ public class Robot extends TimedRobot {
         m_robotContainer.carousel,
         m_robotContainer.driveCommand,
         m_robotContainer.carouselCommand));
-  */
-  chosenAuto.addDefault("NewEightBallSim", new NewEightBallSim(m_robotContainer.robotDrive, m_robotContainer.driveCommand, m_robotContainer.climber));
-  chosenAuto.addObject("MoveAroundField", new MoveAroundField());
-  chosenAuto.addObject("TrenchAuto Pos 0", new TrenchAuto(FieldMap.startPosition[0], m_robotContainer.robotDrive , m_robotContainer.driveCommand, m_robotContainer.climber));
-  chosenAuto.addObject("TrenchAuto Pos 2", new TrenchAuto(FieldMap.startPosition[2], m_robotContainer.robotDrive , m_robotContainer.driveCommand, m_robotContainer.climber));
-  chosenAuto.addObject("ShedTest", new ShedTest(m_robotContainer.robotDrive));
-   SmartDashboard.putData("Chosen Auto", chosenAuto);
+    */
+
+    chosenAuto.setDefaultOption("NewEightBallSim", new NewEightBallSim(m_robotContainer.robotDrive, m_robotContainer.driveCommand, m_robotContainer.climber));
+    chosenAuto.addOption("MoveAroundField", new MoveAroundField());
+    chosenAuto.addOption("TrenchAuto Pos 0", new TrenchAuto(FieldMap.startPosition[0], m_robotContainer.robotDrive, m_robotContainer.driveCommand, m_robotContainer.climber));
+    chosenAuto.addOption("TrenchAuto Pos 2", new TrenchAuto(FieldMap.startPosition[2], m_robotContainer.robotDrive, m_robotContainer.driveCommand, m_robotContainer.climber));
+    chosenAuto.addOption("ShedTest", new ShedTest(m_robotContainer.robotDrive));
+    SmartDashboard.putData("Chosen Auto", chosenAuto);
   }
 
   /**
@@ -147,11 +125,11 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledPeriodic() {
-    m_autoCommandInterface = chosenAuto.getSelected();
     //m_robotContainer.carouselCommand.schedule();
-    // schedule the autonomous command (example)
-    if (m_autoCommandInterface != null) {
-      m_robotContainer.robotDrive.setPose(m_autoCommandInterface.getInitialPose());
+
+    AutoCommandInterface autoCommandInterface = chosenAuto.getSelected();
+    if (autoCommandInterface != null) {
+      m_robotContainer.robotDrive.setPose(autoCommandInterface.getInitialPose());
     }
   }
 
@@ -165,11 +143,12 @@ public class Robot extends TimedRobot {
     // Set motors to brake for the drive train
     m_robotContainer.robotDrive.setIdleMode(IdleMode.kBrake);
 
-    m_autoCommandInterface = chosenAuto.getSelected();
     //m_robotContainer.carouselCommand.schedule();
-    // schedule the autonomous command (example)
-    if (m_autoCommandInterface != null) {
-      m_autoCommandInterface.schedule();
+
+    // schedule the autonomous command
+    m_autonomousCommand = chosenAuto.getSelected();
+    if (m_autonomousCommand != null) {
+      m_autonomousCommand.schedule();
     }
   }
 
@@ -182,6 +161,16 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    // This makes sure that the autonomous stops running when
+    // teleop starts running. If you want the autonomous to
+    // continue until interrupted by another command, remove
+    // this line or comment it out.
+    // Do this immediately before changing any motor settings, etc.
+    if (m_autonomousCommand != null) {
+      m_autonomousCommand.cancel();
+      m_autonomousCommand = null;
+    }
+
     // Set motors to brake for the drive train
     m_robotContainer.robotDrive.setIdleMode(IdleMode.kBrake);
 
@@ -194,14 +183,7 @@ public class Robot extends TimedRobot {
     m_robotContainer.climber.resetWinchEncoder();
     m_robotContainer.climber.winch.setIdleMode(IdleMode.kCoast);
 
-
-    // This makes sure that the autonomous stops running when
-    // teleop starts running. If you want the autonomous to
-    // continue until interrupted by another command, remove
-    // this line or comment it out.
     //SmartDashboard.putData(m_robotContainer.testFlup);
-    if (m_autonomousCommand != null)
-      m_autonomousCommand.cancel();
 
     m_robotContainer.driveCommand.schedule();
     //m_robotContainer.testFlup.schedule();
