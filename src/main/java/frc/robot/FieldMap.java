@@ -1,5 +1,4 @@
 package frc.robot;
-import frc.robot.Constants;
 import java.util.ArrayList;
 
 import edu.wpi.first.wpilibj.geometry.Pose2d;
@@ -25,9 +24,9 @@ public class FieldMap {
     
     // centerline is the robot starting position
     public static final double targetCenterPointY = 94.66 * Constants.inchToMetersConversionFactor; // of target
-    //the position of the Our goal
-    public static final Pose2d goalCenterPoint = new Pose2d(fieldLength, targetCenterPointY , Rotation2d.fromDegrees(0));
-    //center the robot on the startpoint (Inside of back frame rail lines up with near edge of line)
+    // the position of the Our goal
+    public static final Translation2d goalCenterPoint = new Translation2d(fieldLength, targetCenterPointY);
+    // center the robot on the startpoint (Inside of back frame rail lines up with near edge of line)
     public static final double startPositionX = startLineX + robotLength/2 - 2 * Constants.inchToMetersConversionFactor; 
     // center line through long axis of trench
     public static final double friendlyTrenchY = 27.75 * Constants.inchToMetersConversionFactor; 
@@ -65,7 +64,7 @@ public class FieldMap {
          // centered in front of enemy feeder station
         startPosition[4] = new Pose2d(startPositionX, fieldWidth - 94.66 * Constants.inchToMetersConversionFactor, new Rotation2d(0.0));
 
-        //locations of balls
+        // locations of balls
         // First two are the enemy trench balls closest to our goal
         ballPosition[0] = new Translation2d(enemyTrenchBallX, enemyTrenchBall1Y);  
         ballPosition[1] = new Translation2d(enemyTrenchBallX, enemyTrenchBall2Y);
