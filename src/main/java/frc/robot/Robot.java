@@ -8,6 +8,7 @@ package frc.robot;
 
 import com.revrobotics.CANSparkMax.IdleMode;
 
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
@@ -47,6 +48,9 @@ public class Robot extends TimedRobot {
   public static double angleErrorAfterTurn = 0;
 
   private Pose2d initialPose2d = FieldMap.startPosition[1];
+
+  private AutoCommandInterface m_prevAutoCommand = null;
+
   /**
    * This function is run when the robot is first started up and should be used
    * for any initialization code.
@@ -136,6 +140,10 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void disabledInit() {
+    if (RobotBase.isSimulation()) {
+      m_robotContainer.robotDrive.setRobotFromFieldPose();
+    }
+
     if (Robot.isReal()) {
       m_robotContainer.climber.shoulder.setIdleMode(IdleMode.kCoast);
       m_robotContainer.climber.winch.setIdleMode(IdleMode.kCoast);
@@ -150,8 +158,9 @@ public class Robot extends TimedRobot {
     m_autoCommandInterface = chosenAuto.getSelected();
     //m_robotContainer.carouselCommand.schedule();
     // schedule the autonomous command (example)
-    if (m_autoCommandInterface != null) {
+    if (m_autoCommandInterface != null && m_autoCommandInterface != m_prevAutoCommand) {
       m_robotContainer.robotDrive.setPose(m_autoCommandInterface.getInitialPose());
+      m_prevAutoCommand = m_autoCommandInterface;
     }
   }
 
@@ -161,6 +170,10 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
+    if (RobotBase.isSimulation()) {
+      m_robotContainer.robotDrive.setRobotFromFieldPose();
+    }
+
     m_robotContainer.carousel.resetEncoder();
     // Set motors to brake for the drive train
     m_robotContainer.robotDrive.setIdleMode(IdleMode.kBrake);
@@ -231,6 +244,9 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void testPeriodic() {
+    if (RobotBase.isSimulation()) {
+      m_robotContainer.robotDrive.moveAroundField();
+    }
   }
 
   @Override

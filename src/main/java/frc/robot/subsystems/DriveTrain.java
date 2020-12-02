@@ -13,9 +13,9 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.PIDController;
+// import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
-import edu.wpi.first.wpilibj.PIDBase.Tolerance;
+// import edu.wpi.first.wpilibj.PIDBase.Tolerance;
 import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
@@ -28,6 +28,7 @@ import edu.wpi.first.wpiutil.math.Matrix;
 import edu.wpi.first.wpiutil.math.Nat;
 import frc.robot.Constants;
 import frc.robot.Robot;
+import frc.robot.FieldMap;
 
 // For simulation
 import frc.robot.simulation.SparkMaxWrapper;
@@ -52,7 +53,7 @@ public class DriveTrain extends SubsystemBase {
 
     private final SpeedControllerGroup rightMotors = new SpeedControllerGroup(rightLeader, rightFollower);
 
-    public PIDController turnSpeedController;
+    // public PIDController turnSpeedController;
 
     public double turnOutput;
 
@@ -75,6 +76,9 @@ public class DriveTrain extends SubsystemBase {
     // Does this belong somewhere else??
     private Field2d fieldSim;
     private SimDouble gyroAngleSim;
+
+    private int prevBallLocation = 0;
+    private int prevStartLocation = 10;
 
     public DriveTrain() {
 
@@ -106,7 +110,7 @@ public class DriveTrain extends SubsystemBase {
 
         odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(0));
 
-        turnSpeedController = new PIDController(0.015, 0.0001, 0.0, 0, navX, output -> this.turnOutput = output);
+        // turnSpeedController = new PIDController(0.015, 0.0001, 0.0, 0, navX, output -> this.turnOutput = output);
 
         if (RobotBase.isSimulation()) {
             // If our robot is simulated
@@ -128,6 +132,9 @@ public class DriveTrain extends SubsystemBase {
       
             // the Field2d class lets us visualize our robot in the simulation GUI.
             fieldSim = new Field2d();
+
+            SmartDashboard.putNumber("moveAroundField/startPos", prevStartLocation);
+            SmartDashboard.putNumber("moveAroundField/ballPos", prevBallLocation);        
         }
 
         // TODO this should not be here
@@ -202,32 +209,34 @@ public class DriveTrain extends SubsystemBase {
         // }
     }
 
-    public void enableTurningControl(double angle, double tolerance) {
-        //double angleOffset = angle;
-        double startAngle = getHeading();
-        double targetAngle = startAngle + angle;
+    // This is not used, but leave it here for future work?
+    //
+    // public void enableTurningControl(double angle, double tolerance) {
+    //     //double angleOffset = angle;
+    //     double startAngle = getHeading();
+    //     double targetAngle = startAngle + angle;
     
-        // We need to keep all angles between -180 and 180. Account for that here
-        // wrapCorrection will be used below in turnError to undo what we do here
-        double originalTargetAngle = targetAngle;
-        if (targetAngle > 180.0) {
-            targetAngle -= 360.0;
-        }
-        else if (targetAngle < -180.0) {
-            targetAngle += 360.0;
-        }
+    //     // We need to keep all angles between -180 and 180. Account for that here
+    //     // wrapCorrection will be used below in turnError to undo what we do here
+    //     double originalTargetAngle = targetAngle;
+    //     if (targetAngle > 180.0) {
+    //         targetAngle -= 360.0;
+    //     }
+    //     else if (targetAngle < -180.0) {
+    //         targetAngle += 360.0;
+    //     }
         
-        turnSpeedController.setSetpoint(targetAngle);
-        turnSpeedController.enable();
-        turnSpeedController.setInputRange(-180.0, 180.0);
-        turnSpeedController.setAbsoluteTolerance(tolerance);
-        turnSpeedController.setOutputRange(-1.0, 1.0);
-        turnSpeedController.setContinuous(true);
+    //     turnSpeedController.setSetpoint(targetAngle);
+    //     turnSpeedController.enable();
+    //     turnSpeedController.setInputRange(-180.0, 180.0);
+    //     turnSpeedController.setAbsoluteTolerance(tolerance);
+    //     turnSpeedController.setOutputRange(-1.0, 1.0);
+    //     turnSpeedController.setContinuous(true);
 
-        System.out.printf(
-            "currentAngle: %5.2f, originalTargetAngle: %5.2f, targetAngle: %5.2f, ",
-            startAngle, originalTargetAngle, targetAngle);
-    }
+    //     System.out.printf(
+    //         "currentAngle: %5.2f, originalTargetAngle: %5.2f, targetAngle: %5.2f, ",
+    //         startAngle, originalTargetAngle, targetAngle);
+    // }
 
     public DifferentialDriveWheelSpeeds getWheelSpeeds () {
         return new DifferentialDriveWheelSpeeds(leftEncoder.getRate(), rightEncoder.getRate());
@@ -311,5 +320,38 @@ public class DriveTrain extends SubsystemBase {
             Arrays.asList(leftLeader, leftFollower, rightLeader, rightFollower)
                 .forEach((CANSparkMax spark) -> spark.setIdleMode(idleMode));
         }
+    }
+
+    public void moveAroundField() {
+        // only applies for simulation
+        if (RobotBase.isReal()) return;
+
+        int startPos = (int)SmartDashboard.getNumber("moveAroundField/startPos", 10);
+        int ballPos = (int)SmartDashboard.getNumber("moveAroundField/ballPos", 0);
+
+        // Use either start of ball to set robot pose.
+        // 10 is the dummy default value for start.
+        if (startPos != prevStartLocation && startPos >= 0 && startPos < FieldMap.startPosition.length) {
+            // The start value has changed and is valid. Use it to position the robot.
+            fieldSim.setRobotPose(FieldMap.startPosition[startPos]);
+        } else if (ballPos != prevBallLocation && ballPos >= 0 && ballPos < FieldMap.ballPosition.length) {
+            // start value is invalid, so use the ball position with 0 rotation angle
+            fieldSim.setRobotPose(new Pose2d(FieldMap.ballPosition[ballPos], new Rotation2d(0.0)));
+        }
+
+        prevBallLocation = ballPos;
+        prevStartLocation = startPos;
+
+        // On every call, output the Pose info to SmartDashboard for debugging convenience
+        Pose2d pose = fieldSim.getRobotPose();
+        SmartDashboard.putNumber("moveAroundField/robotX", pose.getX() / Constants.inchToMetersConversionFactor);
+        SmartDashboard.putNumber("moveAroundField/robotY", pose.getY() / Constants.inchToMetersConversionFactor);        
+        SmartDashboard.putNumber("moveAroundField/robotAngle", pose.getRotation().getDegrees());        
+    }
+
+    public void setRobotFromFieldPose() {
+        // only applies for simulation
+        if (RobotBase.isSimulation())
+            setPose(fieldSim.getRobotPose());
     }
 }
