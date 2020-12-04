@@ -35,7 +35,7 @@ public class Robot extends TimedRobot {
   private AutoCommandInterface m_autoCommandInterface;
   private RobotContainer m_robotContainer;
   // private DriveTrain driveTrain;
-  // private Carousel carousel;
+   private Carousel carousel;
   // private Intake intake;
   // private DriveCommand driveCommand;
   // private Shooter shooter;
@@ -100,7 +100,7 @@ public class Robot extends TimedRobot {
         m_robotContainer.driveCommand,
         m_robotContainer.carouselCommand));
   */
-  chosenAuto.addDefault("NewEightBallSim", new NewEightBallSim(m_robotContainer.robotDrive, m_robotContainer.driveCommand, m_robotContainer.climber));
+  chosenAuto.addDefault("NewEightBallSim", new NewEightBallSim(m_robotContainer.robotDrive, m_robotContainer.driveCommand, m_robotContainer.climber, m_robotContainer.carousel, m_robotContainer.carouselCommand, m_robotContainer.shooter));
   chosenAuto.addObject("MoveAroundField", new MoveAroundField());
   chosenAuto.addObject("TrenchAuto Pos 0", new TrenchAuto(FieldMap.startPosition[0], m_robotContainer.robotDrive , m_robotContainer.driveCommand, m_robotContainer.climber));
   chosenAuto.addObject("TrenchAuto Pos 2", new TrenchAuto(FieldMap.startPosition[2], m_robotContainer.robotDrive , m_robotContainer.driveCommand, m_robotContainer.climber));
