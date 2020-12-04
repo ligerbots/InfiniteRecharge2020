@@ -55,10 +55,6 @@ public class Robot extends TimedRobot {
     RPMAdjustment = 0;
     HoodAdjustment = 0;
 
-    // Configure the initial Pose (field position, angle) of the robot
-    // For now, we're hardcoding the pose. Eventually we will use a selected robot pose
-    // m_robotContainer.robotDrive.setPose(FieldMap.startPositions[1]);
-    
     // SmartDashboard.putData(new TestTurret(m_robotContainer.shooter));
     /*
     chosenAuto.addDefault("Default Auto", new DriveForwardAuto(m_robotContainer.robotDrive, m_robotContainer.carouselCommand, m_robotContainer.driveCommand));
@@ -96,10 +92,7 @@ public class Robot extends TimedRobot {
    * items like diagnostics that you want ran during disabled, autonomous,
    * teleoperated and test.
    *
-   * <p>
-   * This runs after the]\[
-   * [\]
-   * ] mode specific periodic functions, but before LiveWindow
+   * This runs after the mode specific periodic functions, but before LiveWindow
    * and SmartDashboard integrated updating.
    */
   @Override
