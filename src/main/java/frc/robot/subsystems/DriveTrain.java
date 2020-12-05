@@ -134,7 +134,7 @@ public class DriveTrain extends SubsystemBase {
             fieldSim = new Field2d();
 
             SmartDashboard.putNumber("moveAroundField/startPos", prevStartLocation);
-            SmartDashboard.putNumber("moveAroundField/ballPos", prevBallLocation);        
+            SmartDashboard.putNumber("moveAroundField/ballPos", prevBallLocation);
         }
 
         // TODO this should not be here
@@ -345,8 +345,8 @@ public class DriveTrain extends SubsystemBase {
         // On every call, output the Pose info to SmartDashboard for debugging convenience
         Pose2d pose = fieldSim.getRobotPose();
         SmartDashboard.putNumber("moveAroundField/robotX", pose.getX() / Constants.inchToMetersConversionFactor);
-        SmartDashboard.putNumber("moveAroundField/robotY", pose.getY() / Constants.inchToMetersConversionFactor);        
-        SmartDashboard.putNumber("moveAroundField/robotAngle", pose.getRotation().getDegrees());        
+        SmartDashboard.putNumber("moveAroundField/robotY", pose.getY() / Constants.inchToMetersConversionFactor);
+        SmartDashboard.putNumber("moveAroundField/robotAngle", pose.getRotation().getDegrees());
     }
 
     public void setRobotFromFieldPose() {
