@@ -146,11 +146,6 @@ public class DriveTrain extends SubsystemBase {
     }
 
     public void setPose(Pose2d pose) {
-        // The left and right encoders MUST be reset when odometry is reset
-        leftEncoder.reset();
-        rightEncoder.reset();
-        odometry.resetPosition(pose, Rotation2d.fromDegrees(getGyroAngle()));
-
         if (RobotBase.isSimulation()) {
             // This is a bit hokey, but if the Robot jumps on the field, we need
             //   to reset the internal state of the DriveTrainSimulator.
@@ -158,8 +153,17 @@ public class DriveTrain extends SubsystemBase {
             //   NOTE: this assumes the robot is not moving, since we are not resetting
             //   the rate variables.
             drivetrainSimulator.setState(new Matrix<>(Nat.N7(), Nat.N1()));
+
+            // reset the GyroSim to match the driveTrainSim
+            // do it early so that "real" odometry matches this value
+            gyroAngleSim.set(-drivetrainSimulator.getHeading().getDegrees());
             fieldSim.setRobotPose(pose);
         }
+
+        // The left and right encoders MUST be reset when odometry is reset
+        leftEncoder.reset();
+        rightEncoder.reset();
+        odometry.resetPosition(pose, Rotation2d.fromDegrees(getGyroAngle()));
     }
       
     public void tankDriveVolts (double leftVolts, double rightVolts) {
