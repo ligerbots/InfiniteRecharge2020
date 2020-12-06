@@ -73,7 +73,6 @@ public class DriveTrain extends SubsystemBase {
     private EncoderSim rightEncoderSim;
     // The Field2d class simulates the field in the sim GUI. Note that we can have only one
     // instance!
-    // Does this belong somewhere else??
     private Field2d fieldSim;
     private SimDouble gyroAngleSim;
 
@@ -192,18 +191,10 @@ public class DriveTrain extends SubsystemBase {
         return Math.IEEEremainder(navX.getAngle(), 360) * -1; // -1 here for unknown reason look in documatation
     }
 
-    // private void resetHeading() {
-    //     navX.reset();
-    // }
-    
-    // private void resetEncoders() {
-    //     leftEncoder.reset();
-    //     rightEncoder.reset();
-    // }
-
     // This is the same as setPose() but leave here for compatibility
     public void resetOdometry (Pose2d pose) {
         setPose(pose);
+        // old code as in master branch. leave here until tested
         // resetEncoders();
         // //resetHeading();
         // odometry.resetPosition(pose, Rotation2d.fromDegrees(getGyroAngle()));
@@ -246,15 +237,12 @@ public class DriveTrain extends SubsystemBase {
         return new DifferentialDriveWheelSpeeds(leftEncoder.getRate(), rightEncoder.getRate());
     }
 
+    // This method will be called once per scheduler run
     @Override
     public void periodic() {
         odometry.update(Rotation2d.fromDegrees(getGyroAngle()), leftEncoder.getDistance(), rightEncoder.getDistance());
         SmartDashboard.putNumber("Heading", getHeading());
         SmartDashboard.putString("Pose", getPose().toString());
-        // SmartDashboard.putNumber("Vision Angle", SmartDashboard.getNumberArray("vision/target_info", new Double[]{0.0,0.0})[4] * 180.0 / 3.1416);
-        //SmartDashboard.putNumber("Arc tan adjustment", Math.atan(7.5 / SmartDashboard.getNumberArray("vision/target_info", new Double[]{0.0,0.0})[3]));
-
-        // This method will be called once per scheduler run
     }
 
     @Override
