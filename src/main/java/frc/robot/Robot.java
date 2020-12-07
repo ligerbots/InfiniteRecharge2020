@@ -8,6 +8,7 @@ package frc.robot;
 
 import com.revrobotics.CANSparkMax.IdleMode;
 
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -31,6 +32,8 @@ public class Robot extends TimedRobot {
   public static int HoodAdjustment;
   public static double angleErrorAfterTurn = 0;
 
+  private AutoCommandInterface m_prevAutoCommand = null;
+
   /**
    * This function is run when the robot is first started up and should be used
    * for any initialization code.
@@ -43,7 +46,7 @@ public class Robot extends TimedRobot {
     m_robotContainer = new RobotContainer();
 
     m_robotContainer.climber.shoulder.setIdleMode(IdleMode.kCoast);
- 
+
     // Set motors to coast so it's easier to move the robot.
     m_robotContainer.robotDrive.setIdleMode(IdleMode.kCoast);
 
@@ -58,8 +61,8 @@ public class Robot extends TimedRobot {
     // SmartDashboard.putData(new TestTurret(m_robotContainer.shooter));
     /*
     chosenAuto.addDefault("Default Auto", new DriveForwardAuto(m_robotContainer.robotDrive, m_robotContainer.carouselCommand, m_robotContainer.driveCommand));
-   
-   
+
+
     chosenAuto.addObject("EightBallAuto", new EightBallAuto(
       m_robotContainer.robotDrive,
       m_robotContainer.shooter,
@@ -112,6 +115,10 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void disabledInit() {
+    if (RobotBase.isSimulation()) {
+      m_robotContainer.robotDrive.setRobotFromFieldPose();
+    }
+
     if (Robot.isReal()) {
       m_robotContainer.climber.shoulder.setIdleMode(IdleMode.kCoast);
       m_robotContainer.climber.winch.setIdleMode(IdleMode.kCoast);
@@ -128,8 +135,9 @@ public class Robot extends TimedRobot {
     // Do not use the member variable m_autonomousCommand. Setting that signals
     //  that the command is running, which it is not, yet.
     AutoCommandInterface autoCommandInterface = chosenAuto.getSelected();
-    if (autoCommandInterface != null) {
+    if (autoCommandInterface != null && autoCommandInterface != m_prevAutoCommand) {
       m_robotContainer.robotDrive.setPose(autoCommandInterface.getInitialPose());
+      m_prevAutoCommand = autoCommandInterface;
     }
   }
 
@@ -139,6 +147,10 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
+    if (RobotBase.isSimulation()) {
+      m_robotContainer.robotDrive.setRobotFromFieldPose();
+    }
+
     m_robotContainer.carousel.resetEncoder();
     // Set motors to brake for the drive train
     m_robotContainer.robotDrive.setIdleMode(IdleMode.kBrake);
@@ -161,6 +173,10 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    if (RobotBase.isSimulation()) {
+      m_robotContainer.robotDrive.setRobotFromFieldPose();
+    }
+
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
@@ -213,6 +229,9 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void testPeriodic() {
+    if (RobotBase.isSimulation()) {
+      m_robotContainer.robotDrive.moveAroundField();
+    }
   }
 
   @Override
