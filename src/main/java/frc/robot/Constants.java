@@ -153,7 +153,7 @@ public final class Constants {
 
 
     // Simulation parameters  FAKE!!
-    public static final double kvVoltSecondsPerRadian = 1.5;
+    public static final double kvVoltSecondsPerRadian = 3.0;
     public static final double kaVoltSecondsSquaredPerRadian = 0.3;
 
     public static final LinearSystem<N2, N2, N2> kDrivetrainPlant =
