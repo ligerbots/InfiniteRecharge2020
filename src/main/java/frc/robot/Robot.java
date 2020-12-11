@@ -27,12 +27,7 @@ public class Robot extends TimedRobot {
 
   private AutoCommandInterface m_autonomousCommand;
   private RobotContainer m_robotContainer;
-  // private DriveTrain driveTrain;
-  private Carousel carousel;
-  // private Intake intake;
-  // private DriveCommand driveCommand;
-  // private Shooter shooter;
-  // private Climber climber;
+  
   SendableChooser<AutoCommandInterface> chosenAuto = new SendableChooser<>();
 
   public static int RPMAdjustment;
