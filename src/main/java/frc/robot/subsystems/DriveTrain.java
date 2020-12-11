@@ -135,9 +135,6 @@ public class DriveTrain extends SubsystemBase {
             SmartDashboard.putNumber("moveAroundField/startPos", prevStartLocation);
             SmartDashboard.putNumber("moveAroundField/ballPos", prevBallLocation);
         }
-
-        // TODO this should not be here
-        SmartDashboard.putString("vision/active_mode/selected", "goalfinder");
     }
 
     public Pose2d getPose () {
