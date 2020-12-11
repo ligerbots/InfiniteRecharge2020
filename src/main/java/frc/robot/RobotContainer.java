@@ -169,7 +169,7 @@ public class RobotContainer {
    */
   //EightBallAuto auto = new EightBallAuto(robotDrive, shooter, intake, climber, carousel, driveCommand, carouselCommand);
   public Command _getAutonomousCommand() {
-    return new NewEightBallSim(robotDrive, driveCommand, climber);
+    return new NewEightBallSim(robotDrive, driveCommand, climber, carousel, carouselCommand,shooter);
     //return new MoveAroundField(robotDrive);
     // return auto;
   }

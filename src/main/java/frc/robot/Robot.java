@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.*;
+import frc.robot.subsystems.Carousel;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -26,6 +27,12 @@ public class Robot extends TimedRobot {
 
   private AutoCommandInterface m_autonomousCommand;
   private RobotContainer m_robotContainer;
+  // private DriveTrain driveTrain;
+  private Carousel carousel;
+  // private Intake intake;
+  // private DriveCommand driveCommand;
+  // private Shooter shooter;
+  // private Climber climber;
   SendableChooser<AutoCommandInterface> chosenAuto = new SendableChooser<>();
 
   public static int RPMAdjustment;
@@ -82,10 +89,10 @@ public class Robot extends TimedRobot {
         m_robotContainer.carouselCommand));
     */
 
-    chosenAuto.setDefaultOption("NewEightBallSim", new NewEightBallSim(m_robotContainer.robotDrive, m_robotContainer.driveCommand, m_robotContainer.climber));
+    chosenAuto.setDefaultOption("NewEightBallSim", new NewEightBallSim(m_robotContainer.robotDrive, m_robotContainer.driveCommand, m_robotContainer.climber, m_robotContainer.carousel, m_robotContainer.carouselCommand, m_robotContainer.shooter));
     chosenAuto.addOption("MoveAroundField", new MoveAroundField());
-    chosenAuto.addOption("TrenchAuto Pos 0", new TrenchAuto(FieldMap.startPosition[0], m_robotContainer.robotDrive, m_robotContainer.driveCommand, m_robotContainer.climber));
-    chosenAuto.addOption("TrenchAuto Pos 2", new TrenchAuto(FieldMap.startPosition[2], m_robotContainer.robotDrive, m_robotContainer.driveCommand, m_robotContainer.climber));
+    chosenAuto.addOption("TrenchAuto Pos 0", new TrenchAuto(FieldMap.startPosition[0], m_robotContainer.robotDrive, m_robotContainer.driveCommand, m_robotContainer.climber, m_robotContainer.carousel, m_robotContainer.carouselCommand, m_robotContainer.shooter));
+    chosenAuto.addOption("TrenchAuto Pos 2", new TrenchAuto(FieldMap.startPosition[2], m_robotContainer.robotDrive, m_robotContainer.driveCommand, m_robotContainer.climber, m_robotContainer.carousel, m_robotContainer.carouselCommand, m_robotContainer.shooter));
     chosenAuto.addOption("ShedTest", new ShedTest(m_robotContainer.robotDrive));
     SmartDashboard.putData("Chosen Auto", chosenAuto);
   }

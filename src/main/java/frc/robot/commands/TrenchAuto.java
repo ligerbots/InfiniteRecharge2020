@@ -17,8 +17,10 @@ import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 import frc.robot.FieldMap;
+import frc.robot.subsystems.Carousel;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.Shooter;
 
 public class TrenchAuto extends SequentialCommandGroup implements AutoCommandInterface {
 
@@ -26,7 +28,7 @@ public class TrenchAuto extends SequentialCommandGroup implements AutoCommandInt
     // and will allow the system to query for it
     private Pose2d initialPose;
 
-    public TrenchAuto(Pose2d initialPose, DriveTrain robotDrive, DriveCommand drivecommand, Climber climber) {
+    public TrenchAuto(Pose2d initialPose, DriveTrain robotDrive, DriveCommand drivecommand, Climber climber, Carousel carousel, CarouselCommand carouselcommand, Shooter shooter) {
         drivecommand.cancel();
 
         // Save the passed in initialPose so we can use it later
@@ -60,7 +62,7 @@ public class TrenchAuto extends SequentialCommandGroup implements AutoCommandInt
                 List.of(
                     FieldMap.ballPosition[8]
                 ),
-                new Pose2d(FieldMap.ballPosition[7].plus(new Translation2d(.4,.4)), Rotation2d.fromDegrees(20)),
+                new Pose2d(FieldMap.ballPosition[7].plus(new Translation2d(.4,.4)), Rotation2d.fromDegrees(0)),
                 configForward);   
 
         // for (State state : backTrajectory.getStates()) {
@@ -101,7 +103,8 @@ public class TrenchAuto extends SequentialCommandGroup implements AutoCommandInt
         addCommands(
             //new SetTrajectory(robotDrive, configBackward).andThen(() -> robotDrive.tankDriveVolts(0, 0))//,
             ramseteBackward.andThen(() -> robotDrive.tankDriveVolts(0, 0)),
-            ramseteForward.andThen(() -> robotDrive.tankDriveVolts(0, 0))
+            ramseteForward.andThen(() -> robotDrive.tankDriveVolts(0, 0)),
+            new TurnAndShoot(robotDrive, shooter, carousel, carouselcommand, drivecommand,false)
         );
     }
 

@@ -17,8 +17,10 @@ import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 import frc.robot.FieldMap;
+import frc.robot.subsystems.Carousel;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.Shooter;
 
 public class NewEightBallSim extends SequentialCommandGroup implements AutoCommandInterface {
 
@@ -26,7 +28,7 @@ public class NewEightBallSim extends SequentialCommandGroup implements AutoComma
     // and will allow the system to query for it
     private Pose2d initialPose = FieldMap.startPosition[1];
 
-    public NewEightBallSim(DriveTrain robotDrive, DriveCommand drivecommand, Climber climber) {
+    public NewEightBallSim(DriveTrain robotDrive, DriveCommand drivecommand, Climber climber, Carousel carousel, CarouselCommand carouselcommand, Shooter shooter) {
         drivecommand.cancel();
 
         DeployShoulderCommand deployShoulder = new DeployShoulderCommand(climber);
@@ -106,7 +108,8 @@ public class NewEightBallSim extends SequentialCommandGroup implements AutoComma
         addCommands(
             //new SetTrajectory(robotDrive, configBackward).andThen(() -> robotDrive.tankDriveVolts(0, 0))//,
             ramseteBackward.andThen(() -> robotDrive.tankDriveVolts(0, 0)),
-            ramseteForward.andThen(() -> robotDrive.tankDriveVolts(0, 0))
+            ramseteForward.andThen(() -> robotDrive.tankDriveVolts(0, 0)),
+            new TurnAndShoot(robotDrive, shooter, carousel, carouselcommand, drivecommand,false)
         );
     }
 
