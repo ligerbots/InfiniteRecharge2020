@@ -15,9 +15,8 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Vision;
 
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
- //import edu.wpi.first.wpilibj.XboxController; will need later
+// import edu.wpi.first.wpilibj.XboxController; will need later
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj.GenericHID.Hand;
@@ -25,7 +24,6 @@ import edu.wpi.first.wpilibj.GenericHID.Hand;
 import frc.robot.commands.*;
 import frc.robot.subsystems.DriveTrain;
 
-@SuppressWarnings("all")
 /**
  * This class is where the bulk of the robot should be declared. Since
  * Command-based is a "declarative" paradigm, very little robot logic should
@@ -52,7 +50,6 @@ public class RobotContainer {
 
   private final Shoulder shoulder = new Shoulder();
   public final Climber climber = new Climber(robotDrive);
-
 
   public final DeployShoulderCommand deployShoulderCommand = new DeployShoulderCommand(climber);
 
@@ -94,6 +91,7 @@ public class RobotContainer {
       return xbox.getX(Hand.kRight);
     }
   }
+  
   public class Shoulder implements DoubleSupplier{
 
     @Override
@@ -108,7 +106,7 @@ public class RobotContainer {
     JoystickButton xboxX = new JoystickButton(xbox, Constants.XBOX_X);
     JoystickButton xboxY = new JoystickButton(xbox, Constants.XBOX_Y);
     JoystickButton xbox7 = new JoystickButton(xbox, Constants.XBOX_BACK);
-    JoystickButton xboxLine = new JoystickButton(xbox, Constants.XBOX_START);
+    //JoystickButton xboxLine = new JoystickButton(xbox, Constants.XBOX_START);
     JoystickButton bumperRight = new JoystickButton(xbox, Constants.XBOX_RB);
     JoystickButton bumperLeft = new JoystickButton(xbox, Constants.XBOX_LB);
     bumperRight.whileHeld(new IntakeCommand(intake, climber, Constants.INTAKE_SPEED));
@@ -138,39 +136,36 @@ public class RobotContainer {
 
     JoystickButton farm5 = new JoystickButton (farm, 5);
     farm5.whenPressed(new ClimberCommand2(climber));
-    
 
     JoystickButton farm11 = new JoystickButton(farm, 11);
     farm11.whenPressed(new FaceShootingTarget(robotDrive, 3, driveCommand, shooter));
 
     JoystickButton farm14 = new JoystickButton(farm, 14);
+    farm14.whenPressed(new ShooterTuner(shooter, carousel, carouselCommand));
+
     JoystickButton farm16 = new JoystickButton(farm, 16);
+    farm16.whenPressed(new GatherData());
+
+    JoystickButton farm20 = new JoystickButton(farm, 20);
+    farm20.whenPressed(new SetVisionMode(shooter.vision, Vision.VisionMode.GOALFINDER));
 
     JoystickButton farm21 = new JoystickButton(farm, 21);
-    farm21.whenPressed(new VisionTargetDistance(shooter));
+    farm21.whenPressed(new SetVisionMode(shooter.vision, Vision.VisionMode.INTAKE));
 
-    farm14.whenPressed(new ShooterTuner(shooter, carousel, carouselCommand));
-    farm16.whenPressed(new GatherData());
     //xboxA.whenPressed(new ClimberCommand()); //shootercomand
     xboxY.whenPressed(new TurnAndShoot(robotDrive, shooter, carousel, carouselCommand, driveCommand, true));
-
   }
-
-
-  /*public boolean APressed () {
-    return xboxA.get();
-  }*/
-
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
    * @return the command to run in autonomous
    */
-  //EightBallAuto auto = new EightBallAuto(robotDrive, shooter, intake, climber, carousel, driveCommand, carouselCommand);
-  public Command _getAutonomousCommand() {
-    return new NewEightBallSim(robotDrive, driveCommand, climber, carousel, carouselCommand,shooter);
-    //return new MoveAroundField(robotDrive);
-    // return auto;
-  }
+  // This is not used. See chosenAuto in Robot.java
+  // //EightBallAuto auto = new EightBallAuto(robotDrive, shooter, intake, climber, carousel, driveCommand, carouselCommand);
+  // public Command _getAutonomousCommand() {
+  //   return new NewEightBallSim(robotDrive, driveCommand, climber, carousel, carouselCommand,shooter);
+  //   //return new MoveAroundField(robotDrive);
+  //   // return auto;
+  // }
 }
