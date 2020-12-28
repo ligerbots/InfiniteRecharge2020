@@ -7,10 +7,10 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.Vision;
 
-public class SetVisionMode extends CommandBase {
+public class SetVisionMode extends InstantCommand {
     /**
      * Sets the Vision processing into a specific mode.
      */
@@ -29,21 +29,5 @@ public class SetVisionMode extends CommandBase {
     @Override
     public void initialize() {
         m_visionSystem.setMode(m_desiredMode);
-    }
-
-    @Override
-    public void execute() {
-        // Nothing to do
-    }
-
-    // Called once the command ends or is interrupted.
-    @Override
-    public void end(boolean interrupted) {
-    }
-
-    // Returns true when the command should end.
-    @Override
-    public boolean isFinished() {
-        return true;
     }
 }
