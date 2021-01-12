@@ -7,6 +7,7 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 import frc.robot.Constants;
@@ -40,6 +41,10 @@ public class ShooterCommand extends CommandBase {
   boolean startedTimerFlag;
   boolean foundTarget;
 
+  // PID values to be read from Smart Dashboard
+  double p, i, d, f;
+  boolean setPid;
+
   // private CircularBuffer kFEstimator = new CircularBuffer(20);
 
   private enum ControlMethod {
@@ -72,7 +77,18 @@ public class ShooterCommand extends CommandBase {
   public void initialize() {
     foundTarget = false;
     shooterTargetSpeed = 0.0;
+    // The PID values below are the defaults to be used to spin up the shooter
     shooter.calibratePID(0.000145, 1e-8, 0, 6.6774 * 0.00001);
+    setPid = true;
+
+    // Get the latest PIDF values from the Smart Dashboard
+    // We only want to get the values once per execution of the command
+    // They won't be set until we get to the HOLD control method
+    p = SmartDashboard.getNumber("P", 0.000145);
+    i = SmartDashboard.getNumber("I",1e-8);
+    d = SmartDashboard.getNumber("D", 0);
+    f = SmartDashboard.getNumber("F", 6.6774 * 0.00001);
+
     driveCommand.cancel();
     startTime = System.nanoTime();
     shooter.vision.setMode(VisionMode.GOALFINDER);
@@ -137,7 +153,14 @@ public class ShooterCommand extends CommandBase {
     }
     else if (currentControlMode == ControlMethod.HOLD) {
       //kFEstimator.addValue(val);
-      shooter.calibratePID(0, 0, 0, 1 / (5700 * 2.6666));
+      // For testing, we're going to use different PID values
+      if (setPid) {
+        shooter.calibratePID(p, i, d, f);
+        setPid = false;
+      }
+      
+      // These are the Spin Up PID values
+      // shooter.calibratePID(0.000145, 1e-8, 0, 6.6774 * 0.00001);
     }
 
   
