@@ -125,6 +125,6 @@ public class Vision extends SubsystemBase {
     }
 
     public void setLedRing (boolean on) {
-        spike.set(on ? Value.kForward : Value.kReverse);
+        spike.set(on ? Value.kReverse : Value.kOff);
     }
 }
