@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Carousel;
 import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Vision.VisionMode;
 
 public class ShooterTuner extends CommandBase {
   /**
@@ -37,9 +38,9 @@ public class ShooterTuner extends CommandBase {
     shooter.vision.setMode("goalfinder");
     SmartDashboard.putNumber("Distance", shooter.vision.getDistance());
     System.out.println("Shooter Tuner going!");
-    shooter.shoot();
+    // shooter.shoot();
     shooter.setHood(SmartDashboard.getNumber("Target Hood Angle", 60));
-    shooter.setShooterRPM(SmartDashboard.getNumber("TSR", -1000));
+    // shooter.setShooterRPM(SmartDashboard.getNumber("TSR", -1000));
     shooter.setTurret(SmartDashboard.getNumber("Turret Angle", 72));
     startTicks = carousel.getTicks();
     cc.cancel();
@@ -51,12 +52,18 @@ public class ShooterTuner extends CommandBase {
     if (shooter.getSpeed() < SmartDashboard.getNumber("TSR", -1000) + 1000) {
       carousel.spin(0.8);
     }
+    // Use the following line to measure the turret servo. This will read the smart dashboard
+    // every iteration
+    // shooter.setTurret(SmartDashboard.getNumber("Turret Angle", 72));
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     //shooter.stopAll();
+    shooter.stopAll();
+    shooter.vision.setMode(VisionMode.INTAKE);
+    carousel.setBallCount(0);
     cc.schedule();
   }
 

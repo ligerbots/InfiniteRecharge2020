@@ -97,17 +97,20 @@ public class Shooter extends SubsystemBase {
             distanceLookUp.put(new Double(235.2), new Double[] {new Double(7500), new Double(55)});            
         }
       
-        turretAngleLookup.put(0.0, 79.5);
-        turretAngleLookup.put(1.0, 85.0);
-        turretAngleLookup.put(2.0, 89.0);
-        turretAngleLookup.put(3.0, 93.0);
-        turretAngleLookup.put(4.0, 97.0);
-        turretAngleLookup.put(5.0, 101.0);
-        turretAngleLookup.put(-5.0, 57.5);
-        turretAngleLookup.put(-4.0, 61.0);
-        turretAngleLookup.put(-3.0, 64.0);
-        turretAngleLookup.put(-2.0, 68.0);
-        turretAngleLookup.put(-1.0, 71.5);
+        turretAngleLookup.put(0.0, 135.0);
+        turretAngleLookup.put(1.0, 139.0);
+        turretAngleLookup.put(2.0, 142.0);
+        turretAngleLookup.put(3.0, 145.5);
+        turretAngleLookup.put(4.0, 149.0);
+        turretAngleLookup.put(5.0, 152.0);
+        turretAngleLookup.put(-5.0, 117.0);
+        turretAngleLookup.put(-4.0, 121.0);
+        turretAngleLookup.put(-3.0, 124.0);
+        turretAngleLookup.put(-2.0, 129.0);
+        turretAngleLookup.put(-1.0, 131.0);
+
+        // 75 = 10 deg
+        // 
 
     // The PID values below are the defaults to be used to spin up the shooter
     // Put the initial values to the Smart Dashboard
