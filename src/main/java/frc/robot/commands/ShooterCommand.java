@@ -65,11 +65,6 @@ public class ShooterCommand extends CommandBase {
     this.driveCommand = driveCommand;
     this.rescheduleDriveCommand = rescheduleDriveCommand;
     startShooting = false;
-    // Put the initial values to the Smart Dashboard
-    SmartDashboard.putNumber("shooter/P", 0.000145);
-    SmartDashboard.putNumber("shooter/I",1e-8);
-    SmartDashboard.putNumber("shooter/D", 0);
-    SmartDashboard.putNumber("shooter/F", 6.6774 * 0.00001);
   }
 
   private void rapidFire() {
@@ -82,8 +77,9 @@ public class ShooterCommand extends CommandBase {
   public void initialize() {
     foundTarget = false;
     shooterTargetSpeed = 0.0;
-    // The PID values below are the defaults to be used to spin up the shooter
-    shooter.calibratePID(0.000145, 1e-8, 0, 6.6774 * 0.00001);
+
+    // This flag is used so we only set the PID values once per command. We don't want to constantly reset the PID
+    // values  in the execute() method.
     setPid = true;
 
     // Get the latest PIDF values from the Smart Dashboard

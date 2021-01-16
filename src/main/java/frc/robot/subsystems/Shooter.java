@@ -109,7 +109,15 @@ public class Shooter extends SubsystemBase {
         turretAngleLookup.put(-2.0, 68.0);
         turretAngleLookup.put(-1.0, 71.5);
 
-
+    // The PID values below are the defaults to be used to spin up the shooter
+    // Put the initial values to the Smart Dashboard
+    SmartDashboard.putNumber("shooter/P", 0.000145);
+    SmartDashboard.putNumber("shooter/I",1e-8);
+    SmartDashboard.putNumber("shooter/D", 0);
+    SmartDashboard.putNumber("shooter/F", 6.6774 * 0.00001);
+    // Set default PIDF values
+    // We're setting them here so that they won't be reset every time we execute the ShooterCommand
+    calibratePID(0.000145, 1e-8, 0, 6.6774 * 0.00001);
 
 
 
