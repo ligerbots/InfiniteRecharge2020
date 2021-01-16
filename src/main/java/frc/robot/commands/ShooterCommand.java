@@ -65,6 +65,11 @@ public class ShooterCommand extends CommandBase {
     this.driveCommand = driveCommand;
     this.rescheduleDriveCommand = rescheduleDriveCommand;
     startShooting = false;
+    // Put the initial values to the Smart Dashboard
+    SmartDashboard.putNumber("shooter/P", 0.000145);
+    SmartDashboard.putNumber("shooter/I",1e-8);
+    SmartDashboard.putNumber("shooter/D", 0);
+    SmartDashboard.putNumber("shooter/F", 6.6774 * 0.00001);
   }
 
   private void rapidFire() {
@@ -84,10 +89,10 @@ public class ShooterCommand extends CommandBase {
     // Get the latest PIDF values from the Smart Dashboard
     // We only want to get the values once per execution of the command
     // They won't be set until we get to the HOLD control method
-    // p = SmartDashboard.getNumber("shooter/P", 0.000145);
-    // i = SmartDashboard.getNumber("shooter/I",1e-8);
-    // d = SmartDashboard.getNumber("shooter/D", 0);
-    // f = SmartDashboard.getNumber("shooter/F", 6.6774 * 0.00001);
+    p = SmartDashboard.getNumber("shooter/P", 0.000145);
+    i = SmartDashboard.getNumber("shooter/I",1e-8);
+    d = SmartDashboard.getNumber("shooter/D", 0);
+    f = SmartDashboard.getNumber("shooter/F", 6.6774 * 0.00001);
 
     driveCommand.cancel();
     startTime = System.nanoTime();
@@ -155,8 +160,8 @@ public class ShooterCommand extends CommandBase {
       //kFEstimator.addValue(val);
       // For testing, we're going to use different PID values
       if (setPid) {
-        // shooter.calibratePID(p, i, d, f);
-        shooter.calibratePID(0.000145, 1e-8, 0, 6.6774 * 0.00001);
+        shooter.calibratePID(p, i, d, f);
+        // shooter.calibratePID(0.000145, 1e-8, 0, 6.6774 * 0.00001);
         setPid = false;
       }
       
