@@ -11,20 +11,17 @@ package frc.robot.commands;
 // PaulR Nov 2020: this is not going to work, and is not actually used!!
 //
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.Carousel;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Vision.VisionMode;
 
 public class BangBangShooter extends CommandBase {
   /**
    * Creates a new BangBangShooter.
    */
-
-  double[] visionInfo;
-  double[] empty = new double[] {0.0,0.0,0.0,0.0,0.0,0.0,0.0}; 
 
   int initialCarouselTicks;
 
@@ -60,7 +57,7 @@ public class BangBangShooter extends CommandBase {
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
-  public void rapidFire() {
+  private void rapidFire() {
     carousel.spin(0.5);
     shooter.shoot();
   }
@@ -70,13 +67,11 @@ public class BangBangShooter extends CommandBase {
   public void initialize() {
     startTime = System.nanoTime();
     driveCommand.cancel();
-    shooter.vision.setMode("goalfinder");
-    //TODO: remember to set to shooting camera mode!!
+    shooter.vision.setMode(VisionMode.GOALFINDER);
     carouselCommand.cancel();
 
     // stor current carouselTick value
     initialCarouselTicks = carousel.getTicks();
-    visionInfo = SmartDashboard.getNumberArray("vision/target_info", empty); 
 
     angleError = shooter.vision.getRobotAngle();
     distance = shooter.vision.getDistance();
@@ -95,9 +90,6 @@ public class BangBangShooter extends CommandBase {
 
   @Override
   public void execute() {
-
-    visionInfo = SmartDashboard.getNumberArray("vision/target_info", empty); // TODO: need actual vision info
-
     angleError = shooter.vision.getRobotAngle(); 
 
     System.out.println("Target Speed: " + shooter.calculateShooterSpeed(distance) + "   Current Speed: " + shooter.getSpeed() + "   " + currentControlMode);
@@ -130,7 +122,7 @@ public class BangBangShooter extends CommandBase {
     }
 
 
-    if (visionInfo[0] != 0) { // figure out if we see a vision target
+    if (shooter.vision.getStatus()) { // figure out if we see a vision target
   
       if (Math.abs(angleError) > 5) {
         robotDrive.allDrive(0, robotDrive.turnSpeedCalc(angleError), false);
@@ -158,7 +150,7 @@ public class BangBangShooter extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     shooter.stopAll();
-    shooter.vision.setMode("intake");
+    shooter.vision.setMode(VisionMode.INTAKE);
     carousel.setBallCount(0);
     carouselCommand.schedule();
     driveCommand.schedule();

@@ -7,22 +7,20 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.subsystems.Carousel;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Shooter;
-import frc.robot.CircularBuffer;
+import frc.robot.subsystems.Vision.VisionMode;
 
 public class ShooterCommand extends CommandBase {
   /**
    * Creates a new ShooterCommand.
    */
 
-  double[] visionInfo;
-  double[] empty = new double[] {0.0,0.0,0.0,0.0,0.0,0.0,0.0}; 
   double waitTime;
   double startTime;
 
@@ -42,9 +40,9 @@ public class ShooterCommand extends CommandBase {
   boolean startedTimerFlag;
   boolean foundTarget;
 
-  private CircularBuffer kFEstimator = new CircularBuffer(20);
+  // private CircularBuffer kFEstimator = new CircularBuffer(20);
 
-  public enum ControlMethod {
+  private enum ControlMethod {
     SPIN_UP, // PIDF to desired RPM
     HOLD_WHEN_READY, // calculate average kF
     HOLD, // switch to pure kF control
@@ -64,7 +62,7 @@ public class ShooterCommand extends CommandBase {
     startShooting = false;
   }
 
-  public void rapidFire() {
+  private void rapidFire() {
     carousel.spin(0.8);
     shooter.shoot();
   }
@@ -77,15 +75,14 @@ public class ShooterCommand extends CommandBase {
     shooter.calibratePID(0.000145, 1e-8, 0, 6.6774 * 0.00001);
     driveCommand.cancel();
     startTime = System.nanoTime();
-    shooter.vision.setMode("goalfinder");
-    //TODO: remember to set to shooting camera mode!!
+    shooter.vision.setMode(VisionMode.GOALFINDER);
+
     carouselCommand.cancel();
     currentControlMode = ControlMethod.SPIN_UP;
 
     System.out.println("Initial NavX Heading: " + robotDrive.getHeading());
     // stor current carouselTick value
     initialCarouselTicks = carousel.getTicks();
-    visionInfo = SmartDashboard.getNumberArray("vision/target_info", empty); 
 
     angleError = shooter.vision.getRobotAngle();
     distance = shooter.vision.getDistance();
@@ -108,10 +105,8 @@ public class ShooterCommand extends CommandBase {
 
   @Override
   public void execute() {
-    visionInfo = SmartDashboard.getNumberArray("vision/target_info", empty); // TODO: need actual vision info
-
     if (!foundTarget) {
-      distance = visionInfo[3];
+      distance = shooter.vision.getDistance();
       if (distance != 0.0) {
         foundTarget = true;
         shooterTargetSpeed = -shooter.calculateShooterSpeed(distance);  
@@ -162,7 +157,7 @@ public class ShooterCommand extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     shooter.stopAll();
-    shooter.vision.setMode("intake");
+    shooter.vision.setMode(VisionMode.INTAKE);
     carousel.setBallCount(0);
     carouselCommand.schedule();
     if (rescheduleDriveCommand) {
@@ -181,7 +176,9 @@ public class ShooterCommand extends CommandBase {
   @Override
   public boolean isFinished() {
     // TODO: this should just check to see if the carousel has rotated 5 CAROUSEL_FIFTH_ROTATION_TICKS intervals
-    return (carousel.getTicks() - initialCarouselTicks) < -5 * Constants.CAROUSEL_FIFTH_ROTATION_TICKS || (distance == 0.0 && (double)(System.nanoTime() - startTime) / 1_000_000_000.0 > 2.0);
+    return (carousel.getTicks() - initialCarouselTicks) < -5 * Constants.CAROUSEL_FIFTH_ROTATION_TICKS
+        || (distance == 0.0 && (double) (System.nanoTime() - startTime) / 1_000_000_000.0 > 2.0);
+
             /*((double)System.nanoTime() - startTime) / 1_000_000_000.0 > 7.0;*/
     // if (waitTime == 0.0) {
     //   return false;
